@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Efecto Planeta al Scroll</title>
+    <title>IA - Futuro y Equipo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -11,15 +11,27 @@
             color: white;
             overflow-x: hidden;
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             scroll-behavior: smooth;
         }
 
-        /* Espacio de scroll para la animación del planeta */
-        .scroll-wrapper {
-            height: 500vh; 
+        /* --- Estrellas Globales Reutilizables --- */
+        .stars-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 100px 150px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 300px 300px;
+            opacity: 0.4;
+            pointer-events: none;
         }
 
+        /* --- Animación de Scroll y Planeta --- */
+        .scroll-wrapper { height: 500vh; }
         .scene-container {
             position: sticky;
             top: 0;
@@ -31,23 +43,9 @@
             align-items: center;
         }
 
-        .stars {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(1px 1px at 20px 30px, #eee, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 100px 150px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 200px 50px, #fff, rgba(0,0,0,0));
-            background-repeat: repeat;
-            background-size: 300px 300px;
-            opacity: 0.4;
-        }
-
         .hero-title {
             position: absolute;
-            font-size: clamp(3rem, 12vw, 8rem);
+            font-size: clamp(2.5rem, 10vw, 8rem);
             font-weight: 900;
             text-align: center;
             z-index: 10;
@@ -57,7 +55,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-transform: uppercase;
-            transition: opacity 0.5s ease;
         }
 
         .planet {
@@ -69,21 +66,9 @@
             border-radius: 50%;
             z-index: 50;
             box-shadow: 0 -30px 100px rgba(30, 64, 175, 0.5);
-            pointer-events: none;
-            will-change: transform;
             left: 50%;
             transform: translateX(-50%);
-        }
-
-        .planet-glow {
-            position: absolute;
-            top: 0;
-            left: 10%;
-            right: 10%;
-            height: 20px;
-            background: rgba(59, 130, 246, 0.2);
-            filter: blur(40px);
-            border-radius: 50%;
+            will-change: transform;
         }
 
         .greeting-text {
@@ -92,52 +77,31 @@
             left: 50%;
             transform: translate(-50%, -50%) translateY(20px);
             z-index: 100;
-            font-size: clamp(1.5rem, 4vw, 3rem);
+            font-size: clamp(1.2rem, 4vw, 3rem);
             font-weight: 300;
             text-align: center;
-            width: 80%;
+            width: 85%;
             opacity: 0;
             transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            pointer-events: none;
         }
 
-        .greeting-text.visible {
-            opacity: 1;
-            transform: translate(-50%, -50%) translateY(0);
-        }
+        .greeting-text.visible { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
 
-        .scroll-line {
+        .scroll-line, .scroll-line-black {
             position: absolute;
             bottom: 0;
             left: 50%;
             width: 2px;
             height: 0;
-            background: linear-gradient(to bottom, transparent, #3b82f6, #ffffff);
+            transform: translateX(-50%);
+            transition: height 1.5s ease;
             z-index: 110;
-            transform: translateX(-50%);
-            transition: height 1.5s ease-in-out;
         }
+        .scroll-line { background: linear-gradient(to bottom, transparent, #3b82f6, #ffffff); }
+        .scroll-line-black { background: linear-gradient(to bottom, transparent, #000000); z-index: 130; }
+        .active { height: 100px; }
 
-        .scroll-line.active {
-            height: 150px;
-        }
-
-        .scroll-line-black {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 2px;
-            height: 0;
-            background: linear-gradient(to bottom, transparent, #000000);
-            z-index: 130;
-            transform: translateX(-50%);
-            transition: height 1.5s ease-in-out;
-        }
-
-        .scroll-line-black.active {
-            height: 150px;
-        }
-
+        /* --- Sección Bienvenido al Futuro --- */
         .next-section {
             height: 100vh;
             background: #ffffff;
@@ -148,145 +112,219 @@
             align-items: center;
             position: relative;
             z-index: 120;
+            padding: 0 24px;
+            text-align: center;
         }
 
-        /* Sección Final con Galería Mejorada */
+        /* --- Sección Equipo con FONDO ESPACIAL VERDE OSCURO --- */
         .final-section {
             min-height: 100vh;
-            background: #000000;
+            background: radial-gradient(circle at center, #082d1b 0%, #020205 100%);
             color: #ffffff;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative;
-            z-index: 140;
             padding: 80px 20px;
-        }
-
-        .gallery-container {
-            display: flex;
-            flex-direction: row; 
-            justify-content: center;
-            align-items: flex-end;
-            gap: 25px; /* Espacio aumentado entre fotos */
-            max-width: 100%;
-            margin-top: 50px;
-            overflow-x: auto; 
-            padding-bottom: 30px;
-        }
-
-        .person-card {
+            z-index: 140;
             position: relative;
-            width: 180px; /* Tamaño aumentado */
-            height: 260px; /* Proporción aumentada */
-            flex-shrink: 0;
             overflow: hidden;
         }
 
-        .person-card img {
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 640px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+
+        .person-item {
+            position: relative;
+            aspect-ratio: 3/4;
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.2s ease-out;
+        }
+
+        .person-item:hover {
+            transform: translateY(-8px);
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+
+        .person-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Efecto para ocultar fondos claros y difuminar abajo */
-            mix-blend-mode: screen; 
-            -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-            mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-            filter: grayscale(30%) brightness(1.1);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: saturate(0.4) brightness(0.7);
+            transition: transform 0.3s ease, filter 0.3s ease;
         }
 
-        .person-card:hover img {
-            transform: scale(1.1);
-            filter: grayscale(0%) brightness(1.25);
-            -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
-            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+        .person-item:hover img {
+            filter: saturate(1) brightness(1);
+            transform: scale(1.05);
         }
 
-        /* Ocultar barra de scroll */
-        .gallery-container::-webkit-scrollbar {
-            display: none;
+        /* Panel de información INSTANTÁNEO */
+        .person-info {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 15px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.1s linear; /* Aparición inmediata */
+            pointer-events: none;
         }
-        .gallery-container {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+
+        .person-item:hover .person-info {
+            opacity: 1;
+        }
+
+        .info-content {
+            backdrop-filter: blur(15px); /* Desenfoque más potente */
+            -webkit-backdrop-filter: blur(15px);
+            background: rgba(4, 26, 16, 0.6); /* Fondo verde abisal translúcido */
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            padding: 12px;
+            border-radius: 12px;
+            transform: translateY(5px);
+            transition: transform 0.15s ease-out;
+        }
+
+        .person-item:hover .info-content {
+            transform: translateY(0);
+        }
+
+        /* NOMBRES EN VERDE */
+        .info-content h3 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #22c55e;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .info-content p {
+            font-size: 0.75rem;
+            line-height: 1.3;
+            color: rgba(255,255,255,0.9);
         }
 
         .scroll-hint {
             position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 20;
+            bottom: 30px;
             text-align: center;
-            transition: opacity 0.3s ease;
-        }
-
-        @keyframes mouse-move {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(10px); opacity: 0; }
-        }
-
-        .mouse-icon {
-            width: 20px;
-            height: 35px;
-            border: 2px solid white;
-            border-radius: 15px;
-            margin: 0 auto 10px;
-            position: relative;
-        }
-
-        .mouse-icon::before {
-            content: '';
-            width: 4px;
-            height: 8px;
-            background: white;
-            position: absolute;
-            left: 50%;
-            margin-left: -2px;
-            top: 6px;
-            border-radius: 2px;
-            animation: mouse-move 1.5s infinite;
+            opacity: 0.5;
         }
     </style>
 </head>
 <body>
 
+    <!-- Primera parte: Hero -->
     <div class="scroll-wrapper">
         <div class="scene-container">
-            <div class="stars"></div>
+            <div class="stars-bg"></div>
             <h1 id="title" class="hero-title">Inteligencia<br>Artificial</h1>
             <div id="greeting" class="greeting-text">Una tecnología, infinitas respuestas.</div>
             <div id="line1" class="scroll-line"></div>
-            <div id="planet" class="planet">
-                <div class="planet-glow"></div>
-            </div>
+            <div id="planet" class="planet"></div>
             <div id="hint" class="scroll-hint">
-                <div class="mouse-icon"></div>
-                <p class="text-[10px] tracking-[0.3em] uppercase opacity-50">Hacer Scroll</p>
+                <div class="w-5 h-8 border-2 border-white rounded-full mx-auto relative after:content-[''] after:w-1 after:h-1 after:bg-white after:absolute after:left-1/2 after:-ml-[2px] after:top-1.5 after:rounded-full after:animate-bounce"></div>
+                <p class="text-[9px] mt-2 uppercase tracking-widest">Scroll</p>
             </div>
         </div>
     </div>
 
+    <!-- Segunda parte: Bienvenida -->
     <section id="next-page" class="next-section">
-        <h2 class="text-5xl font-black mb-6">BIENVENIDO AL FUTURO</h2>
-        <p class="text-xl text-gray-600 max-w-xl text-center">
-            Has cruzado la frontera. Ahora puedes explorar el contenido detallado de nuestra plataforma.
-        </p>
+        <div class="flex flex-col items-center justify-center w-full max-w-2xl">
+            <h2 class="text-3xl md:text-5xl font-black mb-6 tracking-tight">BIENVENIDO AL FUTURO</h2>
+            <p class="text-lg md:text-xl text-gray-600 leading-relaxed">
+                Has cruzado la frontera. Explora las mentes que están construyendo la próxima era digital.
+            </p>
+        </div>
         <div id="line2" class="scroll-line-black"></div>
     </section>
 
+    <!-- Tercera parte: Galería con estrellas y verde oscuro -->
     <section id="final-page" class="final-section">
-        <h2 class="text-3xl font-bold mb-10 tracking-widest uppercase opacity-70">Nuestro Equipo</h2>
-        <div class="gallery-container">
-            <div class="person-card"><img src="Abel.jpeg" alt="Abel"></div>
-            <div class="person-card"><img src="hiday.jpeg" alt="Hiday"></div>
-            <div class="person-card"><img src="ricardo.jpeg" alt="Ricardo"></div>
-            <div class="person-card"><img src="paola.jpeg" alt="Paola"></div>
-            <div class="person-card"><img src="luis.jpeg" alt="Luis"></div>
-            
+        <div class="stars-bg"></div> <!-- Estrellas en el fondo de la galería -->
+        
+        <h2 class="text-[10px] font-bold mb-12 tracking-[0.5em] uppercase opacity-40 relative z-10">Squad CodeGenius</h2>
+        
+        <div class="gallery-grid">
+            <!-- Abel -->
+            <div class="person-item">
+                <img src="Abel.jpeg" alt="Abel Ghanam" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop'">
+                <div class="person-info">
+                    <div class="info-content">
+                        <h3>Abel Ghanam</h3>
+                        <p>CEO & Fundador. Visión estratégica de CodeGenius.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hiday -->
+            <div class="person-item">
+                <img src="hiday.jpeg" alt="Hiday" onerror="this.src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&auto=format&fit=crop'">
+                <div class="person-info">
+                    <div class="info-content">
+                        <h3>Hiday Garcia</h3>
+                        <p>Indicadora de inversiones. Estrategia y decisión.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ricardo -->
+            <div class="person-item">
+                <img src="ricardo.jpeg" alt="Ricardo" onerror="this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&auto=format&fit=crop'">
+                <div class="person-info">
+                    <div class="info-content">
+                        <h3>Ricardo Marin</h3>
+                        <p>CEO Piensa Rápido. Mente analítica y editor.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Paola -->
+            <div class="person-item">
+                <img src="paola.jpeg" alt="Paola" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop'">
+                <div class="person-info">
+                    <div class="info-content">
+                        <h3>Paola Hernandez</h3>
+                        <p>Directora Creativa. Estrategias de marketing.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Luis -->
+            <div class="person-item">
+                <img src="luis.jpeg" alt="Luis" onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=600&auto=format&fit=crop'">
+                <div class="person-info">
+                    <div class="info-content">
+                        <h3>Luis Noguera</h3>
+                        <p>Noguera Films. Motivación y narrativa visual.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <p class="mt-16 text-[10px] opacity-25 tracking-[0.8em] uppercase">Mentes detrás del código</p>
+
+        <p class="mt-16 text-[9px] opacity-20 tracking-[1em] uppercase relative z-10">Mentes detrás del código</p>
     </section>
 
     <script>
@@ -306,18 +344,9 @@
             const scrollY = window.scrollY;
             const planetPercent = Math.min(scrollY / (window.innerHeight * 4), 1);
             
-            // 1. Animación del planeta
-            const moveUp = planetPercent * 160; 
-            planet.style.transform = `translateX(-50%) translateY(-${moveUp}%)`;
+            planet.style.transform = `translateX(-50%) translateY(-${planetPercent * 160}%)`;
+            title.style.opacity = planetPercent > 0.2 ? Math.max(0, 1 - (planetPercent - 0.2) * 4) : 1;
 
-            // 2. Desvanecer título principal
-            if (planetPercent > 0.2) {
-                title.style.opacity = Math.max(0, 1 - (planetPercent - 0.2) * 4);
-            } else {
-                title.style.opacity = 1;
-            }
-
-            // 3. Lógica Primera Transición
             if (planetPercent > 0.85) {
                 if (!greeting.classList.contains('visible')) {
                     greeting.classList.add('visible');
@@ -331,20 +360,15 @@
                                         nextPage.scrollIntoView({ behavior: 'smooth' });
                                         triggerSecondTransition();
                                     }
-                                }, 1500);
-                            } else {
-                                timer1Started = false;
-                                line1.classList.remove('active');
+                                }, 1000);
                             }
-                        }, 3000);
+                        }, 2000);
                     }
                 }
             } else {
                 greeting.classList.remove('visible');
                 line1.classList.remove('active');
                 timer1Started = false;
-                line2.classList.remove('active');
-                timer2Started = false;
             }
 
             hint.style.opacity = Math.max(0, 1 - (planetPercent * 10));
@@ -355,15 +379,15 @@
                 timer2Started = true;
                 setTimeout(() => {
                     const rect = nextPage.getBoundingClientRect();
-                    if (rect.top >= -100 && rect.top <= 100) {
+                    if (Math.abs(rect.top) < 100) {
                         line2.classList.add('active');
                         setTimeout(() => {
                             finalPage.scrollIntoView({ behavior: 'smooth' });
-                        }, 1500);
+                        }, 1000);
                     } else {
                         timer2Started = false;
                     }
-                }, 3000);
+                }, 2000);
             }
         }
     </script>
