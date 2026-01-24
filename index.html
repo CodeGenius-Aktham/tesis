@@ -62,10 +62,10 @@
             top: 110%; 
             width: 180vmax; 
             height: 180vmax;
-            background: radial-gradient(circle at 50% 0%, #1e6eaf 0%, #15203b 35%, #020617 60%);
+            background: radial-gradient(circle at 50% 0%, #103db9 0%, #0c3437 35%, #020617 60%);
             border-radius: 50%;
             z-index: 50;
-            box-shadow: 0 -30px 100px rgba(30, 64, 175, 0.5);
+            box-shadow: 0 -30px 100px rgba(16, 162, 185, 0.3);
             left: 50%;
             transform: translateX(-50%);
             will-change: transform;
@@ -87,6 +87,7 @@
 
         .greeting-text.visible { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
 
+        /* --- Indicador de Scroll Unificado --- */
         .scroll-line, .scroll-line-black {
             position: absolute;
             bottom: 0;
@@ -94,14 +95,13 @@
             width: 2px;
             height: 0;
             transform: translateX(-50%);
-            transition: height 1.5s ease;
+            transition: height 1.5s cubic-bezier(0.65, 0, 0.35, 1);
             z-index: 110;
         }
-        .scroll-line { background: linear-gradient(to bottom, transparent, #3b82f6, #ffffff); }
+        .scroll-line { background: linear-gradient(to bottom, transparent, #104eb9, #ffffff); }
         .scroll-line-black { background: linear-gradient(to bottom, transparent, #000000); z-index: 130; }
-        .active { height: 100px; }
+        .active { height: 120px; }
 
-        /* --- Sección Bienvenido al Futuro --- */
         .next-section {
             height: 100vh;
             background: #ffffff;
@@ -116,10 +116,9 @@
             text-align: center;
         }
 
-        /* --- Sección Equipo (VERDE) --- */
         .final-section {
             min-height: 100vh;
-            background: radial-gradient(circle at center, #082d1b 0%, #020205 100%);
+            background: radial-gradient(circle at center, #064e3b 0%, #020205 100%);
             color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -142,13 +141,6 @@
             z-index: 10;
         }
 
-        @media (max-width: 640px) {
-            .gallery-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
-        }
-
         .person-item {
             position: relative;
             aspect-ratio: 3/4;
@@ -159,23 +151,17 @@
             transition: transform 0.2s ease-out;
         }
 
-        .person-item:hover {
-            transform: translateY(-8px);
-            border-color: rgba(34, 197, 94, 0.4);
-        }
+        .person-item:hover { transform: translateY(-8px); border-color: rgba(16, 185, 129, 0.4); }
 
         .person-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: saturate(0.4) brightness(0.7);
-            transition: transform 0.3s ease, filter 0.3s ease;
+            filter: saturate(0.2) brightness(0.6);
+            transition: transform 0.4s ease, filter 0.4s ease;
         }
 
-        .person-item:hover img {
-            filter: saturate(1) brightness(1);
-            transform: scale(1.05);
-        }
+        .person-item:hover img { filter: saturate(1) brightness(1.1); transform: scale(1.05); }
 
         .person-info {
             position: absolute;
@@ -186,61 +172,29 @@
             padding: 15px;
             background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
             opacity: 0;
-            transition: opacity 0.1s linear;
-            pointer-events: none;
+            transition: opacity 0.2s linear;
         }
 
         .person-item:hover .person-info { opacity: 1; }
 
         .info-content {
             backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            background: rgba(4, 26, 16, 0.6);
-            border: 1px solid rgba(34, 197, 94, 0.2);
+            background: rgba(6, 78, 59, 0.7);
+            border: 1px solid rgba(16, 185, 129, 0.3);
             padding: 12px;
             border-radius: 12px;
-            transform: translateY(5px);
-            transition: transform 0.15s ease-out;
         }
 
-        .person-item:hover .info-content { transform: translateY(0); }
-
-        .info-content h3 {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: #22c55e;
-            text-transform: uppercase;
-            margin-bottom: 2px;
-        }
-
-        .info-content p {
-            font-size: 0.75rem;
-            line-height: 1.3;
-            color: rgba(255,255,255,0.9);
-        }
-
-        /* --- DEGRADADO DE TRANSICIÓN: Del Verde al Negro (Principio de la Tesis) --- */
-        .transition-gradient {
-            height: 30vh;
-            background: linear-gradient(to bottom, #020205 0%, #020205 100%); /* Manteniendo base sólida para el flujo */
-            position: relative;
-            z-index: 145;
-        }
-
-        /* --- SECCIÓN TESIS (Negro Profundo) --- */
+        /* --- SECCIÓN TESIS --- */
         .thesis-section {
             min-height: 100vh;
-            background-color: #020205; /* Negro de la versión anterior */
-            padding: 60px 20px 120px 20px;
+            background-color: #020205;
+            padding: 120px 20px 0 20px;
             position: relative;
             z-index: 150;
         }
 
-        .thesis-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            text-align: center;
-        }
+        .thesis-container { max-width: 1000px; margin: 0 auto; text-align: center; }
 
         .thesis-card {
             background: rgba(255, 255, 255, 0.02);
@@ -250,66 +204,184 @@
             backdrop-filter: blur(10px);
             margin-bottom: 40px;
             text-align: left;
-            transition: border-color 0.3s ease;
+            transition: background 0.3s ease;
         }
 
-        .thesis-card:hover {
-            border-color: rgba(34, 197, 94, 0.3);
-        }
+        .thesis-card:hover { background: rgba(255, 255, 255, 0.04); }
 
         .thesis-title {
             font-size: clamp(1.5rem, 4vw, 2.5rem);
             font-weight: 800;
-            line-height: 1.2;
-            background: linear-gradient(45deg, #ffffff, #22c55e);
+            background: linear-gradient(45deg, #ffffff, #10b981);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin: 0 auto 40px auto;
-            max-width: 850px;
+            margin-bottom: 40px;
             text-transform: uppercase;
         }
 
         .thesis-label {
             display: inline-block;
-            padding: 5px 15px;
-            background: rgba(34, 197, 94, 0.1);
-            color: #22c55e;
+            padding: 6px 18px;
+            background: rgba(16, 185, 129, 0.1);
+            color: #34d399;
             border-radius: 100px;
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 3px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
         }
 
-        .thesis-text {
-            font-size: 1.05rem;
-            line-height: 1.8;
-            color: rgba(255, 255, 255, 0.75);
-            margin-bottom: 30px;
+        /* --- TRANSICIÓN DEGRADADO (VERDE -> CIAN) --- */
+        .chapter-transition {
+            position: relative;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* Degradado de verde esmeralda a azul cian profundo */
+            background: linear-gradient(to bottom, #020205 0%, #064e3b 40%, #061e27 100%);
+            overflow: hidden;
         }
 
-        .scroll-hint {
+        .data-stream {
             position: absolute;
-            bottom: 30px;
-            text-align: center;
-            opacity: 0.5;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(to bottom, #10b981 0%, #06b6d4 100%);
+            opacity: 0.3;
         }
+
+        .data-node {
+            width: 8px;
+            height: 8px;
+            background: #22d3ee;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #06b6d4;
+            position: absolute;
+            top: 10%;
+            animation: fall 5s linear infinite;
+        }
+
+        @keyframes fall {
+            0% { top: -20px; opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { top: 110%; opacity: 0; }
+        }
+
+        .chapter-title-glow {
+            font-size: clamp(4rem, 18vw, 12rem);
+            font-weight: 900;
+            color: rgba(6, 182, 212, 0.04);
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            position: absolute;
+            z-index: 1;
+            user-select: none;
+        }
+
+        .chapter-content-box {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .sub-label {
+            color: #22d3ee;
+            font-size: 12px;
+            letter-spacing: 1em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            font-weight: 300;
+        }
+
+        .main-chapter-head {
+            font-size: 3rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        /* --- CAPÍTULO II (CIAN ELECTRÓNICO) --- */
+        .chapter-two-start {
+            min-height: 100vh;
+            background-color: #061e27; 
+            padding: 120px 20px;
+            position: relative;
+            z-index: 155;
+        }
+
+        .glow-effect {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 400px;
+            background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .scroll-hint-down {
+            margin-top: 60px;
+            animation: bounce-scroll 2s infinite;
+        }
+
+        @keyframes bounce-scroll {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0); opacity: 0.3;}
+            40% {transform: translateY(-15px); opacity: 1;}
+            60% {transform: translateY(-8px); opacity: 1;}
+        }
+
+        .scroll-pill {
+            width: 20px;
+            height: 35px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .scroll-pill::after {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background: #10b981; /* Empieza verde en el primer pill */
+            position: absolute;
+            left: 50%;
+            margin-left: -2px;
+            top: 6px;
+            border-radius: 50%;
+            animation: scroll-dot 1.5s infinite;
+        }
+
+        .scroll-pill.cyan::after { background: #22d3ee; } /* Cambia a cian luego */
+
+        @keyframes scroll-dot {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(15px); opacity: 0; }
+        }
+
     </style>
 </head>
 <body>
 
-    <!-- Hero -->
+    <!-- Hero y Planeta -->
     <div class="scroll-wrapper">
         <div class="scene-container">
             <div class="stars-bg"></div>
             <h1 id="title" class="hero-title">Inteligencia<br>Artificial</h1>
-            <div id="greeting" class="greeting-text">Una tecnología, infinitas respuestas.</div>
+            <div id="greeting" class="greeting-text">Un horizonte infinito de posibilidades.</div>
             <div id="line1" class="scroll-line"></div>
             <div id="planet" class="planet"></div>
-            <div id="hint" class="scroll-hint">
-                <div class="w-5 h-8 border-2 border-white rounded-full mx-auto relative after:content-[''] after:w-1 after:h-1 after:bg-white after:absolute after:left-1/2 after:-ml-[2px] after:top-1.5 after:rounded-full after:animate-bounce"></div>
-                <p class="text-[9px] mt-2 uppercase tracking-widest">Scroll</p>
+            <div id="hint" class="absolute bottom-10 left-1/2 -translate-x-1/2 text-center opacity-40">
+                <div class="scroll-pill"></div>
+                <p class="text-[8px] mt-3 uppercase tracking-[0.4em] font-bold">Scroll</p>
             </div>
         </div>
     </div>
@@ -317,74 +389,132 @@
     <!-- Bienvenida -->
     <section id="next-page" class="next-section">
         <div class="flex flex-col items-center justify-center w-full max-w-2xl">
-            <h2 class="text-3xl md:text-5xl font-black mb-6 tracking-tight">BIENVENIDO AL FUTURO</h2>
-            <p class="text-lg md:text-xl text-gray-600 leading-relaxed">
-                Has cruzado la frontera. Explora las mentes que están construyendo la próxima era digital.
+            <h2 class="text-3xl md:text-5xl font-black mb-6 tracking-tight uppercase">El despertar digital</h2>
+            <p class="text-lg md:text-xl text-gray-500 leading-relaxed font-light">
+                Estamos ante la mayor revolución intelectual de la historia humana. Conoce al equipo que explora esta frontera.
             </p>
         </div>
         <div id="line2" class="scroll-line-black"></div>
     </section>
 
-    <!-- Equipo (Verde) -->
+    <!-- Equipo -->
     <section id="final-page" class="final-section">
         <div class="stars-bg"></div>
-        <h2 class="text-[10px] font-bold mb-12 tracking-[0.5em] uppercase opacity-40 relative z-10">Squad CodeGenius</h2>
+        <h2 class="text-[10px] font-bold mb-12 tracking-[0.5em] uppercase opacity-40">Squad CodeGenius</h2>
         
         <div class="gallery-grid">
             <div class="person-item">
                 <img src="Abel.jpeg" alt="Abel Ghanam" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop'">
-                <div class="person-info"><div class="info-content"><h3>Abel Ghanam</h3><p>CEO & Fundador. Visión estratégica.</p></div></div>
+                <div class="person-info"><div class="info-content"><h3 class="font-bold">Abel Ghanam</h3><p class="text-xs opacity-70">CEO & Fundador.</p></div></div>
             </div>
             <div class="person-item">
                 <img src="hiday.jpeg" alt="Hiday" onerror="this.src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&auto=format&fit=crop'">
-                <div class="person-info"><div class="info-content"><h3>Hiday Garcia</h3><p>Indicadora de inversiones. Estrategia y decisión.</p></div></div>
+                <div class="person-info"><div class="info-content"><h3 class="font-bold">Hiday Garcia</h3><p class="text-xs opacity-70">Estratega de inversiones.</p></div></div>
             </div>
             <div class="person-item">
                 <img src="ricardo.jpeg" alt="Ricardo" onerror="this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&auto=format&fit=crop'">
-                <div class="person-info"><div class="info-content"><h3>Ricardo Marin</h3><p>CEO Piensa Rápido. Mente analítica y editor.</p></div></div>
+                <div class="person-info"><div class="info-content"><h3 class="font-bold">Ricardo Marin</h3><p class="text-xs opacity-70">CEO Piensa Rápido.</p></div></div>
             </div>
             <div class="person-item">
                 <img src="paola.jpeg" alt="Paola" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop'">
-                <div class="person-info"><div class="info-content"><h3>Paola Hernandez</h3><p>Directora Creativa. Marketing digital.</p></div></div>
+                <div class="person-info"><div class="info-content"><h3 class="font-bold">Paola Hernandez</h3><p class="text-xs opacity-70">Directora Creativa.</p></div></div>
             </div>
             <div class="person-item">
                 <img src="luis.jpeg" alt="Luis" onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=600&auto=format&fit=crop'">
-                <div class="person-info"><div class="info-content"><h3>Luis Noguera</h3><p>Noguera Films. Narrativa visual.</p></div></div>
+                <div class="person-info"><div class="info-content"><h3 class="font-bold">Luis Noguera</h3><p class="text-xs opacity-70">Noguera Films.</p></div></div>
             </div>
         </div>
-        <p class="mt-16 text-[9px] opacity-20 tracking-[1em] uppercase relative z-10">Desliza para conocer la investigación</p>
+        <p class="mt-20 text-[9px] opacity-20 tracking-[1.5em] uppercase">Desciende hacia la tesis</p>
     </section>
 
-    <!-- Tesis (Negro) -->
+    <!-- Tesis Capítulo I -->
     <section id="thesis-page" class="thesis-section">
         <div class="thesis-container">
             <span class="thesis-label">Investigación Académica</span>
-            <h2 class="thesis-title">EL USO DE LA TECNOLOGÍA Y LAS INTELIGENCIAS ARTIFICIALES PARA LOS ESTUDIANTES DE TERCER AÑO DE LA UNIDAD EDUCATIVA LITIN</h2>
+            <h2 class="thesis-title">EL USO DE LA TECNOLOGÍA Y LAS INTELIGENCIAS ARTIFICIALES PARA LOS ESTUDIANTES DE TERCER AÑO</h2>
             
-            <div class="thesis-card">
+            <div class="thesis-card border-t border-white/10">
                 <div class="flex justify-between items-start mb-6">
                     <h3 class="text-xl font-bold text-white">Introducción y Planteamiento</h3>
-                    <span class="text-[10px] text-green-500 font-bold uppercase tracking-widest bg-green-500/10 px-3 py-1 rounded">Capítulo I</span>
+                    <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-widest bg-emerald-500/10 px-3 py-1 rounded border border-emerald-500/20">Capítulo I</span>
                 </div>
-                <p class="thesis-text">
-                    Esta investigación profundiza en cómo los algoritmos de aprendizaje profundo están redefiniendo el paradigma educativo. No se trata solo de automatización, sino de una personalización del conocimiento sin precedentes en la historia humana, evaluando su impacto directo en el rendimiento académico y desarrollo cognitivo de los estudiantes.
+                <p class="text-gray-400 leading-relaxed">
+                    La IA impulsa una transformación global liderada por potencias económicas. Su integración educativa trasciende la automatización, permitiendo una personalización profunda y optimización docente.
                 </p>
-                <div class="h-[1px] w-full bg-gradient-to-r from-green-500/50 to-transparent"></div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="thesis-card">
+                <div class="thesis-card border-l border-emerald-500/20">
                     <h3 class="text-lg font-bold text-white mb-3">Objetivo General</h3>
-                    <p class="text-sm text-gray-400 leading-relaxed">Analizar la integración socio-técnica de herramientas generativas en el aula venezolana, identificando beneficios y riesgos éticos en el proceso de enseñanza-aprendizaje.</p>
+                    <p class="text-sm text-gray-400">Determinar el uso de la IA en el proceso académico de los estudiantes de tercer año de la U.E. LITIN.</p>
                 </div>
-                <div class="thesis-card">
-                    <h3 class="text-lg font-bold text-white mb-3">Metodología</h3>
-                    <p class="text-sm text-gray-400 leading-relaxed">Enfoque cuantitativo-analítico con muestras estadísticas de rendimiento académico asistido y encuestas de percepción tecnológica aplicadas a la comunidad educativa.</p>
+                <div class="thesis-card border-l border-emerald-500/20">
+                    <h3 class="text-lg font-bold text-white mb-3">Justificación</h3>
+                    <p class="text-sm text-gray-400">Modernización de métodos educativos mediante capacitación docente y personalización del aprendizaje.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRANSICIÓN VISUAL AL CAPÍTULO 2 CON DEGRADADO -->
+    <div class="chapter-transition">
+        <div class="data-stream">
+            <div class="data-node" style="animation-delay: 0s; left: -4px;"></div>
+            <div class="data-node" style="animation-delay: 2.5s; left: -4px;"></div>
+        </div>
+        
+        <div class="chapter-title-glow">CAP II</div>
+        
+        <div class="chapter-content-box">
+            <p class="sub-label">Evolución</p>
+            <h2 class="main-chapter-head">Marco Teórico</h2>
+            <div class="scroll-hint-down">
+                <div class="scroll-pill cyan !border-cyan-500/50"></div>
+                <p class="text-[9px] text-cyan-500 mt-4 uppercase tracking-[0.6em] font-bold">Continuar</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- INICIO CAPÍTULO II (CIAN ELECTRÓNICO) -->
+    <section class="chapter-two-start">
+        <div class="glow-effect"></div>
+        <div class="thesis-container">
+            <span class="thesis-label !text-cyan-400 !bg-cyan-500/10 !border-cyan-500/20">Bases del Conocimiento</span>
+            <h2 class="thesis-title !from-white !to-cyan-400">Fundamentos Tecnológicos</h2>
+            
+            <div class="grid grid-cols-1 gap-8 text-left">
+                <div class="thesis-card border-l-4 border-l-cyan-500">
+                    <h3 class="text-xl font-bold text-white mb-4">Antecedentes de la Investigación</h3>
+                    <p class="text-gray-400 leading-relaxed mb-6">
+                        Los antecedentes fundamentan esta investigación mediante el análisis de trabajos previos que respaldan y validan los objetivos planteados. Se seleccionaron tres estudios clave cuya relación metodológica y temática sustenta sólidamente este proyecto.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="px-4 py-2 bg-cyan-500/10 rounded-lg border border-cyan-500/20 text-[10px] text-cyan-400 uppercase tracking-tighter font-bold">Referencia Académica 2024</div>
+                        <div class="px-4 py-2 bg-white/5 rounded-lg border border-white/10 text-[10px] text-gray-400 uppercase tracking-tighter">Estudio Piloto Latam</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-8 bg-white/5 rounded-3xl border border-white/5 hover:border-cyan-500/40 transition-all duration-300">
+                        <div class="text-cyan-500 font-black text-2xl mb-4">01</div>
+                        <h4 class="text-white font-bold text-sm mb-2 uppercase tracking-tight">Bases Legales</h4>
+                        <p class="text-[11px] text-gray-500 leading-relaxed">Marco regulatorio sobre el uso de tecnologías en instituciones venezolanas.</p>
+                    </div>
+                    <div class="p-8 bg-white/5 rounded-3xl border border-white/5 hover:border-cyan-500/40 transition-all duration-300">
+                        <div class="text-cyan-500 font-black text-2xl mb-4">02</div>
+                        <h4 class="text-white font-bold text-sm mb-2 uppercase tracking-tight">Definición de Términos</h4>
+                        <p class="text-[11px] text-gray-500 leading-relaxed">Machine Learning, Redes Neuronales y Procesamiento de Lenguaje Natural.</p>
+                    </div>
+                    <div class="p-8 bg-white/5 rounded-3xl border border-white/5 hover:border-cyan-500/40 transition-all duration-300">
+                        <div class="text-cyan-500 font-black text-2xl mb-4">03</div>
+                        <h4 class="text-white font-bold text-sm mb-2 uppercase tracking-tight">Variables</h4>
+                        <p class="text-[11px] text-gray-500 leading-relaxed">Análisis dependiente e independiente sobre el rendimiento estudiantil.</p>
+                    </div>
                 </div>
             </div>
             
-            <div class="mt-24 opacity-30">
-                <p class="text-[10px] uppercase tracking-[1em]"> Análisis Estadístico 2026</p>
+            <div class="mt-32 opacity-10">
+                <p class="text-[9px] uppercase tracking-[2em]">Análisis en desarrollo...</p>
             </div>
         </div>
     </section>
@@ -392,7 +522,6 @@
     <script>
         const planet = document.getElementById('planet');
         const title = document.getElementById('title');
-        const hint = document.getElementById('hint');
         const greeting = document.getElementById('greeting');
         const line1 = document.getElementById('line1');
         const line2 = document.getElementById('line2');
@@ -404,7 +533,8 @@
 
         window.addEventListener('scroll', () => {
             const scrollY = window.scrollY;
-            const planetPercent = Math.min(scrollY / (window.innerHeight * 4), 1);
+            const viewportH = window.innerHeight;
+            const planetPercent = Math.min(scrollY / (viewportH * 4), 1);
             
             planet.style.transform = `translateX(-50%) translateY(-${planetPercent * 160}%)`;
             title.style.opacity = planetPercent > 0.2 ? Math.max(0, 1 - (planetPercent - 0.2) * 4) : 1;
@@ -415,14 +545,14 @@
                     if (!timer1Started) {
                         timer1Started = true;
                         setTimeout(() => {
-                            if (window.scrollY / (window.innerHeight * 4) > 0.8) {
+                            if (window.scrollY / (viewportH * 4) > 0.8) {
                                 line1.classList.add('active');
                                 setTimeout(() => {
-                                    if (window.scrollY / (window.innerHeight * 4) > 0.8) {
+                                    if (window.scrollY / (viewportH * 4) > 0.8) {
                                         nextPage.scrollIntoView({ behavior: 'smooth' });
                                         triggerSecondTransition();
                                     }
-                                }, 1000);
+                                }, 1500);
                             }
                         }, 2000);
                     }
@@ -432,8 +562,6 @@
                 line1.classList.remove('active');
                 timer1Started = false;
             }
-
-            hint.style.opacity = Math.max(0, 1 - (planetPercent * 10));
         });
 
         function triggerSecondTransition() {
@@ -441,11 +569,11 @@
                 timer2Started = true;
                 setTimeout(() => {
                     const rect = nextPage.getBoundingClientRect();
-                    if (Math.abs(rect.top) < 100) {
+                    if (Math.abs(rect.top) < 150) {
                         line2.classList.add('active');
                         setTimeout(() => {
                             finalPage.scrollIntoView({ behavior: 'smooth' });
-                        }, 1000);
+                        }, 1500);
                     } else {
                         timer2Started = false;
                     }
