@@ -586,6 +586,63 @@
             </div>
         </div>
     </section>
+    <section></section>
+    <!-- TRANSICIÓN VISUAL AL CAPÍTULO IV -->
+    <div class="chapter-transition" style="position:relative; height:90vh; display:flex; flex-direction:column; align-items:center; justify-content:center; background: linear-gradient(to bottom, #17040c 0%, #3a0618 45%, #41010b 100%); overflow:hidden; z-index:180;">
+        <div class="data-stream" style="position:absolute; top:0; width:1px; height:100%; background: linear-gradient(to bottom, #06b6d4 0%, #7c3aed 100%); opacity:0.22;">
+            <div class="data-node" style="animation-delay: 0s; left: -4px;"></div>
+            <div class="data-node" style="animation-delay: 1.6s; left: -4px;"></div>
+            <div class="data-node" style="animation-delay: 3.2s; left: -4px;"></div>
+        </div>
+
+        <div class="chapter-title-glow" style="font-size: clamp(4rem, 18vw, 12rem); font-weight:900; color: rgba(124,58,237,0.04); z-index:1; user-select:none;">CAP IV</div>
+
+        <div class="chapter-content-box" style="position:relative; z-index:10; text-align:center;">
+            <p class="sub-label" style="color:#7c3aed;">Análisis</p>
+            <h2 class="main-chapter-head" style="color:white;">Resultados y Discusión</h2>
+            <div class="scroll-hint-down" style="margin-top:60px; animation: bounce-scroll 2s infinite;">
+                <div class="scroll-pill" style="border-color: rgba(124,58,237,0.25);">
+                    <span style="display:block; width:4px; height:4px; background:#7c3aed; position:absolute; left:50%; margin-left:-2px; top:6px; border-radius:50%; animation: scroll-dot 1.5s infinite;"></span>
+                </div>
+                <p class="text-[9px] mt-4" style="color:#7c3aed; text-transform:uppercase; letter-spacing:0.6em; font-weight:700;">Continuar</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CAPÍTULO IV: RESULTADOS Y DISCUSIÓN -->
+    <section class="thesis-section" style="background: linear-gradient(to bottom, #42000e 0%, #1c0308 50%, #020205 100%); padding-top:120px; position:relative; z-index:175;">
+        <div class="thesis-container">
+            <span class="thesis-label" style="background: rgba(124,58,237,0.08); color:#b794f4; border-color: rgba(124,58,237,0.18);">Resultados</span>
+            <h2 class="thesis-title" style="background: linear-gradient(45deg,#ffffff,#7c3aed); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Análisis de Impacto en el Rendimiento Estudiantil</h2>
+
+            <div class="thesis-card border-t border-white/10">
+                <div class="flex justify-between items-start mb-6">
+                    <h3 class="text-xl font-bold text-white">Resumen de Hallazgos</h3>
+                </div>
+                <p class="text-gray-400 leading-relaxed">
+                    Los resultados muestran mejoras en la comprensión conceptual y en la resolución de problemas tras la integración de herramientas de IA en el aula. Se observó mayor motivación y participación activa en actividades guiadas por modelos adaptativos.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div class="thesis-card border-l border-cyan-500/20">
+                    <h3 class="text-lg font-bold text-white mb-3">Medidas Cuantitativas</h3>
+                    <p class="text-sm text-gray-400">Incremento promedio del rendimiento académico en pruebas estandarizadas: +12% (p < 0.05). Reducción de la tasa de abandono en actividades digitales.</p>
+                </div>
+                <div class="thesis-card border-l border-emerald-500/20">
+                    <h3 class="text-lg font-bold text-white mb-3">Observaciones Cualitativas</h3>
+                    <p class="text-sm text-gray-400">Estudiantes reportan mayor claridad en explicaciones personalizadas y docentes destacan ahorro de tiempo en tareas repetitivas.</p>
+                </div>
+            </div>
+
+            <div class="thesis-card mt-8">
+                <h3 class="text-lg font-bold text-white mb-3">Implicaciones</h3>
+                <p class="text-gray-400 leading-relaxed">
+                    Los hallazgos sugieren la necesidad de capacitación docente continua y protocolos éticos para el uso responsable de IA. Se recomienda ampliar el estudio a más cohortes para robustecer la evidencia.
+                </p>
+            </div>
+        </div>
+    </section>
     <script>
         const planet = document.getElementById('planet');
         const title = document.getElementById('title');
