@@ -690,7 +690,81 @@
             </div>
         </div>
     </section>
-    <script>
+    <section></section>
+    <!-- TRANSICIÓN VISUAL AL CAPÍTULO V -->
+    <div class="chapter-transition" style="position:relative; height:90vh; display:flex; flex-direction:column; align-items:center; justify-content:center; background: linear-gradient(to bottom, #020205 0%, #302406 45%, #383a05 100%); overflow:hidden; z-index:190;">
+        <div class="data-stream" style="position:absolute; top:0; width:1px; height:100%; background: linear-gradient(to bottom, #06b6d4 0%, #34d399 100%); opacity:0.22;">
+            <div class="data-node" style="animation-delay: 0s; left: -4px;"></div>
+            <div class="data-node" style="animation-delay: 1.6s; left: -4px;"></div>
+            <div class="data-node" style="animation-delay: 3.2s; left: -4px;"></div>
+        </div>
+
+        <div id="cap5-glow" class="chapter-title-glow" style="font-size: clamp(4rem, 18vw, 12rem); font-weight:900; color: rgba(16,185,129,0.04); z-index:1; user-select:none;">CAP V</div>
+        <style>
+        @media (max-width: 640px) {
+            #cap5-glow {
+                font-size: clamp(5rem, 22vw, 14rem) !important;
+                color: rgba(16,185,129,0.12) !important;
+                text-shadow: 0 8px 28px rgba(16,185,129,0.10);
+                line-height: 0.85;
+                padding-top: 6px;
+            }
+        }
+        </style>
+
+        <div class="chapter-content-box" style="position:relative; z-index:10; text-align:center;">
+            <p class="sub-label" style="color:#34d399;">Síntesis</p>
+            <h2 class="main-chapter-head" style="color:white;">Conclusiones y Recomendaciones</h2>
+            <div class="scroll-hint-down" style="margin-top:60px; animation: bounce-scroll 2s infinite;">
+                <div class="scroll-pill" style="border-color: rgba(52,211,153,0.25);">
+                    <span style="display:block; width:4px; height:4px; background:#34d399; position:absolute; left:50%; margin-left:-2px; top:6px; border-radius:50%; animation: scroll-dot 1.5s infinite;"></span>
+                </div>
+                <p class="text-[9px] mt-4" style="color:#34d399; text-transform:uppercase; letter-spacing:0.6em; font-weight:700;">Continuar</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CAPÍTULO V: CONCLUSIONES Y RECOMENDACIONES -->
+    <section class="thesis-section" style="background: linear-gradient(to bottom, #383a05 0%, #3b5a0f 50%, #000000 100%); padding-top:120px; position:relative; z-index:195;">
+        <div class="thesis-container">
+            <span class="thesis-label" style="background: rgba(16,185,129,0.08); color:#34d399; border-color: rgba(16,185,129,0.18);">Conclusiones</span>
+            <h2 class="thesis-title" style="background: linear-gradient(45deg,#ffffff,#22c55e); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Síntesis de Resultados y Recomendaciones</h2>
+
+            <div class="thesis-card border-t border-white/10">
+                <div class="flex justify-between items-start mb-6">
+                    <h3 class="text-xl font-bold text-white">Conclusiones Clave</h3>
+                </div>
+                <p class="text-gray-400 leading-relaxed">
+                    La integración de IA en el proceso educativo mostró efectos positivos en la comprensión, motivación y rendimiento. Sin embargo, su éxito depende de formación docente, infraestructura y lineamientos éticos claros.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <div class="thesis-card border-l border-cyan-500/20">
+                    <h3 class="text-lg font-bold text-white mb-3">Recomendaciones Prácticas</h3>
+                    <ul class="text-sm text-gray-400 list-disc pl-5">
+                        <li>Capacitación continua para docentes en herramientas adaptativas.</li>
+                        <li>Desarrollo de planes piloto escalables dentro de la institución.</li>
+                    </ul>
+                </div>
+                <div class="thesis-card border-l border-emerald-500/20">
+                    <h3 class="text-lg font-bold text-white mb-3">Líneas Futuras</h3>
+                    <ul class="text-sm text-gray-400 list-disc pl-5">
+                        <li>Ampliar la muestra a más cohortes y centros educativos.</li>
+                        <li>Evaluar el impacto a largo plazo y aspectos éticos de la automatización.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="thesis-card mt-8">
+                <h3 class="text-lg font-bold text-white mb-3">Cierre</h3>
+                <p class="text-gray-400 leading-relaxed">
+                    Se concluye que la IA tiene potencial transformador en la educación cuando se implementa con evidencia, equidad y responsabilidad. Se recomienda institucionalizar buenas prácticas y políticas que garanticen beneficios sostenibles.
+                </p>
+            </div>
+        </div>
+    </section>
+    <script> 
         const planet = document.getElementById('planet');
         const title = document.getElementById('title');
         const greeting = document.getElementById('greeting');
