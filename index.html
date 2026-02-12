@@ -367,6 +367,220 @@
             100% { transform: translateY(15px); opacity: 0; }
         }
 
+          /* --- ESTILOS GLOBALES DE LA WEB (Integrados) --- */
+        body {
+            background-color: #020205;
+            color: white;
+            overflow-x: hidden;
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* --- Estrellas Globales --- */
+        .stars-bg {
+            position: fixed; /* Cambiado a fixed para que cubra todo el scroll */
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 100px 150px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 300px 300px;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* --- SECCIÓN TESIS (CRONOLOGÍA AISLADA) --- */
+        .thesis-section {
+            --ia-bg: #050508;
+            --ia-accent: #22d3ee;
+            --ia-text: #f8fafc;
+            --ia-muted: #94a3b8;
+            --ia-card-bg: rgba(255, 255, 255, 0.02);
+            --ia-border: rgba(255, 255, 255, 0.08);
+
+            min-height: 100vh;
+            padding: 120px 24px;
+            position: relative;
+            z-index: 150;
+            overflow: hidden;
+            background-color: var(--ia-bg);
+            color: var(--ia-text);
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .ia-timeline-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* LÍNEA CENTRAL ESPECÍFICA */
+        .ia-timeline-spine {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom,
+                transparent,
+                var(--ia-border) 5%,
+                var(--ia-border) 95%,
+                transparent);
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        /* ANIMACIÓN DE BOLITAS */
+        .ia-spine-dot {
+            position: absolute;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            background: var(--ia-accent);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 15px var(--ia-accent);
+            animation: iaFlowDown 8s linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes iaFlowDown {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        .ia-spine-dot:nth-child(2) { animation-delay: 2.5s; }
+        .ia-spine-dot:nth-child(3) { animation-delay: 5s; }
+
+        /* ELEMENTOS DE LA LÍNEA */
+        .ia-timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 50%;
+            position: relative;
+            margin-bottom: 100px;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 2;
+        }
+
+        .ia-timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-right: 0;
+            padding-left: 50%;
+        }
+
+        .ia-node-marker {
+            position: absolute;
+            left: 50%;
+            top: 40px;
+            width: 16px;
+            height: 16px;
+            background: var(--ia-bg);
+            border: 2px solid var(--ia-accent);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            box-shadow: 0 0 10px rgba(34, 211, 238, 0.2);
+        }
+
+        /* TARJETAS CON SCOPE */
+        .ia-thesis-card {
+            background: var(--ia-card-bg);
+            border-radius: 20px;
+            padding: 35px;
+            border: 1px solid var(--ia-border);
+            width: 85%;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            backdrop-filter: blur(12px);
+            position: relative;
+        }
+
+        .ia-timeline-item:nth-child(odd) .ia-thesis-card { margin-right: 45px; text-align: right; }
+        .ia-timeline-item:nth-child(even) .ia-thesis-card { margin-left: 45px; text-align: left; }
+
+        .ia-thesis-card:hover {
+            border-color: var(--ia-accent);
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.04);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        /* TIPOGRAFÍA DENTRO DE LA SECCIÓN */
+        .ia-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--ia-accent);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .ia-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0 0 15px 0;
+            color: var(--ia-text);
+        }
+
+        .ia-text {
+            line-height: 1.8;
+            color: var(--ia-muted);
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        /* TAGS AISLADOS */
+        .ia-tag-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: inherit;
+        }
+
+        .ia-tag {
+            font-size: 0.75rem;
+            padding: 5px 12px;
+            border-radius: 6px;
+            background: rgba(34, 211, 238, 0.08);
+            color: var(--ia-accent);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+        }
+
+        .ia-tag.negative {
+            background: rgba(244, 63, 94, 0.08);
+            color: #fb7185;
+            border-color: rgba(244, 63, 94, 0.2);
+        }
+
+        /* TRANSICIÓN DEGRADADO (VERDE -> CIAN) */
+        .chapter-transition {
+            position: relative;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to bottom, #020205 0%, #064e3b 40%, #050508 100%);
+            overflow: hidden;
+            z-index: 145;
+        }
+
+        /* RESPONSIVO */
+        @media (max-width: 768px) {
+            .ia-timeline-spine, .ia-spine-dot, .ia-node-marker { left: 20px; transform: none; }
+            .ia-timeline-item { padding-left: 50px !important; padding-right: 0 !important; justify-content: flex-start !important; }
+            .ia-timeline-item .ia-thesis-card { width: 100%; margin: 0 !important; text-align: left !important; }
+        }
+
     </style>
 </head>
 <body>
@@ -404,23 +618,23 @@
         
         <div class="gallery-grid">
             <div class="person-item">
-                <img src="Abe.jpeg" alt="Abel Ghanam" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop'">
+                <img src="Abel.jpeg" alt="Abel Ghanam" >
                 <div class="person-info"><div class="info-content"><h3 class="font-bold">Abel Ghanam</h3><p class="text-xs opacity-70">CEO & Fundador.</p></div></div>
             </div>
             <div class="person-item">
-                <img src="hida.jpeg" alt="Hiday" onerror="this.src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600&auto=format&fit=crop'">
+                <img src="hiday.jpeg" alt="Hiday" >
                 <div class="person-info"><div class="info-content"><h3 class="font-bold">Hiday Garcia</h3><p class="text-xs opacity-70">Estratega de inversiones.</p></div></div>
             </div>
             <div class="person-item">
-                <img src="ricard.jpeg" alt="Ricardo" onerror="this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&auto=format&fit=crop'">
+                <img src="ricardo.jpeg" alt="Ricardo" onerror="this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&auto=format&fit=crop'">
                 <div class="person-info"><div class="info-content"><h3 class="font-bold">Ricardo Marin</h3><p class="text-xs opacity-70">CEO Piensa Rápido.</p></div></div>
             </div>
             <div class="person-item">
-                <img src="paol.jpeg" alt="Paola" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop'">
+                <img src="paola.jpeg" alt="Paola" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop'">
                 <div class="person-info"><div class="info-content"><h3 class="font-bold">Paola Hernandez</h3><p class="text-xs opacity-70">Directora Creativa.</p></div></div>
             </div>
             <div class="person-item">
-                <img src="lui.jpeg" alt="Luis" onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=600&auto=format&fit=crop'">
+                <img src="luis.jpeg" alt="Luis" onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=600&auto=format&fit=crop'">
                 <div class="person-info"><div class="info-content"><h3 class="font-bold">Luis Noguera</h3><p class="text-xs opacity-70">Noguera Films.</p></div></div>
             </div>
         </div>
@@ -764,6 +978,81 @@
             </div>
         </div>
     </section>
+
+    <div class="stars-bg"></div>
+
+    <!-- Ejemplo de transición previa en tu web -->
+    <div class="chapter-transition">
+        <div style="text-align: center; z-index: 10;">
+            <p style="letter-spacing: 1em; color: #10b981; text-transform: uppercase; font-size: 12px;">El Conocimiento</p>
+            <h1 style="font-size: 3rem; font-weight: 800; margin: 10px 0;">LA EVOLUCIÓN</h1>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DE CRONOLOGÍA DE IA -->
+    <section class="thesis-section">
+        <div class="ia-timeline-container">
+            <!-- Espina dorsal animada -->
+            <div class="ia-timeline-spine">
+                <div class="ia-spine-dot"></div>
+                <div class="ia-spine-dot"></div>
+                <div class="ia-spine-dot"></div>
+            </div>
+
+            <!-- Bloque 1 -->
+            <div class="ia-timeline-item">
+                <div class="ia-node-marker"></div>
+                <div class="ia-thesis-card">
+                    <span class="ia-label">01. Origen</span>
+                    <h2 class="ia-title">Inteligencia Humana</h2>
+                    <div class="ia-text">
+                        <p>Es la chispa biológica que nos permite razonar, imaginar y sentir. Nuestra inteligencia integra la <strong>intuición emocional</strong> y la capacidad de aprender de errores abstractos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloque 2 -->
+            <div class="ia-timeline-item">
+                <div class="ia-node-marker"></div>
+                <div class="ia-thesis-card">
+                    <span class="ia-label">02. Evolución</span>
+                    <h2 class="ia-title">Inteligencia Artificial</h2>
+                    <div class="ia-text">
+                        <p>Sistemas diseñados para procesar datos a velocidades inhumanas. La IA no "piensa", pero <strong>emula patrones</strong> cognitivos para resolver problemas técnicos complejos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloque 3 -->
+            <div class="ia-timeline-item">
+                <div class="ia-node-marker"></div>
+                <div class="ia-thesis-card">
+                    <span class="ia-label">03. Impacto</span>
+                    <h2 class="ia-title">Pros y Contras</h2>
+                    <div class="ia-tag-group">
+                        <span class="ia-tag">Eficiencia Extrema</span>
+                        <span class="ia-tag">Medicina de Precisión</span>
+                        <span class="ia-tag negative">Sesgos Algorítmicos</span>
+                        <span class="ia-tag negative">Privacidad</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloque 4 -->
+            <div class="ia-timeline-item">
+                <div class="ia-node-marker"></div>
+                <div class="ia-thesis-card">
+                    <span class="ia-label">04. Aplicación</span>
+                    <h2 class="ia-title">Educación 4.0</h2>
+                    <div class="ia-text">
+                        <p>La IA se convierte en el <strong>copiloto del estudiante</strong>. Ofrece feedback instantáneo y permite que el humano se concentre en el pensamiento crítico y la creatividad.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+    
     <script> 
         const planet = document.getElementById('planet');
         const title = document.getElementById('title');
