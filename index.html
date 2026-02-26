@@ -580,6 +580,177 @@
             .ia-timeline-item { padding-left: 50px !important; padding-right: 0 !important; justify-content: flex-start !important; }
             .ia-timeline-item .ia-thesis-card { width: 100%; margin: 0 !important; text-align: left !important; }
         }
+        
+        
+        
+                #ai-auditor-container {
+            --bg-light: #f4f7f6;
+            --text-main: #2d3436;
+            --primary: #4834d4;
+            --danger: #eb4d4b;
+            --success: #6ab04c;
+            --surface: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.08);
+            
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            width: 100%;
+            height: 600px; /* Altura fija para la sección */
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .game-section {
+            display: none;
+            width: 90%;
+            max-width: 900px;
+            text-align: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .active {
+            display: flex !important;
+        }
+
+        /* PANTALLA DE INICIO */
+        #start-screen h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary), #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #start-screen p {
+            color: #636e72;
+            max-width: 500px;
+            margin-bottom: 30px;
+        }
+
+        .ai-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(72, 52, 212, 0.3);
+        }
+
+        .ai-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(72, 52, 212, 0.4);
+        }
+
+        /* INTERFAZ DE JUEGO */
+        #game-ui {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            z-index: 10;
+        }
+
+        .stat-pill {
+            background: var(--surface);
+            padding: 8px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px var(--shadow);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        #conveyor-belt {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        /* BURBUJAS DE NOTICIAS */
+        .news-bubble {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background: var(--surface);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            box-shadow: 0 6px 20px var(--shadow);
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s, opacity 0.3s;
+            animation: float-ai 3s infinite ease-in-out;
+            user-select: none;
+        }
+
+        @keyframes float-ai {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .news-bubble:hover {
+            border-color: var(--primary);
+            z-index: 50;
+        }
+
+        .news-bubble p {
+            font-size: 0.7rem;
+            margin: 0;
+            line-height: 1.2;
+            font-weight: 700;
+            color: var(--text-main);
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        /* EFECTO CLICK */
+        .feedback-ring {
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            transform: translate(-50%, -50%);
+            animation: ring-ai 0.5s ease-out forwards;
+        }
+
+        @keyframes ring-ai {
+            0% { width: 0; height: 0; opacity: 1; }
+            100% { width: 150px; height: 150px; opacity: 0; }
+        }
+
+        /* RESULTADOS */
+        .card-result {
+            background: var(--surface);
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px var(--shadow);
+        }
+
+        #final-score-display {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+        
+
+
 
     </style>
 </head>
@@ -1051,7 +1222,36 @@
             </div>
         </div>
     </section>
-   
+    
+    
+   <div id="ai-auditor-container">
+        <!-- Inicio -->
+        <section id="start-screen" class="game-section active">
+            <h1>AI Auditor</h1>
+            <p>Audita el flujo de información. Toca las <b>alucinaciones</b> (noticias falsas). La velocidad subirá cada segundo durante 1 minuto.</p>
+            <button class="ai-btn" onclick="Game.init()">Iniciar Auditoría</button>
+        </section>
+
+        <!-- Juego -->
+        <section id="game-screen" class="game-section">
+            <div id="game-ui">
+                <div class="stat-pill">SCORE: <span id="score" style="color:var(--primary)">0</span></div>
+                <div class="stat-pill">VIDAS: <span id="lives" style="color:var(--danger)">3</span></div>
+                <div class="stat-pill">VEL: x<span id="speed-display">1.0</span></div>
+            </div>
+            <div id="conveyor-belt"></div>
+        </section>
+
+        <!-- Fin -->
+        <section id="end-screen" class="game-section">
+            <div class="card-result">
+                <h2>Resultado del Turno</h2>
+                <div id="final-score-display">0</div>
+                <p id="performance-feedback" style="margin-bottom: 20px; color: #636e72;"></p>
+                <button class="ai-btn" onclick="Game.reset()">Reintentar</button>
+            </div>
+        </section>
+    </div>
     
     <script> 
         const planet = document.getElementById('planet');
@@ -1114,6 +1314,160 @@
                 }, 2000);
             }
         }
+        const DATABASE = [
+            { text: "Nvidia lanza chips Blackwell.", isHallucination: false },
+            { text: "OpenAI presenta Sora AI.", isHallucination: false },
+            { text: "Neuralink implanta chip cerebral.", isHallucination: false },
+            { text: "AlphaFold predice proteínas.", isHallucination: false },
+            { text: "IA detecta cáncer de mama.", isHallucination: false },
+            { text: "Mistral lanza modelos abiertos.", isHallucination: false },
+            { text: "Gemini analiza videos largos.", isHallucination: false },
+            { text: "iPhone carga con luz solar.", isHallucination: true },
+            { text: "Tesla vuela con imanes.", isHallucination: true },
+            { text: "IA lee mentes sin sensores.", isHallucination: true },
+            { text: "Nanobots borran el pasado.", isHallucination: true },
+            { text: "App traduce miau de gatos.", isHallucination: true },
+            { text: "WIFI cura el dolor de cabeza.", isHallucination: true },
+            { text: "IA duerme por los humanos.", isHallucination: true },
+            { text: "Batería dura 100 años hoy.", isHallucination: true }
+        ];
+
+        const Game = {
+            score: 0,
+            lives: 3,
+            startTime: 0,
+            currentSpeed: 2,
+            baseSpeed: 2,
+            isActive: false,
+            items: [],
+            container: document.getElementById('ai-auditor-container'),
+            belt: document.getElementById('conveyor-belt'),
+
+            init() {
+                this.score = 0;
+                this.lives = 3;
+                this.isActive = true;
+                this.items = [];
+                this.belt.innerHTML = '';
+                this.startTime = Date.now();
+                
+                this.switchScreen('game-screen');
+                this.updateUI();
+                this.gameLoop();
+                this.startSpawning();
+            },
+
+            switchScreen(id) {
+                document.querySelectorAll('.game-section').forEach(s => s.classList.remove('active'));
+                document.getElementById(id).classList.add('active');
+            },
+
+            startSpawning() {
+                const spawn = () => {
+                    if (!this.isActive) return;
+                    this.createBubble();
+                    const rate = Math.max(600, 1500 - (this.currentSpeed * 150));
+                    setTimeout(spawn, rate);
+                };
+                spawn();
+            },
+
+            createBubble() {
+                const data = DATABASE[Math.floor(Math.random() * DATABASE.length)];
+                const element = document.createElement('div');
+                element.className = 'news-bubble';
+                element.innerHTML = `<p>${data.text}</p>`;
+                
+                let x = -130;
+                let y = Math.random() * (this.belt.offsetHeight - 130);
+                
+                element.style.left = x + "px";
+                element.style.top = y + "px";
+                
+                const item = { element, data, x, removed: false };
+                element.onmousedown = (e) => this.handleSelection(item, e);
+                
+                this.belt.appendChild(element);
+                this.items.push(item);
+            },
+
+            handleSelection(item, event) {
+                if (item.removed || !this.isActive) return;
+
+                const rect = this.container.getBoundingClientRect();
+                const clickX = event.clientX - rect.left;
+                const clickY = event.clientY - rect.top;
+
+                if (item.data.isHallucination) {
+                    this.score += 25;
+                    this.createRing(clickX, clickY, 'var(--success)');
+                } else {
+                    this.lives--;
+                    this.createRing(clickX, clickY, 'var(--danger)');
+                    if (this.lives <= 0) this.gameOver();
+                }
+
+                this.removeItem(item);
+                this.updateUI();
+            },
+
+            createRing(x, y, color) {
+                const ring = document.createElement('div');
+                ring.className = 'feedback-ring';
+                ring.style.left = `${x}px`;
+                ring.style.top = `${y}px`;
+                ring.style.borderColor = color;
+                this.container.appendChild(ring);
+                setTimeout(() => ring.remove(), 500);
+            },
+
+            removeItem(item) {
+                item.removed = true;
+                item.element.style.transform = "scale(0)";
+                item.element.style.opacity = "0";
+                setTimeout(() => item.element.remove(), 250);
+            },
+
+            gameLoop() {
+                if (!this.isActive) return;
+
+                const elapsed = (Date.now() - this.startTime) / 1000;
+                const progress = Math.min(elapsed / 60, 1);
+                const multiplier = 1 + (progress * 2); // Hasta 3x de velocidad
+                this.currentSpeed = this.baseSpeed * multiplier;
+
+                this.items.forEach((item) => {
+                    if (!item.removed) {
+                        item.x += this.currentSpeed;
+                        item.element.style.left = item.x + "px";
+                        if (item.x > this.belt.offsetWidth + 150) this.removeItem(item);
+                    }
+                });
+
+                document.getElementById('speed-display').innerText = multiplier.toFixed(1);
+                requestAnimationFrame(() => this.gameLoop());
+            },
+
+            updateUI() {
+                document.getElementById('score').innerText = this.score;
+                document.getElementById('lives').innerText = this.lives;
+            },
+
+            gameOver() {
+                this.isActive = false;
+                this.switchScreen('end-screen');
+                document.getElementById('final-score-display').innerText = this.score;
+                
+                const f = document.getElementById('performance-feedback');
+                if (this.score > 400) f.innerText = "¡Nivel Senior! Tu capacidad crítica es excepcional.";
+                else if (this.score > 200) f.innerText = "Buen trabajo. Sabes distinguir la realidad de la ficción.";
+                else f.innerText = "Necesitas más práctica. Las alucinaciones de la IA te han superado.";
+            },
+
+            reset() {
+                this.switchScreen('start-screen');
+            }
+        };
     </script>
 </body>
 </html>
