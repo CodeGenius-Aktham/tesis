@@ -916,7 +916,7 @@
     </div>
     
     
-        <div class="switch-wrapper">
+       <div class="switch-wrapper">
         <div id="glider" class="switch-glider"></div>
         <!-- Puedes cambiar el nombre de estos botones aquí abajo -->
         <button class="switch-btn active" onclick="showContent(0, this)">Página 1</button>
@@ -932,7 +932,17 @@
             <p>Sustituye este bloque por el código de tu web 1.</p>
             <!-- FIN DEL BLOQUE PARA PEGAR -->
         </div>
-    
+
+        <!-- SEGUNDO CONTENIDO -->
+        <div id="card-1" class="content-card">
+            <!-- PEGA AQUÍ EL HTML DE TU SEGUNDA PÁGINA (Borra lo de abajo si quieres) -->
+            <h2 class="text-2xl font-bold text-white mb-4">Tu Segunda Página</h2>
+            <p>Sustituye este bloque por el código de tu web 2.</p>
+            <!-- FIN DEL BLOQUE PARA PEGAR -->
+        </div>
+
+    </div>
+
     
      
            <!-- Tesis Capítulo I -->
@@ -1564,6 +1574,24 @@
                 this.switchScreen('start-screen');
             }
         };
+        
+    
+    function showContent(index, btn) {
+            const glider = document.getElementById('glider');
+            glider.style.transform = `translateX(${index * 100}%)`;
+
+            document.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            document.querySelectorAll('.content-card').forEach((card, i) => {
+                if(i === index) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+        }
+    
     </script>
 </body>
 </html>
