@@ -829,89 +829,6 @@
 
 
 
-
-
-
-.switch-master-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    padding: 60px 20px;
-    background: #000; /* Fondo negro puro */
-}
-
-.switch-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    font-weight: 900;
-    color: rgba(255, 255, 255, 0.3);
-    transition: color 0.3s ease;
-}
-
-/* El Switch */
-.rocker-switch {
-    position: relative;
-    width: 64px;
-    height: 32px;
-}
-
-.rocker-switch input { opacity: 0; width: 0; height: 0; }
-
-.switch-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #111;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 50px;
-    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.switch-slider:before {
-    position: absolute;
-    content: "";
-    height: 22px;
-    width: 22px;
-    left: 5px;
-    bottom: 4px;
-    background: white;
-    border-radius: 50%;
-    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 10px rgba(255,255,255,0.2);
-}
-
-/* Estado Activo */
-input:checked + .switch-slider {
-    background-color: #7c3aed; /* Púrpura */
-    border-color: #a78bfa;
-}
-
-input:checked + .switch-slider:before {
-    transform: translateX(30px);
-    box-shadow: 0 0 20px rgba(167, 139, 250, 0.8);
-}
-
-/* Lógica de los bloques de contenido */
-.thesis-content-block {
-    display: none; /* Oculto por defecto */
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 0.7s ease-out;
-}
-
-.thesis-content-block.active {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-
-
-
-
-
     </style>
 </head>
 <body>
@@ -973,22 +890,7 @@ input:checked + .switch-slider:before {
     </section>
     
     
-    <div class="switch-master-container">
-    <span class="switch-label">Exploración Inicial</span>
-    <label class="rocker-switch">
-        <input type="checkbox" id="main-thesis-toggle" onchange="updateThesisDisplay()">
-        <span class="switch-slider"></span>
-    </label>
-    <span class="switch-label">Resultados & Tesis</span>
-</div>
-
-<div id="fase-1" class="thesis-content-block active">
-    </div>
-
-
-
-               <!-- Tesis Capítulo I -->
-    <section id="thesis-page" class="thesis-section">
+  <section id="thesis-page" class="thesis-section">
         <div class="thesis-container">
             <span class="thesis-label">Investigación Académica</span>
             <h2 class="thesis-title">EL USO DE LA TECNOLOGÍA Y LAS INTELIGENCIAS ARTIFICIALES PARA LOS ESTUDIANTES DE TERCER AÑO</h2>
@@ -1326,7 +1228,8 @@ input:checked + .switch-slider:before {
         </div>
     </div>
     
-    
+     <!-- Tesis Capítulo I -->
+   
 
     
     
