@@ -1661,39 +1661,39 @@ input:checked + .switch-slider:before {
         };
         
     
-    function showContent(index, btn) {
-            const glider = document.getElementById('glider');
-            glider.style.transform = `translateX(${index * 100}%)`;
-
-            document.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            document.querySelectorAll('.content-card').forEach((card, i) => {
-                if(i === index) {
-                    card.classList.add('active');
-                } else {
-                    card.classList.remove('active');
-                }
-            });
-        }
-        
-        
-        
-function toggleThesisContent() {
-    const isChecked = document.getElementById('thesis-toggle').checked;
-    const planteamiento = document.getElementById('content-planteamiento');
-    const resultados = document.getElementById('content-resultados');
+ <script>
+function updateThesisDisplay() {
+    const isChecked = document.getElementById('main-thesis-toggle').checked;
+    const fase1 = document.getElementById('fase-1');
+    const fase2 = document.getElementById('fase-2');
 
     if (isChecked) {
-        // Mostrar Resultados
-        planteamiento.classList.remove('active');
-        resultados.classList.add('active');
+        // Mostrar Tesis Completa (Fase 2)
+        fase1.classList.remove('active');
+        setTimeout(() => {
+            fase1.style.display = 'none';
+            fase2.style.display = 'block';
+            setTimeout(() => {
+                fase2.classList.add('active');
+                // Opcional: Scroll automático al inicio de la tesis
+                fase2.scrollIntoView({ behavior: 'smooth' });
+            }, 50);
+        }, 600);
     } else {
-        // Mostrar Planteamiento
-        resultados.classList.remove('active');
-        planteamiento.classList.add('active');
+        // Volver a Introducción (Fase 1)
+        fase2.classList.remove('active');
+        setTimeout(() => {
+            fase2.style.display = 'none';
+            fase1.style.display = 'block';
+            setTimeout(() => {
+                fase1.classList.add('active');
+                fase1.scrollIntoView({ behavior: 'smooth' });
+            }, 50);
+        }, 600);
     }
 }
+</script>
+
 
 
     
