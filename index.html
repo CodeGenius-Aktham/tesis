@@ -750,7 +750,8 @@
         }
         
         
-                .switch-wrapper {
+        
+        .switch-wrapper {
             background: var(--glass-bg);
             border: 1px solid rgba(192, 192, 192, 0.1);
             padding: 5px;
@@ -823,11 +824,196 @@
             visibility: visible;
             transform: scale(1);
         }
-        
-        
 
+        /* Estilo del Switch */
+.ui-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
 
+.ui-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
 
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #2d3436;
+  transition: .4s;
+  border-radius: 34px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+input:checked + .slider {
+  background-color: #10b981;
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+/* Tipografía Apple */
+        .text-gradient {
+            background: linear-gradient(180deg, #ffffff 0%, #a1a1a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Contenedor de sección */
+        .node-section { 
+        padding: 80px 20px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        min-height: 80vh; 
+        position: relative;
+    }
+    .node-large-card {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        max-width: 1100px;
+        width: 100%;
+        align-items: center;
+    }
+    .ai-types-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 40px;
+    }
+    .type-card {
+        background: #111;
+        padding: 30px;
+        border-radius: 20px;
+        border: 1px solid #222;
+    }
+    .connection-line {
+        width: 2px;
+        height: 100px;
+        background: linear-gradient(to bottom, #3b82f6, transparent);
+        margin: 0 auto;
+    }
+    /* Para que se vea aunque no tengas JS de revelado */
+    .reveal { opacity: 1 !important; transform: none !important; }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Tarjetas de Nodo Expandidas */
+        .node-large-card {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        @media (max-width: 968px) {
+            .node-large-card { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+            .node-large-card .order-last { order: -1; }
+        }
+
+        /* Detalles Técnicos */
+        .tech-specs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .spec-item {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.3s ease;
+        }
+
+        .spec-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .spec-label {
+            font-size: 10px;
+            color: var(--apple-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .spec-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Grid de Tipos de IA */
+        .ai-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 50px;
+        }
+
+        .type-card {
+            background: #121214;
+            border-radius: 24px;
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .type-card:hover {
+            transform: scale(1.02);
+            border-color: var(--apple-blue);
+        }
+
+        /* Efecto de revelado */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Línea de conexión visual entre secciones */
+        .connection-line {
+            position: absolute;
+            left: 50%;
+            width: 1px;
+            height: 100px;
+            background: linear-gradient(to bottom, var(--apple-blue), transparent);
+            bottom: -50px;
+            z-index: 10;
+        }
 
     </style>
 </head>
@@ -888,17 +1074,27 @@
         </div>
         <p class="mt-20 text-[9px] opacity-20 tracking-[1.5em] uppercase">Desciende hacia la tesis</p>
     </section>
+
+
+
+    <div class="switch-container" style="display: flex; align-items: center; justify-content: center; gap: 15px; margin: 40px 0;">
+    <span style="color: #636e72; font-size: 12px; font-weight: bold; uppercase; letter-spacing: 0.2em;">OCULTAR TESIS</span>
+    <label class="ui-switch">
+        <input type="checkbox" id="toggle-thesis" onchange="toggleInformation()">
+        <span class="slider"></span>
+    </label>
+    <span style="color: #10b981; font-size: 12px; font-weight: bold; uppercase; letter-spacing: 0.2em;">MOSTRAR TESIS</span>
+</div>
+
+<div id="thesis-content-wrapper" style="display: none; transition: all 0.5s ease;">
     
-    
-<!-- Tesis Capítulo I -->
-    
-        <div class="chapter-transition">
+    <div class="chapter-transition" style="background: linear-gradient(to bottom, #064e3b 0%, #000000 100%);">
         <div class="data-stream">
             <div class="data-node" style="animation-delay: 0s; left: -4px;"></div>
             <div class="data-node" style="animation-delay: 2.5s; left: -4px;"></div>
         </div>
         
-      <div id="cap4-glow" class="chapter-title-glow" style="font-size: clamp(4rem, 18vw, 12rem); font-weight:900; color: rgba(124,58,237,0.04); z-index:1; user-select:none;">CAP I</div>
+        <div id="cap4-glow" class="chapter-title-glow" style="font-size: clamp(4rem, 18vw, 12rem); font-weight:900; color: rgba(124,58,237,0.04); z-index:1; user-select:none;">CAP I</div>
         <style>
         @media (max-width: 640px) {
             #cap4-glow {
@@ -913,7 +1109,7 @@
 
         
         <div class="chapter-content-box">
-            <p class="sub-label">Evolución</p>
+            <p class="sub-label">El problema</p>
             <h2 class="main-chapter-head">Planteamiento</h2>
             <div class="scroll-hint-down">
                 <div class="scroll-pill cyan !border-cyan-500/50"></div>
@@ -921,8 +1117,13 @@
             </div>
         </div>
     </div>
+    
+    
+   
 
     
+     
+           <!-- Tesis Capítulo I -->
     <section id="thesis-page" class="thesis-section">
         <div class="thesis-container">
             <span class="thesis-label">Investigación Académica</span>
@@ -958,7 +1159,7 @@
             <div class="data-node" style="animation-delay: 2.5s; left: -4px;"></div>
         </div>
         
-      <div id="cap4-glow" class="chapter-title-glow" style="font-size: clamp(4rem, 18vw, 12rem); font-weight:900; color: rgba(124,58,237,0.04); z-index:1; user-select:none;">CAP II</div>
+      <div id="cap4-glow" class="chapter-title-glow" style="font-size: clamp(4rem, 18vw, 12rem); font-weight:900; color: rgba(120, 86, 179, 0.04); z-index:1; user-select:none;">CAP II</div>
         <style>
         @media (max-width: 640px) {
             #cap4-glow {
@@ -1228,7 +1429,14 @@
             </div>
         </div>
     </section>
-     
+</div>
+    
+    
+    
+      
+    
+    
+    
 
 
     <div class="stars-bg"></div>
@@ -1241,102 +1449,270 @@
         </div>
     </div>
 
-    <!-- SECCIÓN DE CRONOLOGÍA DE IA -->
-    <section class="thesis-section">
-        <div class="ia-timeline-container">
-            <!-- Espina dorsal animada -->
-            <div class="ia-timeline-spine">
-                <div class="ia-spine-dot"></div>
-                <div class="ia-spine-dot"></div>
-                <div class="ia-spine-dot"></div>
-            </div>
-
-            <!-- Bloque 1 -->
-            <div class="ia-timeline-item">
-                <div class="ia-node-marker"></div>
-                <div class="ia-thesis-card">
-                    <span class="ia-label">01. Origen</span>
-                    <h2 class="ia-title">Inteligencia Humana</h2>
-                    <div class="ia-text">
-                        <p>Es la chispa biológica que nos permite razonar, imaginar y sentir. Nuestra inteligencia integra la <strong>intuición emocional</strong> y la capacidad de aprender de errores abstractos.</p>
+     <section class="node-section">
+        <div class="node-large-card">
+            <div class="reveal">
+                <span class="text-blue-500 font-mono text-sm tracking-widest mb-4 block">NODE.01 // ORIGEN</span>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">La Chispa del<br>Pensamiento Vivo.</h2>
+                <p class="text-lg text-gray-400 leading-relaxed mb-6">
+                    La inteligencia biológica es la base de todo progreso. Su motor principal es la <strong>plasticidad sináptica</strong>, permitiéndonos no solo procesar información, sino otorgarle un peso emocional y moral.
+                </p>
+                <p class="text-gray-500 mb-8">
+                    A diferencia de los modelos estáticos, el cerebro humano utiliza el <strong>razonamiento abductivo</strong> para generar soluciones creativas a partir de datos incompletos.
+                </p>
+                <div class="tech-specs">
+                    <div class="spec-item">
+                        <span class="spec-label">Arquitectura</span>
+                        <span class="spec-value">Carbono</span>
+                    </div>
+                    <div class="spec-item">
+                        <span class="spec-label">Ventaja</span>
+                        <span class="spec-value">Intuición</span>
                     </div>
                 </div>
             </div>
+            <div class="reveal flex justify-center order-last">
+                <div class="w-80 h-80 rounded-full bg-gradient-to-br from-gray-900 to-black border border-gray-800 flex items-center justify-center shadow-2xl relative">
+                    <div class="absolute inset-0 rounded-full border border-blue-500/20 animate-ping"></div>
+                    <span class="text-6xl text-white">🧠</span>
+                </div>
+            </div>
+        </div>
+        <div class="connection-line"></div>
+    </section>
 
-            <!-- Bloque 2 -->
-            <div class="ia-timeline-item">
-                <div class="ia-node-marker"></div>
-                <div class="ia-thesis-card">
-                    <span class="ia-label">02. Evolución</span>
-                    <h2 class="ia-title">Inteligencia Artificial</h2>
-                    <div class="ia-text">
-                        <p>Sistemas diseñados para procesar datos a velocidades inhumanas. La IA no "piensa", pero <strong>emula patrones</strong> cognitivos para resolver problemas técnicos complejos.</p>
+    <!-- NUEVA SECCIÓN: TAXONOMÍA DE LA IA EN EDUCACIÓN -->
+    <section class="node-section bg-[#050505] flex-col justify-start">
+        <div class="max-w-6xl w-full mx-auto">
+            <div class="reveal text-center mb-16">
+                <span class="text-blue-500 font-mono text-sm tracking-widest mb-4 block">IA CLASSIFICATION // CAPABILITIES</span>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">Especialización de la IA.</h2>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                    No toda la Inteligencia Artificial es igual. Cada variante aporta una capacidad única al ecosistema educativo, transformando el aula en un entorno dinámico.
+                </p>
+            </div>
+
+            <div class="ai-types-grid reveal">
+                <!-- TIPO 1: GENERATIVA -->
+                <div class="type-card">
+                    <div class="mb-6 text-blue-500 text-3xl">✨</div>
+                    <h3 class="text-xl font-bold mb-3">IA Generativa</h3>
+                    <p class="text-gray-500 text-sm mb-6">Capacidad de crear contenido original (texto, código, imágenes) a partir de instrucciones.</p>
+                    <div class="bg-blue-500/5 p-4 rounded-xl border border-blue-500/10">
+                        <span class="spec-label">Aporte Educativo</span>
+                        <p class="text-sm text-gray-300">Co-creación de materiales, resúmenes personalizados y generación de casos de estudio únicos para cada alumno.</p>
+                    </div>
+                </div>
+
+                <!-- TIPO 2: PREDICTIVA -->
+                <div class="type-card">
+                    <div class="mb-6 text-blue-500 text-3xl">📈</div>
+                    <h3 class="text-xl font-bold mb-3">IA Predictiva</h3>
+                    <p class="text-gray-500 text-sm mb-6">Análisis de patrones históricos para anticipar resultados o comportamientos futuros.</p>
+                    <div class="bg-blue-500/5 p-4 rounded-xl border border-blue-500/10">
+                        <span class="spec-label">Aporte Educativo</span>
+                        <p class="text-sm text-gray-300">Identificación temprana de riesgo de deserción y predicción de áreas donde el alumno necesitará refuerzo.</p>
+                    </div>
+                </div>
+
+                <!-- TIPO 3: CONVERSACIONAL -->
+                <div class="type-card">
+                    <div class="mb-6 text-blue-500 text-3xl">💬</div>
+                    <h3 class="text-xl font-bold mb-3">IA Conversacional</h3>
+                    <p class="text-gray-500 text-sm mb-6">Sistemas diseñados para el procesamiento del lenguaje natural en diálogos complejos.</p>
+                    <div class="bg-blue-500/5 p-4 rounded-xl border border-blue-500/10">
+                        <span class="spec-label">Aporte Educativo</span>
+                        <p class="text-sm text-gray-300">Tutores socráticos 24/7 que guían al estudiante mediante preguntas en lugar de dar respuestas directas.</p>
+                    </div>
+                </div>
+
+                <!-- TIPO 4: ADAPTATIVA -->
+                <div class="type-card">
+                    <div class="mb-6 text-blue-500 text-3xl">🧩</div>
+                    <h3 class="text-xl font-bold mb-3">IA Adaptativa</h3>
+                    <p class="text-gray-500 text-sm mb-6">Motores que modifican su estructura y contenido en tiempo real según la interacción.</p>
+                    <div class="bg-blue-500/5 p-4 rounded-xl border border-blue-500/10">
+                        <span class="spec-label">Aporte Educativo</span>
+                        <p class="text-sm text-gray-300">Personalización masiva del currículo: la dificultad y el formato cambian según el ritmo de cada estudiante.</p>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="connection-line"></div>
+    </section>
 
-            <!-- Bloque 3 -->
-            <div class="ia-timeline-item">
-                <div class="ia-node-marker"></div>
-                <div class="ia-thesis-card">
-                    <span class="ia-label">03. Impacto</span>
-                    <h2 class="ia-title">Pros y Contras</h2>
-                    <div class="ia-tag-group">
-                        <span class="ia-tag">Eficiencia Extrema</span>
-                        <span class="ia-tag">Medicina de Precisión</span>
-                        <span class="ia-tag negative">Sesgos Algorítmicos</span>
-                        <span class="ia-tag negative">Privacidad</span>
+    <!-- NODO 02: EXPANSIÓN SINTÉTICA -->
+    <section class="node-section">
+        <div class="node-large-card">
+            <div class="reveal flex justify-center">
+                <div class="relative">
+                    <div class="w-80 h-80 bg-blue-600 rounded-[3rem] opacity-10 absolute blur-3xl"></div>
+                    <div class="w-72 h-72 bg-[#1d1d1f] rounded-[2.5rem] border border-blue-500/30 flex items-center justify-center relative z-10 shadow-inner">
+                        <div class="text-blue-500 font-mono text-xl animate-pulse">011011001</div>
                     </div>
                 </div>
             </div>
+            <div class="reveal">
+                <span class="text-blue-500 font-mono text-sm tracking-widest mb-4 block">NODE.02 // EXPANSIÓN</span>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">Potencia de Cálculo<br>Inhumana.</h2>
+                <p class="text-lg text-gray-400 leading-relaxed mb-6">
+                    La IA actúa como una <strong>extensión cognitiva</strong>. Su arquitectura de silicio permite la detección de patrones sutiles en petabytes de información en milisegundos.
+                </p>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-1 h-12 bg-blue-500 mt-1"></div>
+                        <div>
+                            <h4 class="font-bold">Procesamiento Masivo</h4>
+                            <p class="text-sm text-gray-500">Capacidad de análisis de Big Data inaccesible para la mente biológica.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-1 h-12 bg-blue-500 mt-1"></div>
+                        <div>
+                            <h4 class="font-bold">Inferencia Predictiva</h4>
+                            <p class="text-sm text-gray-500">Modelado de escenarios futuros basado en billones de variables históricas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="connection-line"></div>
+    </section>
 
-            <!-- Bloque 4 -->
-            <div class="ia-timeline-item">
-                <div class="ia-node-marker"></div>
-                <div class="ia-thesis-card">
-                    <span class="ia-label">04. Aplicación</span>
-                    <h2 class="ia-title">Educación 4.0</h2>
-                    <div class="ia-text">
-                        <p>La IA se convierte en el <strong>copiloto del estudiante</strong>. Ofrece feedback instantáneo y permite que el humano se concentre en el pensamiento crítico y la creatividad.</p>
+    <!-- NODO 03: FILTRO CRÍTICO Y ÉTICA -->
+    <section class="node-section bg-[#050505]">
+        <div class="node-large-card">
+            <div class="reveal">
+                <span class="text-blue-500 font-mono text-sm tracking-widest mb-4 block">NODE.03 // GOBERNANZA</span>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">El Filtro Ético.</h2>
+                <p class="text-lg text-gray-400 mb-8">
+                    La tecnología sin valores es ciega. La transición requiere una <strong>supervisión humana constante</strong> para evitar sesgos y asegurar la transparencia.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+                        <h4 class="text-red-400 font-bold mb-2">Riesgos Algorítmicos</h4>
+                        <p class="text-sm text-gray-500">Sesgos de datos, falta de explicabilidad y pérdida de privacidad sistémica.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+                        <h4 class="text-green-400 font-bold mb-2">Meta Humana</h4>
+                        <p class="text-sm text-gray-500">Alinear la inteligencia sintética con la dignidad y el bienestar colectivo.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="reveal flex items-center justify-center">
+                <div class="p-8 border border-white/10 rounded-3xl bg-black shadow-2xl">
+                    <ul class="space-y-6">
+                        <li class="flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs">✓</span>
+                            <span class="text-gray-400">Gobernanza de Datos</span>
+                        </li>
+                        <li class="flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs">✓</span>
+                            <span class="text-gray-400">Auditoría de Sesgos</span>
+                        </li>
+                        <li class="flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs">✓</span>
+                            <span class="text-gray-400">Transparencia Operativa</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="connection-line"></div>
+    </section>
+
+    <!-- NODO 04: EDUCACIÓN 4.0 -->
+    <section class="node-section bg-white text-black overflow-hidden">
+        <div class="node-large-card">
+            <div class="reveal flex justify-center order-last md:order-first">
+                <div class="w-96 h-64 bg-gray-100 rounded-3xl border border-gray-200 flex items-center justify-center text-6xl shadow-xl">
+                    🎓
+                </div>
+            </div>
+            <div class="reveal">
+                <span class="text-blue-600 font-mono text-sm tracking-widest mb-4 block">NODE.04 // FUTURO</span>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">Educación 4.0:<br>Simbiosis Total.</h2>
+                <p class="text-lg text-gray-600 mb-8 leading-relaxed">
+                    El aula evoluciona de un centro de transferencia a un <strong>hub de innovación asistida</strong>. La IA no dicta el conocimiento; personaliza el camino para que el humano lidere la creatividad.
+                </p>
+                <div class="space-y-6">
+                    <div class="p-5 border-l-4 border-blue-600 bg-gray-50">
+                        <h5 class="font-bold text-black">Aprendizaje Adaptativo</h5>
+                        <p class="text-sm text-gray-500">Sistemas que ajustan la dificultad y el método en tiempo real según la respuesta del estudiante.</p>
+                    </div>
+                    <div class="p-5 border-l-4 border-blue-600 bg-gray-50">
+                        <h5 class="font-bold text-black">Enfoque Socrático</h5>
+                        <p class="text-sm text-gray-500">La IA actúa como tutor persistente, fomentando el pensamiento crítico mediante el diálogo.</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+
+
+
+
+
+
+
     
     
 
+ <section id="start-screen" class="game-section active">
+        <h1>La Super Tesis del Buen Uso de la IA</h1>
+        <p>
+            Tu investigación está siendo saboteada por noticias falsas.<br>
+            Depura tu bibliografía tocando las <b>NOTICIAS FALSAS</b>.<br>
+            Protege los hechos reales para aprobar la tesis.<br>
+            <small style="color:var(--neon-cyan)">Combo rápido (x2) | Espacio: Concentración Máxima</small>
+        </p>
+        <button class="btn-primary" onclick="Game.init()">Comenzar Defensa</button>
+    </section>
 
+    <section id="game-screen" class="game-section">
+        <div id="game-ui">
+            <div id="score-container">
+                <div class="stat-pill">MÉRITO: <span id="score" style="color:var(--neon-cyan)">0</span></div>
+                <div id="combo-display">COMBO x1</div>
+            </div>
+
+            <div class="ability-ui">
+                <div class="energy-bar"><div id="energy-fill" class="energy-fill"></div></div>
+                <button id="btn-overclock" onclick="Game.activateOverclock()">CONCENTRACIÓN</button>
+            </div>
+
+            <div id="lives-container">
+                <div class="stat-pill">RIGOR: <span id="lives" style="color:var(--neon-red)">3</span></div>
+            </div>
+        </div>
+        <div id="conveyor-belt"></div>
+    </section>
+
+    <section id="end-screen" class="game-section">
+        <div style="text-align:center; background: var(--surface); padding: 40px; border: 1px solid var(--neon-cyan)">
+            <h2 style="margin:0">CALIFICACIÓN FINAL</h2>
+            <div id="final-score" style="font-size: 4rem; color: var(--neon-cyan)">0</div>
+            <p id="performance" style="color: #888; margin-bottom: 30px;"></p>
+            <button class="btn-primary" onclick="location.reload()">Reintentar Tesis</button>
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
   
-    
-   <div id="ai-auditor-container">
-        <!-- Inicio -->
-        <section id="start-screen" class="game-section active">
-            <h1>AI Auditor</h1>
-            <p>Audita el flujo de información. Toca las <b>alucinaciones</b> (noticias falsas). La velocidad subirá cada segundo durante 1 minuto.</p>
-            <button class="ai-btn" onclick="Game.init()">Iniciar Auditoría</button>
-        </section>
-
-        <!-- Juego -->
-        <section id="game-screen" class="game-section">
-            <div id="game-ui">
-                <div class="stat-pill">SCORE: <span id="score" style="color:var(--primary)">0</span></div>
-                <div class="stat-pill">VIDAS: <span id="lives" style="color:var(--danger)">3</span></div>
-                <div class="stat-pill">VEL: x<span id="speed-display">1.0</span></div>
-            </div>
-            <div id="conveyor-belt"></div>
-        </section>
-
-        <!-- Fin -->
-        <section id="end-screen" class="game-section">
-            <div class="card-result">
-                <h2>Resultado del Turno</h2>
-                <div id="final-score-display">0</div>
-                <p id="performance-feedback" style="margin-bottom: 20px; color: #636e72;"></p>
-                <button class="ai-btn" onclick="Game.reset()">Reintentar</button>
-            </div>
-        </section>
-    </div>
+   
     
     <script> 
         const planet = document.getElementById('planet');
@@ -1399,22 +1775,26 @@
                 }, 2000);
             }
         }
-        const DATABASE = [
-            { text: "Nvidia lanza chips Blackwell.", isHallucination: false },
-            { text: "OpenAI presenta Sora AI.", isHallucination: false },
-            { text: "Neuralink implanta chip cerebral.", isHallucination: false },
-            { text: "AlphaFold predice proteínas.", isHallucination: false },
-            { text: "IA detecta cáncer de mama.", isHallucination: false },
-            { text: "Mistral lanza modelos abiertos.", isHallucination: false },
-            { text: "Gemini analiza videos largos.", isHallucination: false },
-            { text: "iPhone carga con luz solar.", isHallucination: true },
-            { text: "Tesla vuela con imanes.", isHallucination: true },
-            { text: "IA lee mentes sin sensores.", isHallucination: true },
-            { text: "Nanobots borran el pasado.", isHallucination: true },
-            { text: "App traduce miau de gatos.", isHallucination: true },
-            { text: "WIFI cura el dolor de cabeza.", isHallucination: true },
-            { text: "IA duerme por los humanos.", isHallucination: true },
-            { text: "Batería dura 100 años hoy.", isHallucination: true }
+          const DATABASE = [
+            // REALES
+            { text: "Nvidia lanza chips Blackwell para IA.", isHallucination: false },
+            { text: "OpenAI presenta Sora para generación de video.", isHallucination: false },
+            { text: "Neuralink implanta su primer chip cerebral.", isHallucination: false },
+            { text: "España gana la Eurocopa 2024 en Alemania.", isHallucination: false },
+            { text: "Apple lanza el Vision Pro a nivel mundial.", isHallucination: false },
+            { text: "El Real Madrid gana su 15ª Champions League.", isHallucination: false },
+            { text: "Donald Trump gana las elecciones de EE.UU. 2024.", isHallucination: false },
+            { text: "La misión Artemis II orbitará la Luna pronto.", isHallucination: false },
+            // FALSAS (Alucinaciones)
+            { text: "iPhone carga batería con luz ambiental hoy.", isHallucination: true },
+            { text: "Tesla presenta coche que vuela con imanes.", isHallucination: true },
+            { text: "IA lee pensamientos sin necesidad de sensores.", isHallucination: true },
+            { text: "Nanobots médicos pueden borrar el pasado.", isHallucination: true },
+            { text: "App traduce maullidos de gatos con 100% éxito.", isHallucination: true },
+            { text: "El WIFI cura el dolor de cabeza crónico.", isHallucination: true },
+            { text: "IA duerme por los humanos para evitar fatiga.", isHallucination: true },
+            { text: "Científicos crean agua seca para desiertos.", isHallucination: true },
+            { text: "Disney cierra parques para ir al Metaverso.", isHallucination: true }
         ];
 
         const Game = {
@@ -1422,7 +1802,7 @@
             lives: 3,
             startTime: 0,
             currentSpeed: 2,
-            baseSpeed: 2,
+            baseSpeed: 2.5,
             isActive: false,
             items: [],
             container: document.getElementById('ai-auditor-container'),
@@ -1451,7 +1831,8 @@
                 const spawn = () => {
                     if (!this.isActive) return;
                     this.createBubble();
-                    const rate = Math.max(600, 1500 - (this.currentSpeed * 150));
+                    // Ajuste de tasa de aparición basado en dificultad
+                    const rate = Math.max(700, 1800 - (this.currentSpeed * 180));
                     setTimeout(spawn, rate);
                 };
                 spawn();
@@ -1463,14 +1844,20 @@
                 element.className = 'news-bubble';
                 element.innerHTML = `<p>${data.text}</p>`;
                 
-                let x = -130;
-                let y = Math.random() * (this.belt.offsetHeight - 130);
+                let x = -230;
+                let y = 100 + Math.random() * (this.belt.offsetHeight - 250);
                 
                 element.style.left = x + "px";
                 element.style.top = y + "px";
                 
                 const item = { element, data, x, removed: false };
+                
+                // Soporte para Mouse y Touch
                 element.onmousedown = (e) => this.handleSelection(item, e);
+                element.ontouchstart = (e) => { 
+                    e.preventDefault(); 
+                    this.handleSelection(item, e.touches[0]); 
+                };
                 
                 this.belt.appendChild(element);
                 this.items.push(item);
@@ -1484,7 +1871,7 @@
                 const clickY = event.clientY - rect.top;
 
                 if (item.data.isHallucination) {
-                    this.score += 25;
+                    this.score += 50;
                     this.createRing(clickX, clickY, 'var(--success)');
                 } else {
                     this.lives--;
@@ -1508,7 +1895,7 @@
 
             removeItem(item) {
                 item.removed = true;
-                item.element.style.transform = "scale(0)";
+                item.element.style.transform = "scale(0.5)";
                 item.element.style.opacity = "0";
                 setTimeout(() => item.element.remove(), 250);
             },
@@ -1518,16 +1905,29 @@
 
                 const elapsed = (Date.now() - this.startTime) / 1000;
                 const progress = Math.min(elapsed / 60, 1);
-                const multiplier = 1 + (progress * 2); // Hasta 3x de velocidad
+                const multiplier = 1 + (progress * 1.5); 
                 this.currentSpeed = this.baseSpeed * multiplier;
 
-                this.items.forEach((item) => {
+                for (let i = this.items.length - 1; i >= 0; i--) {
+                    const item = this.items[i];
                     if (!item.removed) {
                         item.x += this.currentSpeed;
                         item.element.style.left = item.x + "px";
-                        if (item.x > this.belt.offsetWidth + 150) this.removeItem(item);
+                        
+                        if (item.x > this.belt.offsetWidth + 250) {
+                            // Penalización si dejas pasar una alucinación
+                            if (item.data.isHallucination) {
+                                this.lives--;
+                                this.updateUI();
+                                if (this.lives <= 0) this.gameOver();
+                            }
+                            this.removeItem(item);
+                            this.items.splice(i, 1);
+                        }
+                    } else if (item.element.parentNode === null) {
+                        this.items.splice(i, 1);
                     }
-                });
+                }
 
                 document.getElementById('speed-display').innerText = multiplier.toFixed(1);
                 requestAnimationFrame(() => this.gameLoop());
@@ -1544,9 +1944,9 @@
                 document.getElementById('final-score-display').innerText = this.score;
                 
                 const f = document.getElementById('performance-feedback');
-                if (this.score > 400) f.innerText = "¡Nivel Senior! Tu capacidad crítica es excepcional.";
-                else if (this.score > 200) f.innerText = "Buen trabajo. Sabes distinguir la realidad de la ficción.";
-                else f.innerText = "Necesitas más práctica. Las alucinaciones de la IA te han superado.";
+                if (this.score > 1000) f.innerText = "¡TESIS LAUREADA! Tu rigor científico es implacable.";
+                else if (this.score > 500) f.innerText = "TESIS APROBADA. Sabes filtrar la desinformación básica.";
+                else f.innerText = "RECHAZO ACADÉMICO. Las alucinaciones han contaminado tu investigación.";
             },
 
             reset() {
@@ -1555,9 +1955,37 @@
         };
         
     
- 
+    function showContent(index, btn) {
+            const glider = document.getElementById('glider');
+            glider.style.transform = `translateX(${index * 100}%)`;
+
+            document.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            document.querySelectorAll('.content-card').forEach((card, i) => {
+                if(i === index) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+        }
 
 
+
+        function toggleInformation() {
+    const checkBox = document.getElementById("toggle-thesis");
+    const content = document.getElementById("thesis-content-wrapper");
+    
+    if (checkBox.checked == true) {
+        content.style.display = "block";
+        // Pequeño retraso para que la animación de opacidad funcione si la agregas
+        setTimeout(() => { content.style.opacity = "1"; }, 10);
+    } else {
+        content.style.opacity = "0";
+        content.style.display = "none";
+    }
+}
     
     </script>
 </body>
