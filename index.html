@@ -825,83 +825,89 @@
         }
         
         
-/* Contenedor del interruptor */
-.thesis-switch-container {
+
+
+
+
+
+
+
+.switch-master-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
-    margin: 40px 0;
+    gap: 20px;
+    padding: 60px 20px;
+    background: #000; /* Fondo negro puro */
 }
 
 .switch-label {
     font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.2em;
-    font-weight: bold;
-    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.3em;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.3);
+    transition: color 0.3s ease;
 }
 
-/* El interruptor (Slider) */
-.toggle-switch {
+/* El Switch */
+.rocker-switch {
     position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 26px;
+    width: 64px;
+    height: 32px;
 }
 
-.toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
+.rocker-switch input { opacity: 0; width: 0; height: 0; }
 
-.slider {
+.switch-slider {
     position: absolute;
     cursor: pointer;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: rgba(255, 255, 255, 0.1);
-    transition: .4s;
-    border-radius: 34px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: #111;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 50px;
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.slider:before {
+.switch-slider:before {
     position: absolute;
     content: "";
-    height: 18px;
-    width: 18px;
-    left: 4px;
-    bottom: 3px;
-    background-color: white;
-    transition: .4s;
+    height: 22px;
+    width: 22px;
+    left: 5px;
+    bottom: 4px;
+    background: white;
     border-radius: 50%;
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(255,255,255,0.2);
 }
 
-input:checked + .slider {
-    background-color: #064e3b; /* Color verde esmeralda como tu transición */
+/* Estado Activo */
+input:checked + .switch-slider {
+    background-color: #7c3aed; /* Púrpura */
+    border-color: #a78bfa;
 }
 
-input:checked + .slider:before {
-    transform: translateX(24px);
-    background-color: #00f2ff; /* Color cian */
+input:checked + .switch-slider:before {
+    transform: translateX(30px);
+    box-shadow: 0 0 20px rgba(167, 139, 250, 0.8);
 }
 
-/* Lógica de visibilidad de contenido */
-.thesis-view {
+/* Lógica de los bloques de contenido */
+.thesis-content-block {
     display: none; /* Oculto por defecto */
-    animation: fadeIn 0.5s ease;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.7s ease-out;
 }
 
-.thesis-view.active {
-    display: block; /* Solo el activo se ve */
+.thesis-content-block.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+
 
 
 
