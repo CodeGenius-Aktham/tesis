@@ -823,6 +823,87 @@
             visibility: visible;
             transform: scale(1);
         }
+        
+        
+/* Contenedor del interruptor */
+.thesis-switch-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin: 40px 0;
+}
+
+.switch-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* El interruptor (Slider) */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: .4s;
+    border-radius: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+input:checked + .slider {
+    background-color: #064e3b; /* Color verde esmeralda como tu transición */
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+    background-color: #00f2ff; /* Color cian */
+}
+
+/* Lógica de visibilidad de contenido */
+.thesis-view {
+    display: none; /* Oculto por defecto */
+    animation: fadeIn 0.5s ease;
+}
+
+.thesis-view.active {
+    display: block; /* Solo el activo se ve */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
 
 
     </style>
@@ -887,33 +968,25 @@
     
     
     
-        <div class="switch-wrapper">
-        <div id="glider" class="switch-glider"></div>
-        <!-- Puedes cambiar el nombre de estos botones aquí abajo -->
-        <button class="switch-btn active" onclick="showContent(0, this)">Página 1</button>
-        <button class="switch-btn" onclick="showContent(1, this)">Página 2</button>
-    </div>
+  <div class="thesis-switch-container">
+    <span class="switch-label">Planteamiento</span>
+    <label class="toggle-switch">
+        <input type="checkbox" id="thesis-toggle" onchange="toggleThesisContent()">
+        <span class="slider"></span>
+    </label>
+    <span class="switch-label">Resultados</span>
+</div>
 
-    <div class="content-area">
-        
-        <!-- PRIMER CONTENIDO -->
-        <div id="card-0" class="content-card active">
-            <!-- PEGA AQUÍ EL HTML DE TU PRIMERA PÁGINA (Borra lo de abajo si quieres) -->
-            <h2 class="text-2xl font-bold text-white mb-4">Tu Primera Página</h2>
-            <p>Sustituye este bloque por el código de tu web 1.</p>
-            <!-- FIN DEL BLOQUE PARA PEGAR -->
-        </div>
+<div id="content-planteamiento" class="thesis-view active">
+    <h3>Planteamiento del Problema</h3>
+    <p>Aquí va el texto detallado sobre la problemática de la IA y el enfoque de la investigación...</p>
+</div>
 
-        <!-- SEGUNDO CONTENIDO -->
-        <div id="card-1" class="content-card">
-            <!-- PEGA AQUÍ EL HTML DE TU SEGUNDA PÁGINA (Borra lo de abajo si quieres) -->
-            <h2 class="text-2xl font-bold text-white mb-4">Tu Segunda Página</h2>
-            <p>Sustituye este bloque por el código de tu web 2.</p>
-            <!-- FIN DEL BLOQUE PARA PEGAR -->
-        </div>
+<div id="content-resultados" class="thesis-view">
+    <h3>Resultados de la Investigación</h3>
+    <p>Aquí se muestran los datos extraídos, métricas y conclusiones alcanzadas por el Squad CodeGenius...</p>
+</div>
 
-    </div>
-    
     
     
     
@@ -1599,6 +1672,26 @@
                 }
             });
         }
+        
+        
+        
+function toggleThesisContent() {
+    const isChecked = document.getElementById('thesis-toggle').checked;
+    const planteamiento = document.getElementById('content-planteamiento');
+    const resultados = document.getElementById('content-resultados');
+
+    if (isChecked) {
+        // Mostrar Resultados
+        planteamiento.classList.remove('active');
+        resultados.classList.add('active');
+    } else {
+        // Mostrar Planteamiento
+        resultados.classList.remove('active');
+        planteamiento.classList.add('active');
+    }
+}
+
+
     
     </script>
 </body>
