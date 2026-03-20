@@ -1015,6 +1015,149 @@ input:checked + .slider:before {
             z-index: 10;
         }
 
+/* --- NODO.05: SIMULADOR DE DEFENSA CRÍTICA --- */
+
+/* 1. Contenedor Maestro */
+#game-container {
+    position: relative;
+    width: 100%;
+    max-width: 1024px;
+    height: 600px;
+    background: #020205;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 1.5rem;
+    overflow: hidden; /* Mantiene las cartas dentro */
+    margin: 20px auto;
+    display: block !important;
+}
+
+/* 2. Pantallas de Menú (Inicio y Fin) */
+.game-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex !important; /* Forzamos flex para centrado */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #05050a; /* Fondo sólido para tapar el juego */
+    z-index: 1000; /* Siempre por encima de las cartas */
+    transition: opacity 0.3s ease;
+}
+
+/* 3. CLASE MAESTRA DE OCULTACIÓN (La que manda) */
+.game-hidden {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* 4. Botón de Acción Principal */
+.game-btn-primary {
+    position: relative;
+    background: rgba(59, 130, 246, 0.1);
+    color: #60a5fa;
+    border: 2px solid #3b82f6;
+    padding: 14px 35px;
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: bold;
+    cursor: pointer !important;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    z-index: 1001;
+    pointer-events: auto !important;
+}
+
+.game-btn-primary:hover {
+    background: #3b82f6;
+    color: white;
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.6);
+    transform: translateY(-2px);
+}
+
+/* 5. Interfaz de Juego (HUD) */
+#game-ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 500; /* Por encima de las cartas, debajo del menú */
+    padding: 25px;
+}
+
+.game-stat-pill {
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    padding: 10px 18px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    color: #fff;
+    border-radius: 6px;
+    backdrop-filter: blur(8px);
+    display: inline-block;
+}
+
+/* 6. Cartas de Datos (Noticias) */
+.data-card {
+    position: absolute;
+    width: 250px;
+    background: rgba(15, 23, 42, 0.98);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-left: 5px solid #3b82f6;
+    padding: 15px;
+    color: #f1f5f9;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    cursor: pointer;
+    z-index: 100;
+    font-family: 'Share Tech Mono', monospace;
+    user-select: none;
+    transition: transform 0.15s ease;
+}
+
+.data-card:active {
+    transform: scale(0.95);
+}
+
+.data-card p { 
+    font-size: 13px; 
+    line-height: 1.5; 
+    margin: 5px 0 0 0; 
+}
+
+.card-meta {
+    font-size: 10px;
+    color: #475569;
+    display: flex;
+    justify-content: space-between;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+/* 7. Efectos Especiales */
+.shake-container {
+    animation: shakeAnim 0.3s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shakeAnim {
+    10%, 90% { transform: translate3d(-2px, 0, 0); }
+    20%, 80% { transform: translate3d(3px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
+    40%, 60% { transform: translate3d(5px, 0, 0); }
+}
+
+.slow-mo-active {
+    box-shadow: inset 0 0 100px rgba(0, 243, 255, 0.15) !important;
+    border: 1px solid #00f3ff !important;
+}
+
+/* 8. Barra de Energía */
+#energy-fill {
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
+}
+
+
+
     </style>
 </head>
 <body>
@@ -1649,70 +1792,55 @@ input:checked + .slider:before {
         </div>
     </section>
 
-
-
-
-
-
-
-
+<div id="game-container">
     
-    
+    <div id="start-screen" class="game-overlay">
+        <div class="text-center p-8">
+            <div class="text-6xl mb-6">🛡️</div>
+            <button class="game-btn-primary" onclick="Game.init()">Comenzar Defensa</button>
+            <p class="text-xs text-blue-400/60 mt-6 font-mono tracking-widest uppercase">
+                Node.05 // Sistema de Filtrado de Datos Listo
+            </p>
+        </div>
+    </div>
 
- <section id="start-screen" class="game-section active">
-        <h1>La Super Tesis del Buen Uso de la IA</h1>
-        <p>
-            Tu investigación está siendo saboteada por noticias falsas.<br>
-            Depura tu bibliografía tocando las <b>NOTICIAS FALSAS</b>.<br>
-            Protege los hechos reales para aprobar la tesis.<br>
-            <small style="color:var(--neon-cyan)">Combo rápido (x2) | Espacio: Concentración Máxima</small>
-        </p>
-        <button class="btn-primary" onclick="Game.init()">Comenzar Defensa</button>
-    </section>
-
-    <section id="game-screen" class="game-section">
-        <div id="game-ui">
-            <div id="score-container">
-                <div class="stat-pill">MÉRITO: <span id="score" style="color:var(--neon-cyan)">0</span></div>
-                <div id="combo-display">COMBO x1</div>
+    <div id="game-screen" class="game-hidden h-full w-full relative">
+        <div id="game-ui" class="absolute top-0 left-0 w-full p-6 flex justify-between items-start pointer-events-none">
+            <div class="flex flex-col gap-3">
+                <div class="game-stat-pill pointer-events-auto">
+                    MÉRITO: <span id="score" class="text-blue-400">0</span>
+                </div>
+                <div id="combo-display" class="text-yellow-400 text-xs font-bold font-mono px-2">
+                    COMBO x1
+                </div>
+            </div>
+            
+            <div class="flex flex-col items-center pointer-events-auto">
+                <div class="w-32 h-2 bg-white/10 border border-blue-500/50 rounded-full overflow-hidden">
+                    <div id="energy-fill" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <button id="btn-overclock" class="text-[9px] mt-2 text-blue-400 border border-blue-400/30 px-2 py-1 rounded hover:bg-blue-400/20 uppercase tracking-tighter" onclick="Game.activateOverclock()">
+                    Modo Concentración
+                </button>
             </div>
 
-            <div class="ability-ui">
-                <div class="energy-bar"><div id="energy-fill" class="energy-fill"></div></div>
-                <button id="btn-overclock" onclick="Game.activateOverclock()">CONCENTRACIÓN</button>
-            </div>
-
-            <div id="lives-container">
-                <div class="stat-pill">RIGOR: <span id="lives" style="color:var(--neon-red)">3</span></div>
+            <div class="game-stat-pill text-red-500 pointer-events-auto">
+                RIGOR: <span id="lives">3</span>
             </div>
         </div>
-        <div id="conveyor-belt"></div>
-    </section>
 
-    <section id="end-screen" class="game-section">
-        <div style="text-align:center; background: var(--surface); padding: 40px; border: 1px solid var(--neon-cyan)">
-            <h2 style="margin:0">CALIFICACIÓN FINAL</h2>
-            <div id="final-score" style="font-size: 4rem; color: var(--neon-cyan)">0</div>
-            <p id="performance" style="color: #888; margin-bottom: 30px;"></p>
-            <button class="btn-primary" onclick="location.reload()">Reintentar Tesis</button>
+        <div id="conveyor-belt" class="w-full h-full relative"></div>
+    </div>
+
+    <div id="end-screen" class="game-overlay game-hidden">
+        <div class="text-center p-8">
+            <h3 class="text-blue-400 font-mono mb-2 uppercase tracking-widest text-sm">Resultado Académico</h3>
+            <div id="final-score" class="text-7xl font-bold text-white mb-4">0</div>
+            <p id="performance" class="text-gray-500 text-xs mb-8 font-mono uppercase"></p>
+            <button class="game-btn-primary" onclick="Game.init()">Reiniciar Defensa</button>
         </div>
-    </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-  
-   
+    </div>
+</div>
     
     <script> 
         const planet = document.getElementById('planet');
@@ -1775,185 +1903,7 @@ input:checked + .slider:before {
                 }, 2000);
             }
         }
-          const DATABASE = [
-            // REALES
-            { text: "Nvidia lanza chips Blackwell para IA.", isHallucination: false },
-            { text: "OpenAI presenta Sora para generación de video.", isHallucination: false },
-            { text: "Neuralink implanta su primer chip cerebral.", isHallucination: false },
-            { text: "España gana la Eurocopa 2024 en Alemania.", isHallucination: false },
-            { text: "Apple lanza el Vision Pro a nivel mundial.", isHallucination: false },
-            { text: "El Real Madrid gana su 15ª Champions League.", isHallucination: false },
-            { text: "Donald Trump gana las elecciones de EE.UU. 2024.", isHallucination: false },
-            { text: "La misión Artemis II orbitará la Luna pronto.", isHallucination: false },
-            // FALSAS (Alucinaciones)
-            { text: "iPhone carga batería con luz ambiental hoy.", isHallucination: true },
-            { text: "Tesla presenta coche que vuela con imanes.", isHallucination: true },
-            { text: "IA lee pensamientos sin necesidad de sensores.", isHallucination: true },
-            { text: "Nanobots médicos pueden borrar el pasado.", isHallucination: true },
-            { text: "App traduce maullidos de gatos con 100% éxito.", isHallucination: true },
-            { text: "El WIFI cura el dolor de cabeza crónico.", isHallucination: true },
-            { text: "IA duerme por los humanos para evitar fatiga.", isHallucination: true },
-            { text: "Científicos crean agua seca para desiertos.", isHallucination: true },
-            { text: "Disney cierra parques para ir al Metaverso.", isHallucination: true }
-        ];
-
-        const Game = {
-            score: 0,
-            lives: 3,
-            startTime: 0,
-            currentSpeed: 2,
-            baseSpeed: 2.5,
-            isActive: false,
-            items: [],
-            container: document.getElementById('ai-auditor-container'),
-            belt: document.getElementById('conveyor-belt'),
-
-            init() {
-                this.score = 0;
-                this.lives = 3;
-                this.isActive = true;
-                this.items = [];
-                this.belt.innerHTML = '';
-                this.startTime = Date.now();
-                
-                this.switchScreen('game-screen');
-                this.updateUI();
-                this.gameLoop();
-                this.startSpawning();
-            },
-
-            switchScreen(id) {
-                document.querySelectorAll('.game-section').forEach(s => s.classList.remove('active'));
-                document.getElementById(id).classList.add('active');
-            },
-
-            startSpawning() {
-                const spawn = () => {
-                    if (!this.isActive) return;
-                    this.createBubble();
-                    // Ajuste de tasa de aparición basado en dificultad
-                    const rate = Math.max(700, 1800 - (this.currentSpeed * 180));
-                    setTimeout(spawn, rate);
-                };
-                spawn();
-            },
-
-            createBubble() {
-                const data = DATABASE[Math.floor(Math.random() * DATABASE.length)];
-                const element = document.createElement('div');
-                element.className = 'news-bubble';
-                element.innerHTML = `<p>${data.text}</p>`;
-                
-                let x = -230;
-                let y = 100 + Math.random() * (this.belt.offsetHeight - 250);
-                
-                element.style.left = x + "px";
-                element.style.top = y + "px";
-                
-                const item = { element, data, x, removed: false };
-                
-                // Soporte para Mouse y Touch
-                element.onmousedown = (e) => this.handleSelection(item, e);
-                element.ontouchstart = (e) => { 
-                    e.preventDefault(); 
-                    this.handleSelection(item, e.touches[0]); 
-                };
-                
-                this.belt.appendChild(element);
-                this.items.push(item);
-            },
-
-            handleSelection(item, event) {
-                if (item.removed || !this.isActive) return;
-
-                const rect = this.container.getBoundingClientRect();
-                const clickX = event.clientX - rect.left;
-                const clickY = event.clientY - rect.top;
-
-                if (item.data.isHallucination) {
-                    this.score += 50;
-                    this.createRing(clickX, clickY, 'var(--success)');
-                } else {
-                    this.lives--;
-                    this.createRing(clickX, clickY, 'var(--danger)');
-                    if (this.lives <= 0) this.gameOver();
-                }
-
-                this.removeItem(item);
-                this.updateUI();
-            },
-
-            createRing(x, y, color) {
-                const ring = document.createElement('div');
-                ring.className = 'feedback-ring';
-                ring.style.left = `${x}px`;
-                ring.style.top = `${y}px`;
-                ring.style.borderColor = color;
-                this.container.appendChild(ring);
-                setTimeout(() => ring.remove(), 500);
-            },
-
-            removeItem(item) {
-                item.removed = true;
-                item.element.style.transform = "scale(0.5)";
-                item.element.style.opacity = "0";
-                setTimeout(() => item.element.remove(), 250);
-            },
-
-            gameLoop() {
-                if (!this.isActive) return;
-
-                const elapsed = (Date.now() - this.startTime) / 1000;
-                const progress = Math.min(elapsed / 60, 1);
-                const multiplier = 1 + (progress * 1.5); 
-                this.currentSpeed = this.baseSpeed * multiplier;
-
-                for (let i = this.items.length - 1; i >= 0; i--) {
-                    const item = this.items[i];
-                    if (!item.removed) {
-                        item.x += this.currentSpeed;
-                        item.element.style.left = item.x + "px";
-                        
-                        if (item.x > this.belt.offsetWidth + 250) {
-                            // Penalización si dejas pasar una alucinación
-                            if (item.data.isHallucination) {
-                                this.lives--;
-                                this.updateUI();
-                                if (this.lives <= 0) this.gameOver();
-                            }
-                            this.removeItem(item);
-                            this.items.splice(i, 1);
-                        }
-                    } else if (item.element.parentNode === null) {
-                        this.items.splice(i, 1);
-                    }
-                }
-
-                document.getElementById('speed-display').innerText = multiplier.toFixed(1);
-                requestAnimationFrame(() => this.gameLoop());
-            },
-
-            updateUI() {
-                document.getElementById('score').innerText = this.score;
-                document.getElementById('lives').innerText = this.lives;
-            },
-
-            gameOver() {
-                this.isActive = false;
-                this.switchScreen('end-screen');
-                document.getElementById('final-score-display').innerText = this.score;
-                
-                const f = document.getElementById('performance-feedback');
-                if (this.score > 1000) f.innerText = "¡TESIS LAUREADA! Tu rigor científico es implacable.";
-                else if (this.score > 500) f.innerText = "TESIS APROBADA. Sabes filtrar la desinformación básica.";
-                else f.innerText = "RECHAZO ACADÉMICO. Las alucinaciones han contaminado tu investigación.";
-            },
-
-            reset() {
-                this.switchScreen('start-screen');
-            }
-        };
-        
+         
     
     function showContent(index, btn) {
             const glider = document.getElementById('glider');
@@ -1969,7 +1919,248 @@ input:checked + .slider:before {
                     card.classList.remove('active');
                 }
             });
+        }  
+
+            const NEWS_DB = [
+
+            // REALES (Hechos verificables 2024-2025)
+
+            { text: "Donald Trump regresa a la Casa Blanca tras ganar las elecciones 2024.", fake: false },
+
+            { text: "España se corona campeona de la Eurocopa 2024 tras vencer a Inglaterra.", fake: false },
+
+            { text: "La misión Artemis II de la NASA se prepara para orbitar la Luna.", fake: false },
+
+            { text: "Apple lanza el Vision Pro, su primer visor de computación espacial.", fake: false },
+
+            { text: "El Real Madrid conquista su 15ª Champions League en Wembley.", fake: false },
+
+            { text: "Científicos detectan agua líquida bajo la superficie de Marte en nuevos datos.", fake: false },
+
+            { text: "Japón logra aterrizar con éxito su sonda SLIM en la Luna.", fake: false },
+
+            { text: "Los Juegos Olímpicos de París 2024 celebran su apertura en el río Sena.", fake: false },
+
+            { text: "Microsoft alcanza una valoración de 3 billones de dólares impulsada por la IA.", fake: false },
+
+            { text: "Aparece una nueva especie de dinosaurio con 'cuernos de pala' en EE.UU.", fake: false },
+
+            { text: "El telescopio James Webb descubre las galaxias más antiguas del universo.", fake: false },
+
+            { text: "Argentina gana la Copa América 2024 derrotando a Colombia.", fake: false },
+
+
+
+            // FALSAS (Alucinaciones de la Tesis)
+
+            { text: "La ONU prohíbe el uso de teléfonos inteligentes en escuelas de todo el mundo.", fake: true },
+
+            { text: "Científicos en Suiza logran teletransportar una partícula a 10 km de distancia.", fake: true },
+
+            { text: "Disney anuncia que cerrará todos sus parques físicos para mudarse al metaverso.", fake: true },
+
+            { text: "Un terremoto en el Pacífico crea una nueva isla del tamaño de Madrid.", fake: true },
+
+            { text: "Elon Musk compra la red social TikTok para fusionarla con X.", fake: true },
+
+            { text: "Descubren una ciudad egipcia intacta bajo el hielo de la Antártida.", fake: true },
+
+            { text: "La FIFA anuncia que el próximo Mundial se jugará cada 2 años.", fake: true },
+
+            { text: "Facebook implementará un cobro obligatorio de 5 dólares al mes a todos los usuarios.", fake: true },
+
+            { text: "Captan señales de radio inteligentes provenientes de la estrella Próxima Centauri.", fake: true },
+
+            { text: "Un hacker de 14 años logra desactivar el suministro eléctrico de toda Londres.", fake: true },
+
+            { text: "Google Maps añade función para ver el interior de cualquier casa en tiempo real.", fake: true },
+
+            { text: "Expertos confirman que la Luna se está alejando de la Tierra el doble de rápido.", fake: true }
+
+        ];
+
+       const Game = {
+    score: 0,
+    lives: 3,
+    energy: 0,
+    combo: 1,
+    isActive: false,
+    isSlowMo: false,
+    items: [],
+    bgMusic: new Audio('WhatsApp Video 2026-03-20 at 7.54.12 PM.mp4'),
+    usedIndices: new Set(),
+    
+   init() {
+    // 1. Referencias a los elementos
+    const start = document.getElementById('start-screen');
+    const end = document.getElementById('end-screen');
+    const screen = document.getElementById('game-screen');
+
+    // 2. Cambio de visibilidad (Crucial: usar game-hidden)
+    if(start) start.classList.add('game-hidden');
+    if(end) end.classList.add('game-hidden');
+    if(screen) screen.classList.remove('game-hidden');
+
+    // 3. Reset de lógica
+    this.score = 0;
+    this.lives = 3;
+    this.isActive = true;
+    this.items = [];
+    
+    document.getElementById('conveyor-belt').innerHTML = '';
+    
+    this.updateUI();
+    this.spawnManager();
+    this.loop();
+    console.log("Juego iniciado correctamente"); // Para debug en consola
+},
+
+    spawnManager() {
+        if(!this.isActive) return;
+        this.createCard();
+        // Dificultad progresiva basada en score
+        const nextSpawn = this.isSlowMo ? 3000 : Math.max(800, 2000 - (this.score / 50));
+        setTimeout(() => this.spawnManager(), nextSpawn);
+    },
+
+    createCard() {
+        const belt = document.getElementById('conveyor-belt');
+        if(!belt) return;
+
+        // Selección aleatoria sin repetir inmediatamente
+        let idx;
+        do {
+            idx = Math.floor(Math.random() * NEWS_DB.length);
+        } while (this.usedIndices.has(idx) && this.usedIndices.size < NEWS_DB.length);
+        
+        this.usedIndices.add(idx);
+        if(this.usedIndices.size >= NEWS_DB.length) this.usedIndices.clear();
+
+        const data = NEWS_DB[idx];
+        const card = document.createElement('div');
+        card.className = 'data-card';
+        card.innerHTML = `<div class="card-meta"><span>#VERIFICAR</span><span>IA_REF</span></div><p>${data.text}</p>`;
+        
+        const startY = 60 + Math.random() * (belt.offsetHeight - 150);
+        card.style.top = `${startY}px`;
+        card.style.left = "-250px";
+
+        const item = { 
+            el: card, 
+            data: data, 
+            x: -250, 
+            speed: 2 + Math.random() * 2,
+            hit: false 
+        };
+
+        // Eventos para Mouse y Touch
+        card.onmousedown = (e) => this.handleHit(item, e);
+        card.ontouchstart = (e) => { e.preventDefault(); this.handleHit(item, e.touches[0]); };
+
+        belt.appendChild(card);
+        this.items.push(item);
+    },
+
+    handleHit(item, e) {
+        if(!this.isActive || item.hit) return;
+        item.hit = true;
+
+        if(item.data.fake) {
+            this.score += 100 * this.combo;
+            this.energy = Math.min(100, this.energy + 15);
+            this.combo++;
+        } else {
+            this.lives--;
+            this.combo = 1;
+            this.shake();
         }
+        
+        item.el.style.opacity = "0";
+        item.el.style.transform = "scale(0.5)";
+        setTimeout(() => item.el.remove(), 300);
+        
+        this.updateUI();
+        if(this.lives <= 0) this.gameOver();
+    },
+
+    shake() {
+        const container = document.getElementById('game-container');
+        if(container) {
+            container.classList.add('shake-container');
+            setTimeout(() => container.classList.remove('shake-container'), 300);
+        }
+    },
+
+    updateUI() {
+        const scoreEl = document.getElementById('score');
+        const livesEl = document.getElementById('lives');
+        const energyEl = document.getElementById('energy-fill');
+        const comboEl = document.getElementById('combo-display');
+
+        if(scoreEl) scoreEl.innerText = this.score;
+        if(livesEl) livesEl.innerText = this.lives;
+        if(energyEl) energyEl.style.width = `${this.energy}%`;
+        if(comboEl) comboEl.innerText = `COMBO x${this.combo}`;
+    },
+
+    loop() {
+        if(!this.isActive) return;
+        const belt = document.getElementById('conveyor-belt');
+        if(!belt) return;
+        const beltWidth = belt.offsetWidth;
+
+        this.items.forEach((item, idx) => {
+            if(!item.hit) {
+                // Si hay slowMo, la velocidad es 30%
+                item.x += this.isSlowMo ? item.speed * 0.3 : item.speed;
+                item.el.style.left = `${item.x}px`;
+
+                // Si se sale de la pantalla
+                if(item.x > beltWidth) {
+                    if(item.data.fake) { 
+                        this.lives--; 
+                        this.shake(); 
+                    }
+                    item.el.remove();
+                    this.items.splice(idx, 1);
+                    this.updateUI();
+                    if(this.lives <= 0) this.gameOver();
+                }
+            }
+        });
+        requestAnimationFrame(() => this.loop());
+    },
+
+    gameOver() {
+        this.isActive = false;
+        document.getElementById('game-screen').classList.add('game-hidden');
+        const endScreen = document.getElementById('end-screen');
+        if(endScreen) {
+            endScreen.classList.remove('game-hidden');
+            document.getElementById('final-score').innerText = this.score;
+            
+            const perf = document.getElementById('performance');
+            if(perf) {
+                perf.innerText = this.score > 5000 ? "TESIS LAUREADA: EXPERTO EN IA" : "TESIS RECHAZADA: REVISA TUS FUENTES";
+            }
+        }
+    },
+
+    activateOverclock() {
+        if(this.energy >= 100 && !this.isSlowMo) {
+            this.energy = 0;
+            this.isSlowMo = true;
+            const container = document.getElementById('game-container');
+            container.classList.add('slow-mo-active');
+            
+            setTimeout(() => {
+                this.isSlowMo = false;
+                container.classList.remove('slow-mo-active');
+            }, 5000);
+            this.updateUI();
+        }
+    }
+};
 
 
 
@@ -2030,531 +2221,3 @@ input:checked + .slider:before {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>La Super Tesis del Buen Uso de la IA</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-
-        :root {
-            --bg-dark: #05050a;
-            --surface: #11111a;
-            --neon-cyan: #00f3ff;
-            --neon-red: #ff005c;
-            --neon-green: #00ff66;
-            --neon-yellow: #ffee00;
-            --text-main: #e0e0e0;
-            --grid-color: rgba(0, 243, 255, 0.05);
-        }
-
-        * {
-            box-sizing: border-box;
-            touch-action: manipulation;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Share Tech Mono', monospace;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-image: 
-                linear-gradient(var(--grid-color) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-            background-size: 30px 30px;
-        }
-
-        /* Efecto Overclock (Estado de Concentración de Tesis) */
-        body.slow-mo {
-            background-color: #00121a;
-            --grid-color: rgba(0, 243, 255, 0.2);
-            box-shadow: inset 0 0 100px rgba(0, 243, 255, 0.15);
-        }
-
-        .shake {
-            animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
-        }
-
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-2px, 0, 0); }
-            30%, 70% { transform: translate3d(-4px, 0, 0); }
-            40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-
-        .game-section {
-            display: none;
-            width: 100%;
-            height: 100%;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            padding: 20px;
-        }
-
-        .active { display: flex; }
-
-        #start-screen h1 {
-            font-size: clamp(1.8rem, 6vw, 3.5rem);
-            color: var(--neon-cyan);
-            text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
-            text-align: center;
-            text-transform: uppercase;
-        }
-
-        #start-screen p {
-            color: #a0a0a0;
-            max-width: 550px;
-            font-size: clamp(0.9rem, 4vw, 1.1rem);
-            text-align: center;
-            line-height: 1.5;
-            margin-bottom: 30px;
-        }
-
-        button.btn-primary {
-            background: rgba(0, 243, 255, 0.1);
-            color: var(--neon-cyan);
-            border: 2px solid var(--neon-cyan);
-            padding: 15px 35px;
-            font-size: 1.1rem;
-            font-family: inherit;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-        }
-
-        button.btn-primary:hover, button.btn-primary:active {
-            background: var(--neon-cyan);
-            color: var(--bg-dark);
-            box-shadow: 0 0 20px var(--neon-cyan);
-        }
-
-        /* UI ADAPTATIVA */
-        #game-ui {
-            position: absolute;
-            top: 10px;
-            left: 0;
-            width: 100%;
-            padding: 10px 15px;
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        .stat-pill {
-            background: rgba(5, 5, 10, 0.8);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 5px 12px;
-            font-size: 0.9rem;
-            backdrop-filter: blur(4px);
-            pointer-events: auto;
-        }
-
-        #combo-display {
-            color: var(--neon-yellow);
-            font-weight: bold;
-            font-size: 0.8rem;
-            margin-top: 4px;
-            text-align: left;
-        }
-
-        .ability-ui {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            pointer-events: auto;
-        }
-
-        .energy-bar {
-            width: clamp(80px, 20vw, 150px);
-            height: 10px;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid var(--neon-cyan);
-            margin-bottom: 5px;
-        }
-
-        .energy-fill {
-            height: 100%;
-            width: 0%;
-            background: var(--neon-cyan);
-            transition: width 0.3s;
-        }
-
-        #btn-overclock {
-            font-size: 0.7rem;
-            background: none;
-            border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan);
-            padding: 4px 8px;
-            cursor: pointer;
-        }
-
-        #btn-overclock.ready {
-            background: rgba(0, 243, 255, 0.3);
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            50% { opacity: 0.5; }
-        }
-
-        /* TARJETAS DE DATOS ADAPTATIVAS */
-        #conveyor-belt {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .data-card {
-            position: absolute;
-            width: clamp(180px, 45vw, 240px);
-            background: rgba(17, 17, 26, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-left: 4px solid #fff;
-            padding: 12px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-            cursor: pointer;
-            user-select: none;
-            z-index: 5;
-        }
-
-        .data-card p {
-            font-size: clamp(0.75rem, 3.5vw, 0.9rem);
-            margin: 0;
-            line-height: 1.3;
-        }
-
-        .card-meta {
-            font-size: 0.65rem;
-            color: #666;
-            margin-bottom: 6px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .data-card.critical {
-            border-left-color: var(--neon-yellow);
-            box-shadow: 0 0 15px rgba(255, 238, 0, 0.2);
-        }
-
-        /* Feedback visual */
-        .floating-text {
-            position: absolute;
-            font-weight: bold;
-            pointer-events: none;
-            animation: floatUp 0.8s ease-out forwards;
-            z-index: 200;
-        }
-
-        @keyframes floatUp {
-            from { transform: translateY(0); opacity: 1; }
-            to { transform: translateY(-40px); opacity: 0; }
-        }
-
-        @media (max-width: 600px) {
-            #game-ui { grid-template-columns: 1fr 1fr; row-gap: 10px; }
-            .ability-ui { grid-column: span 2; order: 3; }
-            #lives-container { justify-self: end; }
-        }
-    </style>
-</head>
-<body>
-
-    <section id="start-screen" class="game-section active">
-        <h1>La Super Tesis del Buen Uso de la IA</h1>
-        <p>
-            Tu investigación está siendo saboteada por noticias falsas.<br>
-            Depura tu bibliografía tocando las <b>NOTICIAS FALSAS</b>.<br>
-            Protege los hechos reales para aprobar la tesis.<br>
-            <small style="color:var(--neon-cyan)">Combo rápido (x2) | Espacio: Concentración Máxima</small>
-        </p>
-        <button class="btn-primary" onclick="Game.init()">Comenzar Defensa</button>
-    </section>
-
-    <section id="game-screen" class="game-section">
-        <div id="game-ui">
-            <div id="score-container">
-                <div class="stat-pill">MÉRITO: <span id="score" style="color:var(--neon-cyan)">0</span></div>
-                <div id="combo-display">COMBO x1</div>
-            </div>
-
-            <div class="ability-ui">
-                <div class="energy-bar"><div id="energy-fill" class="energy-fill"></div></div>
-                <button id="btn-overclock" onclick="Game.activateOverclock()">CONCENTRACIÓN</button>
-            </div>
-
-            <div id="lives-container">
-                <div class="stat-pill">RIGOR: <span id="lives" style="color:var(--neon-red)">3</span></div>
-            </div>
-        </div>
-        <div id="conveyor-belt"></div>
-    </section>
-
-    <section id="end-screen" class="game-section">
-        <div style="text-align:center; background: var(--surface); padding: 40px; border: 1px solid var(--neon-cyan)">
-            <h2 style="margin:0">CALIFICACIÓN FINAL</h2>
-            <div id="final-score" style="font-size: 4rem; color: var(--neon-cyan)">0</div>
-            <p id="performance" style="color: #888; margin-bottom: 30px;"></p>
-            <button class="btn-primary" onclick="location.reload()">Reintentar Tesis</button>
-        </div>
-    </section>
-
-    <script>
-        const NEWS_DB = [
-            // REALES (Hechos verificables 2024-2025)
-            { text: "Donald Trump regresa a la Casa Blanca tras ganar las elecciones 2024.", fake: false },
-            { text: "España se corona campeona de la Eurocopa 2024 tras vencer a Inglaterra.", fake: false },
-            { text: "La misión Artemis II de la NASA se prepara para orbitar la Luna.", fake: false },
-            { text: "Apple lanza el Vision Pro, su primer visor de computación espacial.", fake: false },
-            { text: "El Real Madrid conquista su 15ª Champions League en Wembley.", fake: false },
-            { text: "Científicos detectan agua líquida bajo la superficie de Marte en nuevos datos.", fake: false },
-            { text: "Japón logra aterrizar con éxito su sonda SLIM en la Luna.", fake: false },
-            { text: "Los Juegos Olímpicos de París 2024 celebran su apertura en el río Sena.", fake: false },
-            { text: "Microsoft alcanza una valoración de 3 billones de dólares impulsada por la IA.", fake: false },
-            { text: "Aparece una nueva especie de dinosaurio con 'cuernos de pala' en EE.UU.", fake: false },
-            { text: "El telescopio James Webb descubre las galaxias más antiguas del universo.", fake: false },
-            { text: "Argentina gana la Copa América 2024 derrotando a Colombia.", fake: false },
-
-            // FALSAS (Alucinaciones de la Tesis)
-            { text: "La ONU prohíbe el uso de teléfonos inteligentes en escuelas de todo el mundo.", fake: true },
-            { text: "Científicos en Suiza logran teletransportar una partícula a 10 km de distancia.", fake: true },
-            { text: "Disney anuncia que cerrará todos sus parques físicos para mudarse al metaverso.", fake: true },
-            { text: "Un terremoto en el Pacífico crea una nueva isla del tamaño de Madrid.", fake: true },
-            { text: "Elon Musk compra la red social TikTok para fusionarla con X.", fake: true },
-            { text: "Descubren una ciudad egipcia intacta bajo el hielo de la Antártida.", fake: true },
-            { text: "La FIFA anuncia que el próximo Mundial se jugará cada 2 años.", fake: true },
-            { text: "Facebook implementará un cobro obligatorio de 5 dólares al mes a todos los usuarios.", fake: true },
-            { text: "Captan señales de radio inteligentes provenientes de la estrella Próxima Centauri.", fake: true },
-            { text: "Un hacker de 14 años logra desactivar el suministro eléctrico de toda Londres.", fake: true },
-            { text: "Google Maps añade función para ver el interior de cualquier casa en tiempo real.", fake: true },
-            { text: "Expertos confirman que la Luna se está alejando de la Tierra el doble de rápido.", fake: true }
-        ];
-
-        const Game = {
-            score: 0,
-            lives: 3,
-            combo: 1,
-            comboCounter: 0,
-            energy: 0,
-            maxEnergy: 100,
-            isActive: false,
-            isSlowMo: false,
-            speed: 2.2,
-            items: [],
-            usedIndices: new Set(),
-            belt: document.getElementById('conveyor-belt'),
-
-            init() {
-                this.score = 0;
-                this.lives = 3;
-                this.combo = 1;
-                this.comboCounter = 0;
-                this.energy = 0;
-                this.isActive = true;
-                this.usedIndices.clear();
-                this.items = [];
-                this.belt.innerHTML = '';
-                
-                document.getElementById('start-screen').classList.remove('active');
-                document.getElementById('game-screen').classList.add('active');
-                
-                window.addEventListener('keydown', (e) => { if(e.code === 'Space') this.activateOverclock(); });
-                
-                this.loop();
-                this.spawnManager();
-            },
-
-            spawnManager() {
-                const spawn = () => {
-                    if(!this.isActive) return;
-                    this.createCard();
-                    
-                    const nextSpawn = this.isSlowMo ? 3000 : Math.max(800, 2000 - (this.score / 60));
-                    setTimeout(spawn, nextSpawn);
-                };
-                spawn();
-            },
-
-            createCard() {
-                if (this.usedIndices.size >= NEWS_DB.length) this.usedIndices.clear();
-                
-                let idx;
-                do { idx = Math.floor(Math.random() * NEWS_DB.length); } 
-                while (this.usedIndices.has(idx));
-                this.usedIndices.add(idx);
-
-                const data = NEWS_DB[idx];
-                const card = document.createElement('div');
-                card.className = 'data-card';
-                if(Math.random() < 0.15) card.classList.add('critical');
-
-                card.innerHTML = `
-                    <div class="card-meta">
-                        <span>#BIBLIO_REF</span>
-                        <span>DATOS_ACTUALES</span>
-                    </div>
-                    <p>${data.text}</p>
-                `;
-
-                const startY = 80 + Math.random() * (this.belt.offsetHeight - 200);
-                const x = -260;
-                card.style.top = startY + "px";
-                card.style.left = x + "px";
-
-                const item = { 
-                    el: card, 
-                    data, 
-                    x, 
-                    speed: (0.8 + Math.random() * 0.5) * (card.classList.contains('critical') ? 1.8 : 1)
-                };
-
-                card.onmousedown = (e) => this.handleHit(item, e);
-                card.ontouchstart = (e) => { e.preventDefault(); this.handleHit(item, e.touches[0]); };
-
-                this.belt.appendChild(card);
-                this.items.push(item);
-            },
-
-            handleHit(item, e) {
-                if(!this.isActive || item.hit) return;
-                item.hit = true;
-
-                if(item.data.fake) {
-                    this.comboCounter++;
-                    if(this.comboCounter >= 2) { 
-                        this.combo = Math.min(10, this.combo + 1);
-                        this.comboCounter = 0;
-                    }
-                    const points = 50 * this.combo;
-                    this.score += points;
-                    this.energy = Math.min(100, this.energy + 15);
-                    this.showFeedback(`+${points}`, e.clientX, e.clientY, 'var(--neon-green)');
-                } else {
-                    this.lives--;
-                    this.combo = 1;
-                    this.comboCounter = 0;
-                    this.showFeedback("VÁLIDO", e.clientX, e.clientY, 'var(--neon-red)');
-                    this.shake();
-                    if(this.lives <= 0) this.gameOver();
-                }
-
-                item.el.style.transform = "scale(0.5)";
-                item.el.style.opacity = "0";
-                setTimeout(() => item.el.remove(), 200);
-                this.updateUI();
-            },
-
-            activateOverclock() {
-                if(this.energy >= 100 && !this.isSlowMo) {
-                    this.energy = 0;
-                    this.isSlowMo = true;
-                    document.body.classList.add('slow-mo');
-                    setTimeout(() => {
-                        this.isSlowMo = false;
-                        document.body.classList.remove('slow-mo');
-                    }, 5000);
-                    this.updateUI();
-                }
-            },
-
-            loop() {
-                if(!this.isActive) return;
-
-                const dt = this.isSlowMo ? 0.25 : 1;
-                this.items.forEach((item, index) => {
-                    if(!item.hit) {
-                        item.x += item.speed * this.speed * dt;
-                        item.el.style.left = item.x + "px";
-
-                        if(item.x > this.belt.offsetWidth) {
-                            if(item.data.fake) {
-                                this.lives--;
-                                this.combo = 1;
-                                this.comboCounter = 0;
-                                this.shake();
-                                if(this.lives <= 0) this.gameOver();
-                            }
-                            item.el.remove();
-                            this.items.splice(index, 1);
-                            this.updateUI();
-                        }
-                    }
-                });
-
-                requestAnimationFrame(() => this.loop());
-            },
-
-            showFeedback(txt, x, y, color) {
-                const f = document.createElement('div');
-                f.className = 'floating-text';
-                f.innerText = txt;
-                f.style.left = x + "px";
-                f.style.top = y + "px";
-                f.style.color = color;
-                document.body.appendChild(f);
-                setTimeout(() => f.remove(), 800);
-            },
-
-            shake() {
-                document.body.classList.add('shake');
-                setTimeout(() => document.body.classList.remove('shake'), 300);
-            },
-
-            updateUI() {
-                document.getElementById('score').innerText = this.score;
-                document.getElementById('lives').innerText = this.lives;
-                document.getElementById('combo-display').innerText = `COMBO x${this.combo}`;
-                document.getElementById('energy-fill').style.width = this.energy + "%";
-                
-                const btn = document.getElementById('btn-overclock');
-                if(this.energy >= 100) btn.classList.add('ready');
-                else btn.classList.remove('ready');
-            },
-
-            gameOver() {
-                this.isActive = false;
-                document.getElementById('game-screen').classList.remove('active');
-                document.getElementById('end-screen').classList.add('active');
-                document.getElementById('final-score').innerText = this.score;
-                
-                const perf = document.getElementById('performance');
-                if(this.score > 8000) perf.innerText = "ESTADO: TESIS LAUREADA (SOBRESALIENTE)";
-                else if(this.score > 3000) perf.innerText = "ESTADO: TESIS APROBADA (CON CORRECCIONES)";
-                else perf.innerText = "ESTADO: RECHAZO ACADÉMICO (PLAGIO O DATOS FALSOS)";
-            }
-        };
-    </script>
-</body>
-</html>
