@@ -1987,40 +1987,54 @@ input:checked + .slider:before {
     isActive: false,
     isSlowMo: false,
     items: [],
-    bgMusic: new Audio('music.mp4'),
+    // 1. DEFINICIÓN DE CANCIONES
+    // Canción 1: La que suena primero
+    introMusic: new Audio('music.mp4'), 
+    // Canción 2: La que suena después y entra en bucle
+    loopMusic: new Audio('music2.mp4'),
     usedIndices: new Set(),
     
    init() {
+// --- LÓGICA DE AUDIO SECUENCIAL ---
+        // Detenemos ambas por seguridad antes de empezar
+        this.introMusic.pause();
+        this.loopMusic.pause();
+        this.introMusic.currentTime = 0;
+        this.loopMusic.currentTime = 0;
 
-    // --- LÓGICA DE AUDIO ---
-        this.bgMusic.currentTime = 0; // Reinicia la canción
-        this.bgMusic.loop = true;      // Que no pare
-        this.bgMusic.volume = 0.5;     // Volumen al 50%
+        this.introMusic.volume = 0.5;
+        this.loopMusic.volume = 0.5;
+        this.loopMusic.loop = true; // La segunda sí va en bucle
+
+        // Programamos que cuando la PRIMERA termine, empiece la SEGUNDA
+        this.introMusic.onended = () => {
+            if (this.isActive) { // Solo si el juego sigue activo
+                this.loopMusic.play().catch(e => console.log("Error loop:", e));
+            }
+        };
+
+        // Reproducir la primera
+        this.introMusic.play().catch(err => console.log("Error intro:", err));
+
+        // --- LÓGICA DE PANTALLAS ---
+        const start = document.getElementById('start-screen');
+        const screen = document.getElementById('game-screen');
+        if(start) start.classList.add('game-hidden');
+        if(screen) screen.classList.remove('game-hidden');
+
+        // --- RESET DE JUEGO ---
+        this.isActive = true;
+        this.score = 0;
+        this.lives = 3;
+        this.items = [];
+        this.usedIndices.clear();
         
-        // Intentar reproducir (los navegadores permiten esto porque viene de un clic)
-        this.bgMusic.play().catch(err => console.log("Error al cargar audio: ", err));
-    // 1. Referencias a los elementos
-    const start = document.getElementById('start-screen');
-    const end = document.getElementById('end-screen');
-    const screen = document.getElementById('game-screen');
-
-    // 2. Cambio de visibilidad (Crucial: usar game-hidden)
-    if(start) start.classList.add('game-hidden');
-    if(end) end.classList.add('game-hidden');
-    if(screen) screen.classList.remove('game-hidden');
-
-    // 3. Reset de lógica
-    this.score = 0;
-    this.lives = 3;
-    this.isActive = true;
-    this.items = [];
-    
-    document.getElementById('conveyor-belt').innerHTML = '';
-    
-    this.updateUI();
-    this.spawnManager();
-    this.loop();
-    console.log("Juego iniciado correctamente"); // Para debug en consola
+        const belt = document.getElementById('conveyor-belt');
+        if(belt) belt.innerHTML = '';
+        
+        this.updateUI();
+        this.spawnManager();
+        this.loop();
 },
 
     spawnManager() {
@@ -2141,16 +2155,16 @@ input:checked + .slider:before {
 
     gameOver() {
         this.isActive = false;
+
+        // --- DETENER TODA LA MÚSICA ---
+        this.introMusic.pause();
+        this.loopMusic.pause();
+
         document.getElementById('game-screen').classList.add('game-hidden');
         const endScreen = document.getElementById('end-screen');
         if(endScreen) {
             endScreen.classList.remove('game-hidden');
             document.getElementById('final-score').innerText = this.score;
-            
-            const perf = document.getElementById('performance');
-            if(perf) {
-                perf.innerText = this.score > 5000 ? "TESIS LAUREADA: EXPERTO EN IA" : "TESIS RECHAZADA: REVISA TUS FUENTES";
-            }
         }
     },
 
