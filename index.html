@@ -1987,55 +1987,60 @@ input:checked + .slider:before {
     isActive: false,
     isSlowMo: false,
     items: [],
-    // 1. DEFINICIÓN DE CANCIONES
-    // Canción 1: La que suena primero
-    introMusic: new Audio('music.mp4'), 
-    // Canción 2: La que suena después y entra en bucle
-    loopMusic: new Audio('music2.mp4'),
     usedIndices: new Set(),
-    
-   init() {
-// --- LÓGICA DE AUDIO SECUENCIAL ---
-        // Detenemos ambas por seguridad antes de empezar
+
+    // CANCIONES
+    introMusic: new Audio('music.mp4'), 
+    loopMusic: new Audio('segunda_cancion.mp3'), 
+
+    init() {
+        console.log("Reiniciando sistema...");
+
+        // 1. LIMPIEZA DE AUDIO (Corta lo que esté sonando y reinicia)
         this.introMusic.pause();
         this.loopMusic.pause();
         this.introMusic.currentTime = 0;
         this.loopMusic.currentTime = 0;
 
+        // 2. CONFIGURACIÓN DE PLAYLIST
         this.introMusic.volume = 0.5;
         this.loopMusic.volume = 0.5;
-        this.loopMusic.loop = true; // La segunda sí va en bucle
-
-        // Programamos que cuando la PRIMERA termine, empiece la SEGUNDA
+        this.loopMusic.loop = true;
         this.introMusic.onended = () => {
-            if (this.isActive) { // Solo si el juego sigue activo
-                this.loopMusic.play().catch(e => console.log("Error loop:", e));
-            }
+            if (this.isActive) this.loopMusic.play();
         };
 
-        // Reproducir la primera
-        this.introMusic.play().catch(err => console.log("Error intro:", err));
-
-        // --- LÓGICA DE PANTALLAS ---
-        const start = document.getElementById('start-screen');
-        const screen = document.getElementById('game-screen');
-        if(start) start.classList.add('game-hidden');
-        if(screen) screen.classList.remove('game-hidden');
-
-        // --- RESET DE JUEGO ---
+        // 3. RESET DE VARIABLES Y UI
         this.isActive = true;
         this.score = 0;
         this.lives = 3;
+        this.energy = 0;
+        this.combo = 1;
+        this.isSlowMo = false;
         this.items = [];
         this.usedIndices.clear();
-        
+
+        // 4. LIMPIEZA VISUAL DEL TABLERO
         const belt = document.getElementById('conveyor-belt');
-        if(belt) belt.innerHTML = '';
+        if(belt) belt.innerHTML = ''; // Borra todas las cartas de la partida anterior
         
+        const container = document.getElementById('game-container');
+        if(container) container.classList.remove('slow-mo-active', 'shake-container');
+
+        // 5. CAMBIO DE PANTALLAS
+        document.getElementById('start-screen').classList.add('game-hidden');
+        document.getElementById('end-screen').classList.add('game-hidden'); // Oculta el Game Over
+        document.getElementById('game-screen').classList.remove('game-hidden');
+
+        // 6. ARRANQUE
         this.updateUI();
+        this.introMusic.play().catch(e => console.log("Audio ready after click"));
+        
+        // Importante: Cancelamos cualquier spawn o loop previo si fuera necesario
+        // Pero al setear isActive = true y llamar a estos métodos, el flujo se refresca
         this.spawnManager();
-        this.loop();
-},
+        this.loop(); 
+    },
 
     spawnManager() {
         if(!this.isActive) return;
@@ -2154,17 +2159,23 @@ input:checked + .slider:before {
     },
 
     gameOver() {
-        this.isActive = false;
-
-        // --- DETENER TODA LA MÚSICA ---
+        this.isActive = false; // Esto detiene el loop y el spawnManager
+        
+        // Detener música
         this.introMusic.pause();
         this.loopMusic.pause();
 
+        // Mostrar pantalla final
         document.getElementById('game-screen').classList.add('game-hidden');
         const endScreen = document.getElementById('end-screen');
         if(endScreen) {
             endScreen.classList.remove('game-hidden');
             document.getElementById('final-score').innerText = this.score;
+            
+            const perf = document.getElementById('performance');
+            if(perf) {
+                perf.innerText = this.score > 5000 ? "SISTEMA VALIDADO: EXPERTO" : "ERROR CRÍTICO: FUENTES NO FIABLES";
+            }
         }
     },
 
