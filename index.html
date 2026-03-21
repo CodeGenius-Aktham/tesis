@@ -1987,10 +1987,18 @@ input:checked + .slider:before {
     isActive: false,
     isSlowMo: false,
     items: [],
-    bgMusic: new Audio('WhatsApp Video 2026-03-20 at 7.54.12 PM.mp4'),
+    bgMusic: new Audio('music.mp4'),
     usedIndices: new Set(),
     
    init() {
+
+    // --- LÓGICA DE AUDIO ---
+        this.bgMusic.currentTime = 0; // Reinicia la canción
+        this.bgMusic.loop = true;      // Que no pare
+        this.bgMusic.volume = 0.5;     // Volumen al 50%
+        
+        // Intentar reproducir (los navegadores permiten esto porque viene de un clic)
+        this.bgMusic.play().catch(err => console.log("Error al cargar audio: ", err));
     // 1. Referencias a los elementos
     const start = document.getElementById('start-screen');
     const end = document.getElementById('end-screen');
