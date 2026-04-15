@@ -1,2228 +1,935 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IA - Futuro, Equipo y Tesis</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background-color: #020205;
-            color: white;
-            overflow-x: hidden;
-            margin: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            scroll-behavior: smooth;
-        }
-
-        /* --- Estrellas Globales --- */
-        .stars-bg {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(1px 1px at 20px 30px, #eee, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 100px 150px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0));
-            background-repeat: repeat;
-            background-size: 300px 300px;
-            opacity: 0.4;
-            pointer-events: none;
-        }
-
-        /* --- Animación de Scroll y Planeta --- */
-        .scroll-wrapper { height: 500vh; }
-        .scene-container {
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            width: 100%;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .hero-title {
-            position: absolute;
-            font-size: clamp(2.5rem, 10vw, 8rem);
-            font-weight: 900;
-            text-align: center;
-            z-index: 10;
-            line-height: 0.9;
-            letter-spacing: -0.04em;
-            background: linear-gradient(to bottom, #ffffff 40%, #555555 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-        }
-
-        .planet {
-            position: absolute;
-            top: 110%; 
-            width: 180vmax; 
-            height: 180vmax;
-            background: radial-gradient(circle at 50% 0%, #1d41a2 0%, #091443 35%, #020617 60%);
-            border-radius: 50%;
-            z-index: 50;
-            box-shadow: 0 -30px 100px rgba(50, 16, 185, 0.3);
-            left: 50%;
-            transform: translateX(-50%);
-            will-change: transform;
-        }
-
-        .greeting-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) translateY(20px);
-            z-index: 100;
-            font-size: clamp(1.2rem, 4vw, 3rem);
-            font-weight: 300;
-            text-align: center;
-            width: 85%;
-            opacity: 0;
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .greeting-text.visible { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
-
-        /* --- Indicador de Scroll Unificado --- */
-        .scroll-line, .scroll-line-black {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 2px;
-            height: 0;
-            transform: translateX(-50%);
-            transition: height 1.5s cubic-bezier(0.65, 0, 0.35, 1);
-            z-index: 110;
-        }
-        .scroll-line { background: linear-gradient(to bottom, transparent, #052d7e, #ffffff); }
-        .scroll-line-black { background: linear-gradient(to bottom, transparent, #000000); z-index: 130; }
-        .active { height: 120px; }
-
-        .next-section {
-            height: 100vh;
-            background: #ffffff;
-            color: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            z-index: 120;
-            padding: 0 24px;
-            text-align: center;
-        }
-
-        .final-section {
-            min-height: 100vh;
-            background: radial-gradient(circle at center, #064e3b 0%, #020205 100%);
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 80px 20px 40px 20px;
-            z-index: 140;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 1100px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 10;
-        }
-
-        .person-item {
-            position: relative;
-            aspect-ratio: 3/4;
-            border-radius: 20px;
-            overflow: hidden;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: transform 0.2s ease-out;
-        }
-
-        .person-item:hover { transform: translateY(-8px); border-color: rgba(16, 185, 129, 0.4); }
-
-        .person-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: saturate(0.2) brightness(0.6);
-            transition: transform 0.4s ease, filter 0.4s ease;
-        }
-
-        .person-item:hover img { filter: saturate(1) brightness(1.1); transform: scale(1.05); }
-
-        .person-info {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 15px;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.2s linear;
-        }
-
-        .person-item:hover .person-info { opacity: 1; }
-
-        .info-content {
-            backdrop-filter: blur(15px);
-            background: rgba(6, 78, 59, 0.7);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            padding: 12px;
-            border-radius: 12px;
-        }
-
-        /* --- SECCIÓN TESIS --- */
-        .thesis-section {
-            min-height: 100vh;
-            background-color: #020205;
-            padding: 120px 20px 0 20px;
-            position: relative;
-            z-index: 150;
-        }
-
-        .thesis-container { max-width: 1000px; margin: 0 auto; text-align: center; }
-
-        .thesis-card {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 30px;
-            padding: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            margin-bottom: 40px;
-            text-align: left;
-            transition: background 0.3s ease;
-        }
-
-        .thesis-card:hover { background: rgba(255, 255, 255, 0.04); }
-
-        .thesis-title {
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            font-weight: 800;
-            background: linear-gradient(45deg, #ffffff, #10b981);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 40px;
-            text-transform: uppercase;
-        }
-
-        .thesis-label {
-            display: inline-block;
-            padding: 6px 18px;
-            background: rgba(16, 185, 129, 0.1);
-            color: #34d399;
-            border-radius: 100px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-        /* --- TRANSICIÓN DEGRADADO (VERDE -> CIAN) --- */
-        .chapter-transition {
-            position: relative;
-            height: 90vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            /* Degradado de verde esmeralda a azul cian profundo */
-            background: linear-gradient(to bottom, #020205 0%, #064e3b 40%, #061e27 100%);
-            overflow: hidden;
-        }
-
-        .data-stream {
-            position: absolute;
-            top: 0;
-            width: 1px;
-            height: 100%;
-            background: linear-gradient(to bottom, #10b981 0%, #06b6d4 100%);
-            opacity: 0.3;
-        }
-
-        .data-node {
-            width: 8px;
-            height: 8px;
-            background: #22d3ee;
-            border-radius: 50%;
-            box-shadow: 0 0 15px #06b6d4;
-            position: absolute;
-            top: 10%;
-            animation: fall 5s linear infinite;
-        }
-
-        @keyframes fall {
-            0% { top: -20px; opacity: 0; }
-            20% { opacity: 1; }
-            80% { opacity: 1; }
-            100% { top: 110%; opacity: 0; }
-        }
-
-        .chapter-title-glow {
-            font-size: clamp(4rem, 18vw, 12rem);
-            font-weight: 900;
-            color: rgba(6, 182, 212, 0.04);
-            text-transform: uppercase;
-            letter-spacing: -0.05em;
-            position: absolute;
-            z-index: 1;
-            user-select: none;
-        }
-
-        .chapter-content-box {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-        }
-
-        .sub-label {
-            color: #22d3ee;
-            font-size: 12px;
-            letter-spacing: 1em;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-            font-weight: 300;
-        }
-
-        .main-chapter-head {
-            font-size: 3rem;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 20px;
-            letter-spacing: -0.02em;
-        }
-
-        /* --- CAPÍTULO II (CIAN ELECTRÓNICO) --- */
-        .chapter-two-start {
-            min-height: 100vh;
-            background-color: #061e27; 
-            padding: 120px 20px;
-            position: relative;
-            z-index: 155;
-        }
-
-        .glow-effect {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            height: 400px;
-            background: radial-gradient(circle at 50% 0%, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .scroll-hint-down {
-            margin-top: 60px;
-            animation: bounce-scroll 2s infinite;
-        }
-
-        @keyframes bounce-scroll {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0); opacity: 0.3;}
-            40% {transform: translateY(-15px); opacity: 1;}
-            60% {transform: translateY(-8px); opacity: 1;}
-        }
-
-        .scroll-pill {
-            width: 20px;
-            height: 35px;
-            border: 2px solid rgba(255,255,255,0.2);
-            border-radius: 20px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .scroll-pill::after {
-            content: '';
-            width: 4px;
-            height: 4px;
-            background: #10b981; /* Empieza verde en el primer pill */
-            position: absolute;
-            left: 50%;
-            margin-left: -2px;
-            top: 6px;
-            border-radius: 50%;
-            animation: scroll-dot 1.5s infinite;
-        }
-
-        .scroll-pill.cyan::after { background: #22d3ee; } /* Cambia a cian luego */
-
-        @keyframes scroll-dot {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(15px); opacity: 0; }
-        }
-
-          /* --- ESTILOS GLOBALES DE LA WEB (Integrados) --- */
-        body {
-            background-color: #020205;
-            color: white;
-            overflow-x: hidden;
-            margin: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            scroll-behavior: smooth;
-        }
-
-        /* --- Estrellas Globales --- */
-        .stars-bg {
-            position: fixed; /* Cambiado a fixed para que cubra todo el scroll */
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(1px 1px at 20px 30px, #eee, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 100px 150px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0));
-            background-repeat: repeat;
-            background-size: 300px 300px;
-            opacity: 0.4;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* --- SECCIÓN TESIS (CRONOLOGÍA AISLADA) --- */
-        .thesis-section {
-            --ia-bg: #050508;
-            --ia-accent: #22d3ee;
-            --ia-text: #f8fafc;
-            --ia-muted: #94a3b8;
-            --ia-card-bg: rgba(255, 255, 255, 0.02);
-            --ia-border: rgba(255, 255, 255, 0.08);
-
-            min-height: 100vh;
-            padding: 120px 24px;
-            position: relative;
-            z-index: 150;
-            overflow: hidden;
-            background-color: var(--ia-bg);
-            color: var(--ia-text);
-            font-family: 'Inter', system-ui, sans-serif;
-        }
-
-        .ia-timeline-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        /* LÍNEA CENTRAL ESPECÍFICA */
-        .ia-timeline-spine {
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: linear-gradient(to bottom,
-                transparent,
-                var(--ia-border) 5%,
-                var(--ia-border) 95%,
-                transparent);
-            transform: translateX(-50%);
-            z-index: 1;
-        }
-
-        /* ANIMACIÓN DE BOLITAS */
-        .ia-spine-dot {
-            position: absolute;
-            left: 50%;
-            width: 8px;
-            height: 8px;
-            background: var(--ia-accent);
-            border-radius: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 0 15px var(--ia-accent);
-            animation: iaFlowDown 8s linear infinite;
-            opacity: 0;
-        }
-
-        @keyframes iaFlowDown {
-            0% { top: 0%; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-        }
-
-        .ia-spine-dot:nth-child(2) { animation-delay: 2.5s; }
-        .ia-spine-dot:nth-child(3) { animation-delay: 5s; }
-
-        /* ELEMENTOS DE LA LÍNEA */
-        .ia-timeline-item {
-            display: flex;
-            justify-content: flex-end;
-            padding-right: 50%;
-            position: relative;
-            margin-bottom: 100px;
-            width: 100%;
-            box-sizing: border-box;
-            z-index: 2;
-        }
-
-        .ia-timeline-item:nth-child(even) {
-            justify-content: flex-start;
-            padding-right: 0;
-            padding-left: 50%;
-        }
-
-        .ia-node-marker {
-            position: absolute;
-            left: 50%;
-            top: 40px;
-            width: 16px;
-            height: 16px;
-            background: var(--ia-bg);
-            border: 2px solid var(--ia-accent);
-            border-radius: 50%;
-            transform: translateX(-50%);
-            z-index: 5;
-            box-shadow: 0 0 10px rgba(34, 211, 238, 0.2);
-        }
-
-        /* TARJETAS CON SCOPE */
-        .ia-thesis-card {
-            background: var(--ia-card-bg);
-            border-radius: 20px;
-            padding: 35px;
-            border: 1px solid var(--ia-border);
-            width: 85%;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            backdrop-filter: blur(12px);
-            position: relative;
-        }
-
-        .ia-timeline-item:nth-child(odd) .ia-thesis-card { margin-right: 45px; text-align: right; }
-        .ia-timeline-item:nth-child(even) .ia-thesis-card { margin-left: 45px; text-align: left; }
-
-        .ia-thesis-card:hover {
-            border-color: var(--ia-accent);
-            transform: translateY(-8px);
-            background: rgba(255, 255, 255, 0.04);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-        }
-
-        /* TIPOGRAFÍA DENTRO DE LA SECCIÓN */
-        .ia-label {
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--ia-accent);
-            margin-bottom: 15px;
-            display: block;
-        }
-
-        .ia-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin: 0 0 15px 0;
-            color: var(--ia-text);
-        }
-
-        .ia-text {
-            line-height: 1.8;
-            color: var(--ia-muted);
-            font-size: 1rem;
-            font-weight: 300;
-        }
-
-        /* TAGS AISLADOS */
-        .ia-tag-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-            justify-content: inherit;
-        }
-
-        .ia-tag {
-            font-size: 0.75rem;
-            padding: 5px 12px;
-            border-radius: 6px;
-            background: rgba(34, 211, 238, 0.08);
-            color: var(--ia-accent);
-            border: 1px solid rgba(34, 211, 238, 0.2);
-        }
-
-        .ia-tag.negative {
-            background: rgba(244, 63, 94, 0.08);
-            color: #fb7185;
-            border-color: rgba(244, 63, 94, 0.2);
-        }
-
-        /* TRANSICIÓN DEGRADADO (VERDE -> CIAN) */
-        .chapter-transition {
-            position: relative;
-            height: 90vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(to bottom, #020205 0%, #064e3b 40%, #050508 100%);
-            overflow: hidden;
-            z-index: 145;
-        }
-
-        /* RESPONSIVO */
-        @media (max-width: 768px) {
-            .ia-timeline-spine, .ia-spine-dot, .ia-node-marker { left: 20px; transform: none; }
-            .ia-timeline-item { padding-left: 50px !important; padding-right: 0 !important; justify-content: flex-start !important; }
-            .ia-timeline-item .ia-thesis-card { width: 100%; margin: 0 !important; text-align: left !important; }
-        }
-        
-        
-        
-                #ai-auditor-container {
-            --bg-light: #f4f7f6;
-            --text-main: #2d3436;
-            --primary: #4834d4;
-            --danger: #eb4d4b;
-            --success: #6ab04c;
-            --surface: #ffffff;
-            --shadow: rgba(0, 0, 0, 0.08);
-            
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-main);
-            width: 100%;
-            height: 600px; /* Altura fija para la sección */
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 12px;
-            margin: 20px 0;
-        }
-
-        .game-section {
-            display: none;
-            width: 90%;
-            max-width: 900px;
-            text-align: center;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .active {
-            display: flex !important;
-        }
-
-        /* PANTALLA DE INICIO */
-        #start-screen h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--primary), #a29bfe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        #start-screen p {
-            color: #636e72;
-            max-width: 500px;
-            margin-bottom: 30px;
-        }
-
-        .ai-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px 40px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 50px;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(72, 52, 212, 0.3);
-        }
-
-        .ai-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(72, 52, 212, 0.4);
-        }
-
-        /* INTERFAZ DE JUEGO */
-        #game-ui {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            z-index: 10;
-        }
-
-        .stat-pill {
-            background: var(--surface);
-            padding: 8px 20px;
-            border-radius: 50px;
-            box-shadow: 0 4px 10px var(--shadow);
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        #conveyor-belt {
-            position: relative;
-            width: 100%;
-            height: 400px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        /* BURBUJAS DE NOTICIAS */
-        .news-bubble {
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            background: var(--surface);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            box-shadow: 0 6px 20px var(--shadow);
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: transform 0.2s, opacity 0.3s;
-            animation: float-ai 3s infinite ease-in-out;
-            user-select: none;
-        }
-
-        @keyframes float-ai {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .news-bubble:hover {
-            border-color: var(--primary);
-            z-index: 50;
-        }
-
-        .news-bubble p {
-            font-size: 0.7rem;
-            margin: 0;
-            line-height: 1.2;
-            font-weight: 700;
-            color: var(--text-main);
-            text-transform: uppercase;
-            pointer-events: none;
-        }
-
-        /* EFECTO CLICK */
-        .feedback-ring {
-            position: absolute;
-            pointer-events: none;
-            border-radius: 50%;
-            border: 4px solid var(--primary);
-            transform: translate(-50%, -50%);
-            animation: ring-ai 0.5s ease-out forwards;
-        }
-
-        @keyframes ring-ai {
-            0% { width: 0; height: 0; opacity: 1; }
-            100% { width: 150px; height: 150px; opacity: 0; }
-        }
-
-        /* RESULTADOS */
-        .card-result {
-            background: var(--surface);
-            padding: 30px;
-            border-radius: 25px;
-            box-shadow: 0 15px 40px var(--shadow);
-        }
-
-        #final-score-display {
-            font-size: 3.5rem;
-            font-weight: 900;
-            color: var(--primary);
-            margin: 10px 0;
-        }
-        
-        
-        
-        .switch-wrapper {
-            background: var(--glass-bg);
-            border: 1px solid rgba(192, 192, 192, 0.1);
-            padding: 5px;
-            border-radius: 9999px;
-            display: flex;
-            position: relative;
-            z-index: 10;
-            margin-bottom: 3rem;
-        }
-
-        .switch-btn {
-            padding: 10px 35px;
-            border-radius: 9999px;
-            border: none;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            background: transparent;
-            color: #666;
-            position: relative;
-            z-index: 2;
-        }
-
-        .switch-btn.active {
-            color: #000;
-        }
-
-        .switch-glider {
-            position: absolute;
-            height: calc(100% - 10px);
-            width: calc(50% - 5px);
-            background: var(--neon-green);
-            left: 5px;
-            top: 5px;
-            border-radius: 9999px;
-            transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
-            z-index: 1;
-            box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
-        }
-
-        .content-area {
-            position: relative;
-            width: 100%;
-            max-width: 800px; /* Aumentado para que quepan tus páginas mejor */
-            min-height: 400px; 
-        }
-
-        .content-card {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(160deg, #1a1a1a 0%, #111111 100%);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-top: 2px solid var(--neon-green);
-            padding: 2rem;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.95);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .content-card.active {
-            opacity: 1;
-            visibility: visible;
-            transform: scale(1);
-        }
-
-        /* Estilo del Switch */
-.ui-switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 26px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#020205">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>IA - Futuro, Equipo y Tesis</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:#020205;color:#fff;overflow-x:hidden;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;min-height:100dvh}
+img{max-width:100%;display:block}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+
+/* ===== STARS ===== */
+.stars-bg{position:fixed;inset:0;
+background-image:radial-gradient(1px 1px at 20px 30px,#eee,transparent),radial-gradient(1px 1px at 100px 150px,#fff,transparent),radial-gradient(2px 2px at 50px 160px,#ddd,transparent);
+background-size:300px 300px;opacity:.35;pointer-events:none;z-index:1}
+
+/* ===== HERO SCROLL ===== */
+.scroll-wrapper{height:400vh}
+@media(max-width:600px){.scroll-wrapper{height:350vh}}
+.scene-container{position:sticky;top:0;height:100dvh;width:100%;overflow:hidden;display:flex;justify-content:center;align-items:center}
+.hero-title{position:absolute;font-size:clamp(2.2rem,12vw,8rem);font-weight:900;text-align:center;z-index:10;line-height:.9;letter-spacing:-.04em;
+background:linear-gradient(to bottom,#fff 40%,#555 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-transform:uppercase;padding:0 16px;width:100%}
+.greeting-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) translateY(20px);z-index:100;
+font-size:clamp(1rem,4vw,2.5rem);font-weight:300;text-align:center;width:90%;opacity:0;transition:all .8s cubic-bezier(.16,1,.3,1);padding:0 16px}
+.greeting-text.visible{opacity:1;transform:translate(-50%,-50%) translateY(0)}
+.planet{position:absolute;top:110%;width:200vmax;height:200vmax;
+background:radial-gradient(circle at 50% 0%,#1d41a2 0%,#091443 35%,#020617 60%);
+border-radius:50%;z-index:50;box-shadow:0 -30px 100px rgba(50,16,185,.3);left:50%;transform:translateX(-50%);will-change:transform}
+
+/* ===== SCROLL LINES ===== */
+.scroll-line,.scroll-line-black{position:absolute;bottom:0;left:50%;width:2px;height:0;transform:translateX(-50%);transition:height 1.5s cubic-bezier(.65,0,.35,1);z-index:110}
+.scroll-line{background:linear-gradient(to bottom,transparent,#052d7e,#fff)}
+.scroll-line-black{background:linear-gradient(to bottom,transparent,#000);z-index:130}
+.scroll-line.active,.scroll-line-black.active{height:100px}
+
+/* ===== SCROLL PILL HINT ===== */
+.scroll-pill{width:20px;height:35px;border:2px solid rgba(255,255,255,.3);border-radius:20px;margin:0 auto;position:relative}
+.scroll-pill::after{content:'';width:4px;height:4px;background:#10b981;position:absolute;left:50%;margin-left:-2px;top:6px;border-radius:50%;animation:scroll-dot 1.5s infinite}
+@keyframes scroll-dot{0%{transform:translateY(0);opacity:1}100%{transform:translateY(14px);opacity:0}}
+
+/* ===== SECCIÓN BIENVENIDA ===== */
+.next-section{min-height:100dvh;background:#fff;color:#000;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;z-index:120;padding:60px 24px 80px;text-align:center}
+
+/* ===== SECCIÓN EQUIPO ===== */
+.final-section{min-height:100dvh;background:radial-gradient(circle at center,#064e3b 0%,#020205 100%);color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:60px 16px 40px;position:relative;z-index:130;overflow:hidden}
+.gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;width:100%;max-width:1100px;margin:0 auto;position:relative;z-index:10}
+@media(min-width:600px){.gallery-grid{grid-template-columns:repeat(3,1fr);gap:16px}}
+@media(min-width:900px){.gallery-grid{grid-template-columns:repeat(5,1fr);gap:20px}}
+.person-item{position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.05);transition:transform .2s ease}
+.person-item:hover,.person-item:focus-within{transform:translateY(-6px);border-color:rgba(16,185,129,.4)}
+.person-item img{width:100%;height:100%;object-fit:cover;filter:saturate(.2) brightness(.6);transition:filter .4s ease,transform .4s ease}
+.person-item:hover img,.person-item:active img{filter:saturate(1) brightness(1.1);transform:scale(1.04)}
+.person-info{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:12px;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,transparent 60%)}
+.info-content{backdrop-filter:blur(12px);background:rgba(6,78,59,.75);border:1px solid rgba(16,185,129,.3);padding:10px 12px;border-radius:10px}
+.info-content h3{font-size:clamp(.8rem,2.5vw,1rem);font-weight:700}
+.info-content p{font-size:clamp(.65rem,2vw,.8rem);opacity:.7;margin-top:2px}
+/* En móvil siempre mostrar info */
+@media(max-width:600px){.person-info{opacity:1}}
+
+/* ===== TOGGLE SWITCH ===== */
+.switch-container{display:flex;align-items:center;justify-content:center;gap:14px;padding:30px 20px}
+.ui-switch{position:relative;display:inline-block;width:50px;height:26px;flex-shrink:0}
+.ui-switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;inset:0;background:#2d3436;transition:.4s;border-radius:34px;border:1px solid rgba(255,255,255,.1)}
+.slider:before{position:absolute;content:"";height:18px;width:18px;left:4px;bottom:3px;background:#fff;transition:.4s;border-radius:50%;box-shadow:0 0 8px rgba(16,185,129,.4)}
+input:checked+.slider{background:#10b981}
+input:checked+.slider:before{transform:translateX(24px)}
+.switch-label{color:#636e72;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.15em}
+.switch-label.on{color:#10b981}
+
+/* ===== TRANSICIÓN CAPÍTULO ===== */
+.chapter-transition{position:relative;min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.data-stream{position:absolute;top:0;left:50%;width:1px;height:100%;opacity:.25;transform:translateX(-50%)}
+.data-node{width:8px;height:8px;background:#22d3ee;border-radius:50%;box-shadow:0 0 12px #06b6d4;position:absolute;top:-20px;left:-4px;animation:fall 5s linear infinite;opacity:0}
+.data-node:nth-child(2){animation-delay:2.5s}
+@keyframes fall{0%{top:-20px;opacity:0}20%{opacity:1}80%{opacity:1}100%{top:110%;opacity:0}}
+.chapter-title-glow{font-size:clamp(4rem,22vw,12rem);font-weight:900;color:rgba(6,182,212,.04);text-transform:uppercase;letter-spacing:-.05em;position:absolute;z-index:1;user-select:none;line-height:1}
+.chapter-content-box{position:relative;z-index:10;text-align:center;padding:0 20px}
+.sub-label{color:#22d3ee;font-size:11px;letter-spacing:.6em;text-transform:uppercase;margin-bottom:10px;font-weight:300}
+.main-chapter-head{font-size:clamp(1.8rem,6vw,3rem);font-weight:800;color:#fff;margin-bottom:16px;letter-spacing:-.02em}
+.scroll-hint-down{margin-top:40px;animation:bounce-scroll 2s infinite}
+@keyframes bounce-scroll{0%,20%,50%,80%,100%{transform:translateY(0);opacity:.3}40%{transform:translateY(-12px);opacity:1}60%{transform:translateY(-6px);opacity:1}}
+
+/* ===== TESIS GENERAL ===== */
+.thesis-section{min-height:100dvh;padding:80px 16px 60px;position:relative;z-index:150;overflow:hidden}
+.thesis-container{max-width:900px;margin:0 auto}
+.thesis-label{display:inline-block;padding:5px 16px;background:rgba(16,185,129,.1);color:#34d399;border-radius:100px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;margin-bottom:20px;border:1px solid rgba(16,185,129,.2)}
+.thesis-title{font-size:clamp(1.3rem,4.5vw,2.2rem);font-weight:800;background:linear-gradient(45deg,#fff,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:28px;text-transform:uppercase;line-height:1.2}
+.thesis-card{background:rgba(255,255,255,.02);border-radius:20px;padding:24px;border:1px solid rgba(255,255,255,.06);margin-bottom:20px;transition:background .3s ease;backdrop-filter:blur(10px)}
+.thesis-card:hover{background:rgba(255,255,255,.04)}
+.thesis-card h3{font-size:1rem;font-weight:700;color:#fff;margin-bottom:10px}
+.thesis-card p{color:#9ca3af;line-height:1.7;font-size:.9rem}
+
+/* ===== CAP II CYAN ===== */
+.chapter-two-start{padding:80px 16px 60px;position:relative;z-index:155}
+.glow-effect{position:absolute;top:0;left:50%;transform:translateX(-50%);width:100%;height:300px;background:radial-gradient(circle at 50% 0%,rgba(6,182,212,.12) 0%,transparent 70%);pointer-events:none}
+
+/* ===== CARDS GRID ===== */
+.card-3-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:20px}
+@media(min-width:640px){.card-3-grid{grid-template-columns:repeat(3,1fr)}}
+.mini-card{padding:24px;background:rgba(255,255,255,.04);border-radius:20px;border:1px solid rgba(255,255,255,.05);transition:border-color .3s}
+.mini-card:hover{border-color:rgba(34,211,238,.3)}
+.mini-card-num{color:#06b6d4;font-weight:900;font-size:1.5rem;margin-bottom:12px}
+.mini-card h4{color:#fff;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.mini-card p{color:#64748b;font-size:.8rem;line-height:1.6}
+
+/* ===== SECCIONES NODO ===== */
+.node-section{padding:60px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80dvh;position:relative}
+.node-large-card{display:flex;flex-direction:column;gap:32px;max-width:1100px;width:100%;align-items:center}
+@media(min-width:900px){.node-large-card{flex-direction:row;gap:60px}}
+.node-large-card .reveal{width:100%}
+.tech-specs{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:28px}
+.spec-item{padding:16px;background:rgba(255,255,255,.03);border-radius:14px;border:1px solid rgba(255,255,255,.05);transition:background .3s}
+.spec-item:hover{background:rgba(255,255,255,.06)}
+.spec-label{font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:4px}
+.spec-value{font-size:16px;font-weight:600;color:#fff}
+.connection-line{width:2px;height:60px;background:linear-gradient(to bottom,#3b82f6,transparent);margin:0 auto}
+.ai-types-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:40px;width:100%;max-width:1200px}
+@media(min-width:580px){.ai-types-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.ai-types-grid{grid-template-columns:repeat(4,1fr)}}
+.type-card{background:#0e0e10;padding:24px;border-radius:20px;border:1px solid rgba(255,255,255,.05);transition:all .4s cubic-bezier(.23,1,.32,1)}
+.type-card:hover{transform:scale(1.02);border-color:#3b82f6}
+.type-icon{font-size:24px;margin-bottom:16px}
+.type-card h3{color:#fff;font-weight:700;font-size:1.05rem;margin-bottom:8px}
+.type-card>p{color:#6b7280;font-size:.82rem;margin-bottom:16px;line-height:1.6}
+.type-detail{background:rgba(59,130,246,.05);padding:14px;border-radius:12px;border:1px solid rgba(59,130,246,.1)}
+.type-detail .spec-label{margin-bottom:6px}
+.type-detail p{color:#d1d5db;font-size:.82rem;line-height:1.5}
+.reveal{opacity:0;transform:translateY(30px);transition:all .9s cubic-bezier(.23,1,.32,1)}
+.reveal.active{opacity:1;transform:translateY(0)}
+
+/* ===== CÍRCULOS DECORATIVOS ===== */
+.deco-circle{width:220px;height:220px;border-radius:50%;background:linear-gradient(135deg,#111,#0a0a0a);border:1px solid rgba(59,130,246,.2);display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;margin:0 auto}
+.deco-circle .ping{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(59,130,246,.15);animation:ping .8s cubic-bezier(0,0,.2,1) infinite}
+.deco-circle .emoji{font-size:52px}
+.deco-square{position:relative;flex-shrink:0;margin:0 auto}
+.deco-square .blur-bg{width:240px;height:240px;background:#3b82f6;border-radius:3rem;opacity:.08;position:absolute;filter:blur(40px);inset:0}
+.deco-square .inner{width:220px;height:220px;background:#111;border-radius:2rem;border:1px solid rgba(59,130,246,.25);display:flex;align-items:center;justify-content:center;position:relative;z-index:1}
+.deco-square .inner span{color:#3b82f6;font-family:monospace;font-size:1.1rem;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.5}}
+@keyframes ping{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.08);opacity:.1}}
+
+/* ===== CHECKS LIST ===== */
+.checks-box{padding:24px;border:1px solid rgba(255,255,255,.08);border-radius:20px;background:#080808}
+.check-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.check-row:last-child{border-bottom:none}
+.check-icon{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+.check-row span{color:#9ca3af;font-size:.9rem}
+
+/* ===== NODO 04 BLANCO ===== */
+.white-section{background:#fff;color:#000}
+.border-accent-left{border-left:4px solid #2563eb;padding:16px;background:#f8fafc;border-radius:0 8px 8px 0;margin-bottom:14px}
+.border-accent-left h5{font-weight:700;color:#000;font-size:.9rem;margin-bottom:4px}
+.border-accent-left p{font-size:.82rem;color:#6b7280}
+.risk-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:16px}
+@media(min-width:480px){.risk-grid{grid-template-columns:1fr 1fr}}
+.risk-card{padding:18px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+
+/* ===== GAME CONTAINER ===== */
+#game-container{position:relative;width:100%;max-width:1024px;height:500px;background:#020205;border:1px solid rgba(59,130,246,.3);border-radius:20px;overflow:hidden;margin:20px auto;display:block}
+@media(min-width:600px){#game-container{height:600px}}
+.game-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#05050a;z-index:1000;padding:20px}
+.game-hidden{display:none!important}
+.game-btn-primary{position:relative;background:rgba(59,130,246,.1);color:#60a5fa;border:2px solid #3b82f6;padding:14px 32px;font-family:monospace;font-weight:700;cursor:pointer;transition:all .3s ease;text-transform:uppercase;letter-spacing:2px;z-index:1001;font-size:14px;border-radius:6px;touch-action:manipulation}
+.game-btn-primary:hover,.game-btn-primary:active{background:#3b82f6;color:#fff;box-shadow:0 0 20px rgba(59,130,246,.5);transform:translateY(-2px)}
+#game-ui{position:absolute;top:0;left:0;width:100%;z-index:500;padding:16px}
+.game-stat-pill{background:rgba(0,0,0,.85);border:1px solid rgba(59,130,246,.4);padding:8px 14px;font-family:monospace;font-size:13px;color:#fff;border-radius:6px;backdrop-filter:blur(8px);display:inline-block}
+.data-card{position:absolute;width:min(220px,60vw);background:rgba(15,23,42,.98);border:1px solid rgba(59,130,246,.2);border-left:5px solid #3b82f6;padding:12px;color:#f1f5f9;box-shadow:0 8px 24px rgba(0,0,0,.7);cursor:pointer;z-index:100;font-family:monospace;user-select:none;transition:transform .15s ease;border-radius:4px;touch-action:manipulation}
+.data-card:active{transform:scale(.95)}
+.data-card p{font-size:11px;line-height:1.5;margin:4px 0 0}
+.card-meta{font-size:9px;color:#475569;display:flex;justify-content:space-between;text-transform:uppercase;margin-bottom:6px}
+.shake-container{animation:shakeAnim .3s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes shakeAnim{10%,90%{transform:translate3d(-2px,0,0)}20%,80%{transform:translate3d(3px,0,0)}30%,50%,70%{transform:translate3d(-5px,0,0)}40%,60%{transform:translate3d(5px,0,0)}}
+.slow-mo-active{box-shadow:inset 0 0 80px rgba(0,243,255,.12)!important;border-color:#00f3ff!important}
+#energy-fill{box-shadow:0 0 8px rgba(59,130,246,.7)}
+
+/* ===== TAGS ===== */
+.tag-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.tag{font-size:.72rem;padding:4px 10px;border-radius:6px;background:rgba(34,211,238,.08);color:#22d3ee;border:1px solid rgba(34,211,238,.2)}
+
+/* ===== FOOTER ===== */
+.site-footer{background:#020205;padding:40px 20px;text-align:center;position:relative;z-index:200}
+.site-footer p{color:rgba(255,255,255,.15);font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+
+/* ===== TYPOGRAPHY HELPERS ===== */
+.font-mono-sm{font-family:monospace;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase}
+.text-cyan{color:#22d3ee}
+.text-emerald{color:#34d399}
+.text-muted{color:#9ca3af}
+.text-sm-muted{font-size:.85rem;color:#9ca3af;line-height:1.7}
+.tag-pill{display:inline-flex;padding:5px 14px;border-radius:100px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.15em}
+
+/* ===== SAFE AREA PADDING ===== */
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+.site-footer{padding-bottom:calc(40px + env(safe-area-inset-bottom))}
 }
-
-.ui-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #2d3436;
-  transition: .4s;
-  border-radius: 34px;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 18px;
-  width: 18px;
-  left: 4px;
-  bottom: 3px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
-}
-
-input:checked + .slider {
-  background-color: #10b981;
-}
-
-input:checked + .slider:before {
-  transform: translateX(24px);
-}
-
-/* Tipografía Apple */
-        .text-gradient {
-            background: linear-gradient(180deg, #ffffff 0%, #a1a1a6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Contenedor de sección */
-        .node-section { 
-        padding: 80px 20px; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        min-height: 80vh; 
-        position: relative;
-    }
-    .node-large-card {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 40px;
-        max-width: 1100px;
-        width: 100%;
-        align-items: center;
-    }
-    .ai-types-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin-top: 40px;
-    }
-    .type-card {
-        background: #111;
-        padding: 30px;
-        border-radius: 20px;
-        border: 1px solid #222;
-    }
-    .connection-line {
-        width: 2px;
-        height: 100px;
-        background: linear-gradient(to bottom, #3b82f6, transparent);
-        margin: 0 auto;
-    }
-    /* Para que se vea aunque no tengas JS de revelado */
-    .reveal { opacity: 1 !important; transform: none !important; }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.5); opacity: 0.5; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        /* Tarjetas de Nodo Expandidas */
-        .node-large-card {
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
-            align-items: center;
-        }
-
-        @media (max-width: 968px) {
-            .node-large-card { grid-template-columns: 1fr; gap: 40px; text-align: center; }
-            .node-large-card .order-last { order: -1; }
-        }
-
-        /* Detalles Técnicos */
-        .tech-specs {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-top: 40px;
-        }
-
-        .spec-item {
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: background 0.3s ease;
-        }
-
-        .spec-item:hover {
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        .spec-label {
-            font-size: 10px;
-            color: var(--apple-gray);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .spec-value {
-            font-size: 18px;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        /* Grid de Tipos de IA */
-        .ai-types-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-            margin-top: 50px;
-        }
-
-        .type-card {
-            background: #121214;
-            border-radius: 24px;
-            padding: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .type-card:hover {
-            transform: scale(1.02);
-            border-color: var(--apple-blue);
-        }
-
-        /* Efecto de revelado */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Línea de conexión visual entre secciones */
-        .connection-line {
-            position: absolute;
-            left: 50%;
-            width: 1px;
-            height: 100px;
-            background: linear-gradient(to bottom, var(--apple-blue), transparent);
-            bottom: -50px;
-            z-index: 10;
-        }
-
-/* --- NODO.05: SIMULADOR DE DEFENSA CRÍTICA --- */
-
-/* 1. Contenedor Maestro */
-#game-container {
-    position: relative;
-    width: 100%;
-    max-width: 1024px;
-    height: 600px;
-    background: #020205;
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    border-radius: 1.5rem;
-    overflow: hidden; /* Mantiene las cartas dentro */
-    margin: 20px auto;
-    display: block !important;
-}
-
-/* 2. Pantallas de Menú (Inicio y Fin) */
-.game-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex !important; /* Forzamos flex para centrado */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: #05050a; /* Fondo sólido para tapar el juego */
-    z-index: 1000; /* Siempre por encima de las cartas */
-    transition: opacity 0.3s ease;
-}
-
-/* 3. CLASE MAESTRA DE OCULTACIÓN (La que manda) */
-.game-hidden {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
-
-/* 4. Botón de Acción Principal */
-.game-btn-primary {
-    position: relative;
-    background: rgba(59, 130, 246, 0.1);
-    color: #60a5fa;
-    border: 2px solid #3b82f6;
-    padding: 14px 35px;
-    font-family: 'Share Tech Mono', monospace;
-    font-weight: bold;
-    cursor: pointer !important;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    z-index: 1001;
-    pointer-events: auto !important;
-}
-
-.game-btn-primary:hover {
-    background: #3b82f6;
-    color: white;
-    box-shadow: 0 0 25px rgba(59, 130, 246, 0.6);
-    transform: translateY(-2px);
-}
-
-/* 5. Interfaz de Juego (HUD) */
-#game-ui {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 500; /* Por encima de las cartas, debajo del menú */
-    padding: 25px;
-}
-
-.game-stat-pill {
-    background: rgba(0, 0, 0, 0.85);
-    border: 1px solid rgba(59, 130, 246, 0.4);
-    padding: 10px 18px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 14px;
-    color: #fff;
-    border-radius: 6px;
-    backdrop-filter: blur(8px);
-    display: inline-block;
-}
-
-/* 6. Cartas de Datos (Noticias) */
-.data-card {
-    position: absolute;
-    width: 250px;
-    background: rgba(15, 23, 42, 0.98);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    border-left: 5px solid #3b82f6;
-    padding: 15px;
-    color: #f1f5f9;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-    cursor: pointer;
-    z-index: 100;
-    font-family: 'Share Tech Mono', monospace;
-    user-select: none;
-    transition: transform 0.15s ease;
-}
-
-.data-card:active {
-    transform: scale(0.95);
-}
-
-.data-card p { 
-    font-size: 13px; 
-    line-height: 1.5; 
-    margin: 5px 0 0 0; 
-}
-
-.card-meta {
-    font-size: 10px;
-    color: #475569;
-    display: flex;
-    justify-content: space-between;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-}
-
-/* 7. Efectos Especiales */
-.shake-container {
-    animation: shakeAnim 0.3s cubic-bezier(.36,.07,.19,.97) both;
-}
-
-@keyframes shakeAnim {
-    10%, 90% { transform: translate3d(-2px, 0, 0); }
-    20%, 80% { transform: translate3d(3px, 0, 0); }
-    30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
-    40%, 60% { transform: translate3d(5px, 0, 0); }
-}
-
-.slow-mo-active {
-    box-shadow: inset 0 0 100px rgba(0, 243, 255, 0.15) !important;
-    border: 1px solid #00f3ff !important;
-}
-
-/* 8. Barra de Energía */
-#energy-fill {
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.8);
-}
-
-
-
-    </style>
+</style>
 </head>
 <body>
 
-    <!-- Hero y Planeta -->
-    <div class="scroll-wrapper">
-        <div class="scene-container">
-            <div class="stars-bg"></div>
-            <h1 id="title" class="hero-title">Inteligencia<br>Artificial</h1>
-            <div id="greeting" class="greeting-text">Una tecnología, infinitas posibilidades.</div>
-            <div id="line1" class="scroll-line"></div>
-            <div id="planet" class="planet"></div>
-            <div id="hint" class="absolute bottom-10 left-1/2 -translate-x-1/2 text-center opacity-40">
-                <div class="scroll-pill"></div>
-                <p class="text-[8px] mt-3 uppercase tracking-[0.4em] font-bold">Scroll</p>
-            </div>
-        </div>
+<div class="stars-bg"></div>
+
+<!-- ===== HERO ===== -->
+<div class="scroll-wrapper">
+  <div class="scene-container">
+    <h1 id="title" class="hero-title">Inteligencia<br>Artificial</h1>
+    <div id="greeting" class="greeting-text">Una tecnología, infinitas posibilidades.</div>
+    <div id="line1" class="scroll-line"></div>
+    <div id="planet" class="planet"></div>
+    <div style="position:absolute;bottom:clamp(20px,5vh,40px);left:50%;transform:translateX(-50%);text-align:center;z-index:200">
+      <div class="scroll-pill"></div>
+      <p style="font-size:8px;margin-top:10px;text-transform:uppercase;letter-spacing:.4em;font-weight:700;opacity:.4">Scroll</p>
     </div>
-
-    <!-- Bienvenida -->
-    <section id="next-page" class="next-section">
-        <div class="flex flex-col items-center justify-center w-full max-w-2xl">
-            <h2 class="text-3xl md:text-5xl font-black mb-6 tracking-tight uppercase">El despertar digital</h2>
-            <p class="text-lg md:text-xl text-gray-500 leading-relaxed font-light">
-                Estamos ante la mayor revolución intelectual de la historia humana. Conoce al equipo que explora esta frontera.
-            </p>
-        </div>
-        <div id="line2" class="scroll-line-black"></div>
-    </section>
-
-    <!-- Equipo -->
-    <section id="final-page" class="final-section">
-        <div class="stars-bg"></div>
-        <h2 class="text-[10px] font-bold mb-12 tracking-[0.5em] uppercase opacity-40">Squad CodeGenius</h2>
-        
-        <div class="gallery-grid">
-            <div class="person-item">
-                <img src="Abel.jpeg" alt="Abel Ghanam" >
-                <div class="person-info"><div class="info-content"><h3 class="font-bold">Abel Ghanam</h3><p class="text-xs opacity-70">CEO & Fundador.</p></div></div>
-            </div>
-            <div class="person-item">
-                <img src="hiday.jpeg" alt="Hiday" >
-                <div class="person-info"><div class="info-content"><h3 class="font-bold">Hiday Garcia</h3><p class="text-xs opacity-70">Estratega de inversiones.</p></div></div>
-            </div>
-            <div class="person-item">
-                <img src="ricardo.jpeg" alt="Ricardo" onerror="this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&auto=format&fit=crop'">
-                <div class="person-info"><div class="info-content"><h3 class="font-bold">Ricardo Marin</h3><p class="text-xs opacity-70">CEO Piensa Rápido.</p></div></div>
-            </div>
-            <div class="person-item">
-                <img src="paola.jpeg" alt="Paola" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop'">
-                <div class="person-info"><div class="info-content"><h3 class="font-bold">Paola Hernandez</h3><p class="text-xs opacity-70">Directora Creativa.</p></div></div>
-            </div>
-            <div class="person-item">
-                <img src="luis.jpeg" alt="Luis" onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=600&auto=format&fit=crop'">
-                <div class="person-info"><div class="info-content"><h3 class="font-bold">Luis Noguera</h3><p class="text-xs opacity-70">Noguera Films.</p></div></div>
-            </div>
-        </div>
-        <p class="mt-20 text-[9px] opacity-20 tracking-[1.5em] uppercase">Desciende hacia la tesis</p>
-    </section>
-
-
-
-    <div class="switch-container" style="display: flex; align-items: center; justify-content: center; gap: 15px; margin: 40px 0;">
-    <span style="color: #636e72; font-size: 12px; font-weight: bold; uppercase; letter-spacing: 0.2em;">OCULTAR TESIS</span>
-    <label class="ui-switch">
-        <input type="checkbox" id="toggle-thesis" onchange="toggleInformation()">
-        <span class="slider"></span>
-    </label>
-    <span style="color: #10b981; font-size: 12px; font-weight: bold; uppercase; letter-spacing: 0.2em;">MOSTRAR TESIS</span>
+  </div>
 </div>
 
-<div id="thesis-content-wrapper" style="display: none; transition: all 0.5s ease;">
-    
-    <div class="chapter-transition" style="background: linear-gradient(to bottom, #064e3b 0%, #000000 100%);">
-        <div class="data-stream">
-            <div class="data-node" style="animation-delay: 0s; left: -4px;"></div>
-            <div class="data-node" style="animation-delay: 2.5s; left: -4px;"></div>
-        </div>
-        
-        <div id="cap4-glow" class="chapter-title-glow" style="font-size: clamp(4rem, 18vw, 12rem); font-weight:900; color: rgba(124,58,237,0.04); z-index:1; user-select:none;">CAP I</div>
-        <style>
-        @media (max-width: 640px) {
-            #cap4-glow {
-                font-size: clamp(5rem, 22vw, 14rem) !important;
-                color: rgba(124,58,237,0.12) !important;
-                text-shadow: 0 8px 28px rgba(124,58,237,0.10);
-                line-height: 0.85;
-                padding-top: 6px;
-            }
-        }
-        </style>
+<!-- ===== BIENVENIDA ===== -->
+<section id="next-page" class="next-section">
+  <div style="max-width:600px;width:100%">
+    <h2 style="font-size:clamp(1.8rem,7vw,3.5rem);font-weight:900;margin-bottom:20px;letter-spacing:-.03em;text-transform:uppercase;line-height:1">El Despertar Digital</h2>
+    <p style="font-size:clamp(.95rem,3vw,1.2rem);color:#6b7280;line-height:1.7;font-weight:300">
+      Estamos ante la mayor revolución intelectual de la historia humana. Conoce al equipo que explora esta frontera.
+    </p>
+  </div>
+  <div id="line2" class="scroll-line-black"></div>
+</section>
 
-        
-        <div class="chapter-content-box">
-            <p class="sub-label">El problema</p>
-            <h2 class="main-chapter-head">Planteamiento</h2>
-            <div class="scroll-hint-down">
-                <div class="scroll-pill cyan !border-cyan-500/50"></div>
-                <p class="text-[9px] text-cyan-500 mt-4 uppercase tracking-[0.6em] font-bold">Continuar</p>
-            </div>
-        </div>
+<!-- ===== EQUIPO ===== -->
+<section id="final-page" class="final-section">
+  <p style="font-size:9px;font-weight:700;margin-bottom:24px;letter-spacing:.5em;text-transform:uppercase;opacity:.35">Squad CodeGenius</p>
+  <div class="gallery-grid">
+    <div class="person-item">
+      <img src="Abel.jpeg" alt="Abel Ghanam" loading="lazy">
+      <div class="person-info"><div class="info-content"><h3>Abel Ghanam</h3><p>CEO &amp; Fundador</p></div></div>
     </div>
-    
-    
-   
-
-    
-     
-           <!-- Tesis Capítulo I -->
-    <section id="thesis-page" class="thesis-section">
-        <div class="thesis-container">
-            <span class="thesis-label">Investigación Académica</span>
-            <h2 class="thesis-title">EL USO DE LA TECNOLOGÍA Y LAS INTELIGENCIAS ARTIFICIALES PARA LOS ESTUDIANTES DE TERCER AÑO</h2>
-            
-            <div class="thesis-card border-t border-white/10">
-                <div class="flex justify-between items-start mb-6">
-                    <h3 class="text-xl font-bold text-white">Introducción y Planteamiento</h3>
-                   
-                </div>
-                <p class="text-gray-400 leading-relaxed">
-                    La IA impulsa una transformación global liderada por potencias económicas. Su integración educativa trasciende la automatización, permitiendo una personalización profunda y optimización docente.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="thesis-card border-l border-emerald-500/20">
-                    <h3 class="text-lg font-bold text-white mb-3">Objetivo General</h3>
-                    <p class="text-sm text-gray-400">Determinar el uso de la IA en el proceso académico de los estudiantes de tercer año de la U.E. LITIN.</p>
-                </div>
-                <div class="thesis-card border-l border-emerald-500/20">
-                    <h3 class="text-lg font-bold text-white mb-3">Justificación</h3>
-                    <p class="text-sm text-gray-400">Modernización de métodos educativos mediante capacitación docente y personalización del aprendizaje.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- TRANSICIÓN VISUAL AL CAPÍTULO 2 CON DEGRADADO -->
-    <div class="chapter-transition">
-        <div class="data-stream">
-            <div class="data-node" style="animation-delay: 0s; left: -4px;"></div>
-            <div class="data-node" style="animation-delay: 2.5s; left: -4px;"></div>
-        </div>
-        
-      <div id="cap4-glow" class="chapter-title-glow" style="font-size: clamp(4rem, 18vw, 12rem); font-weight:900; color: rgba(120, 86, 179, 0.04); z-index:1; user-select:none;">CAP II</div>
-        <style>
-        @media (max-width: 640px) {
-            #cap4-glow {
-                font-size: clamp(5rem, 22vw, 14rem) !important;
-                color: rgba(124,58,237,0.12) !important;
-                text-shadow: 0 8px 28px rgba(124,58,237,0.10);
-                line-height: 0.85;
-                padding-top: 6px;
-            }
-        }
-        </style>
-
-        
-        <div class="chapter-content-box">
-            <p class="sub-label">Evolución</p>
-            <h2 class="main-chapter-head">Marco Teórico</h2>
-            <div class="scroll-hint-down">
-                <div class="scroll-pill cyan !border-cyan-500/50"></div>
-                <p class="text-[9px] text-cyan-500 mt-4 uppercase tracking-[0.6em] font-bold">Continuar</p>
-            </div>
-        </div>
+    <div class="person-item">
+      <img src="hiday.jpeg" alt="Hiday Garcia" loading="lazy">
+      <div class="person-info"><div class="info-content"><h3>Hiday Garcia</h3><p>Estratega de inversiones</p></div></div>
     </div>
-
-    <!-- INICIO CAPÍTULO II (CIAN ELECTRÓNICO) -->
-    <section class="chapter-two-start">
-        <div class="glow-effect"></div>
-        <div class="thesis-container">
-            <span class="thesis-label !text-cyan-400 !bg-cyan-500/10 !border-cyan-500/20">Bases del Conocimiento</span>
-            <h2 class="thesis-title !from-white !to-cyan-400">Fundamentos Tecnológicos</h2>
-            
-            <div class="grid grid-cols-1 gap-8 text-left">
-                <div class="thesis-card border-l-4 border-l-cyan-500">
-                    
-                    <h3 class="text-xl font-bold text-white mb-4">Antecedentes de la Investigación</h3>
-                    
-                    <p class="text-gray-400 leading-relaxed mb-6">
-                        El estudio de la Inteligencia Artificial no es un fenómeno aislado. Investigaciones previas sugieren que la implementación de algoritmos de aprendizaje profundo en entornos de secundaria mejora la retención de conceptos lógicos en un 40%.
-                    </p>
-                    <div class="flex flex-wrap gap-4">
-                        <div class="px-4 py-2 bg-cyan-500/10 rounded-lg border border-cyan-500/20 text-[10px] text-cyan-400 uppercase tracking-tighter font-bold">Referencia Académica 2024</div>
-                        <div class="px-4 py-2 bg-white/5 rounded-lg border border-white/10 text-[10px] text-gray-400 uppercase tracking-tighter">Estudio Piloto Latam</div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="p-8 bg-white/5 rounded-3xl border border-white/5 hover:border-cyan-500/40 transition-all duration-300">
-                        <div class="text-cyan-500 font-black text-2xl mb-4">01</div>
-                        <h4 class="text-white font-bold text-sm mb-2 uppercase tracking-tight">Bases Legales</h4>
-                        <p class="text-[11px] text-gray-500 leading-relaxed">Marco regulatorio sobre el uso de tecnologías en instituciones venezolanas.</p>
-                    </div>
-                    <div class="p-8 bg-white/5 rounded-3xl border border-white/5 hover:border-cyan-500/40 transition-all duration-300">
-                        <div class="text-cyan-500 font-black text-2xl mb-4">02</div>
-                        <h4 class="text-white font-bold text-sm mb-2 uppercase tracking-tight">Definición de Términos</h4>
-                        <p class="text-[11px] text-gray-500 leading-relaxed">Machine Learning, Redes Neuronales y Procesamiento de Lenguaje Natural.</p>
-                    </div>
-                    <div class="p-8 bg-white/5 rounded-3xl border border-white/5 hover:border-cyan-500/40 transition-all duration-300">
-                        <div class="text-cyan-500 font-black text-2xl mb-4">03</div>
-                        <h4 class="text-white font-bold text-sm mb-2 uppercase tracking-tight">Variables</h4>
-                        <p class="text-[11px] text-gray-500 leading-relaxed">Análisis dependiente e independiente sobre el rendimiento estudiantil.</p>
-                    </div>
-                </div>
-            </div>
-
-            
-
-    </section>
-
-
-    <!-- TRANSICIÓN VISUAL DEL CAPÍTULO II AL III -->
-    <div class="chapter-transition" style="position:relative; height:90vh; display:flex; flex-direction:column; align-items:center; justify-content:center; background: linear-gradient(to bottom, #061e27 0%, #0b2e3a 45%, #2b0456 100%); overflow:hidden; z-index:170;">
-        <div class="data-stream" style="position:absolute; top:0; width:1px; height:100%; background: linear-gradient(to bottom, #22d3ee 0%, #b36bff 100%); opacity:0.25;">
-            <div class="data-node" style="animation-delay: 0s; left: -4px;"></div>
-            <div class="data-node" style="animation-delay: 2.5s; left: -4px;"></div>
-        </div>
-
-        <div id="cap4-glow" class="chapter-title-glow" style="font-size: clamp(4rem, 18vw, 12rem); font-weight:900; color: rgba(124,58,237,0.04); z-index:1; user-select:none;">CAP III</div>
-        <style>
-        @media (max-width: 640px) {
-            #cap4-glow {
-                font-size: clamp(5rem, 22vw, 14rem) !important;
-                color: rgba(124,58,237,0.12) !important;
-                text-shadow: 0 8px 28px rgba(124,58,237,0.10);
-                line-height: 0.85;
-                padding-top: 6px;
-            }
-        }
-        </style>
-
-
-        <div class="chapter-content-box" style="position:relative; z-index:10; text-align:center;">
-            <p class="sub-label" style="color:#b36bff;">Metodología</p>
-            <h2 class="main-chapter-head" style="color:white;">Diseño Metodológico</h2>
-            <div class="scroll-hint-down" style="margin-top:60px; animation: bounce-scroll 2s infinite;">
-                <div class="scroll-pill" style="border-color: rgba(179,107,255,0.25);">
-                    <span style="display:block; width:4px; height:4px; background:#b36bff; position:absolute; left:50%; margin-left:-2px; top:6px; border-radius:50%; animation: scroll-dot 1.5s infinite;"></span>
-                </div>
-                <p class="text-[9px] mt-4" style="color:#b36bff; text-transform:uppercase; letter-spacing:0.6em; font-weight:700;">Continuar</p>
-            </div>
-        </div>
+    <div class="person-item">
+      <img src="ricardo.jpeg" alt="Ricardo Marin" loading="lazy"
+        onerror="this.src='https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=600&auto=format&fit=crop'">
+      <div class="person-info"><div class="info-content"><h3>Ricardo Marin</h3><p>CEO Piensa Rápido</p></div></div>
     </div>
-
-    <section class="thesis-section" style="background: linear-gradient(to bottom, #2b0456 0%, #0b2e3a 50%, #140110 100%); padding-top:120px; position:relative; z-index:160;">
-        <div class="thesis-container">
-            <span class="thesis-label">Metodología</span>
-            <h2 class="thesis-title">Diseño de la Investigación</h2>
-            
-            <div class="thesis-card border-t border-white/10">
-                <div class="flex justify-between items-start mb-6">
-                    <h3 class="text-xl font-bold text-white">Enfoque Mixto</h3>
-                </div>
-                <p class="text-gray-400 leading-relaxed">
-                    La investigación combina métodos cuantitativos y cualitativos para una comprensión integral del impacto de la IA en el aprendizaje estudiantil.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                <div class="thesis-card border-l border-emerald-500/20">
-                    <h3 class="text-lg font-bold text-white mb-3">Métodos Cuantitativos</h3>
-                    <p class="text-sm text-gray-400">Se utilizarán encuestas y análisis estadísticos para medir el rendimiento académico de los estudiantes.</p>
-                </div>
-                <div class="thesis-card border-l border-emerald-500/20">
-                    <h3 class="text-lg font-bold text-white mb-3">Métodos Cualitativos</h3>
-                    <p class="text-sm text-gray-400">Entrevistas y grupos focales se llevarán a cabo para obtener perspectivas sobre la experiencia de aprendizaje.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section></section>
-    <!-- TRANSICIÓN VISUAL AL CAPÍTULO IV -->
-    <div class="chapter-transition" style="position:relative; height:90vh; display:flex; flex-direction:column; align-items:center; justify-content:center; background: linear-gradient(to bottom, #17040c 0%, #3a0618 45%, #41010b 100%); overflow:hidden; z-index:180;">
-        <div class="data-stream" style="position:absolute; top:0; width:1px; height:100%; background: linear-gradient(to bottom, #06b6d4 0%, #7c3aed 100%); opacity:0.22;">
-            <div class="data-node" style="animation-delay: 0s; left: -4px;"></div>
-            <div class="data-node" style="animation-delay: 1.6s; left: -4px;"></div>
-            <div class="data-node" style="animation-delay: 3.2s; left: -4px;"></div>
-        </div>
-
-        <div id="cap4-glow" class="chapter-title-glow" style="font-size: clamp(4rem, 18vw, 12rem); font-weight:900; color: rgba(124,58,237,0.04); z-index:1; user-select:none;">CAP IV</div>
-        <style>
-        @media (max-width: 640px) {
-            #cap4-glow {
-                font-size: clamp(5rem, 22vw, 14rem) !important;
-                color: rgba(124,58,237,0.12) !important;
-                text-shadow: 0 8px 28px rgba(124,58,237,0.10);
-                line-height: 0.85;
-                padding-top: 6px;
-            }
-        }
-        </style>
-
-        <div class="chapter-content-box" style="position:relative; z-index:10; text-align:center;">
-            <p class="sub-label" style="color:#7c3aed;">Análisis</p>
-            <h2 class="main-chapter-head" style="color:white;">Resultados y Discusión</h2>
-            <div class="scroll-hint-down" style="margin-top:60px; animation: bounce-scroll 2s infinite;">
-                <div class="scroll-pill" style="border-color: rgba(124,58,237,0.25);">
-                    <span style="display:block; width:4px; height:4px; background:#7c3aed; position:absolute; left:50%; margin-left:-2px; top:6px; border-radius:50%; animation: scroll-dot 1.5s infinite;"></span>
-                </div>
-                <p class="text-[9px] mt-4" style="color:#7c3aed; text-transform:uppercase; letter-spacing:0.6em; font-weight:700;">Continuar</p>
-            </div>
-        </div>
+    <div class="person-item">
+      <img src="paola.jpeg" alt="Paola Hernandez" loading="lazy"
+        onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop'">
+      <div class="person-info"><div class="info-content"><h3>Paola Hernandez</h3><p>Directora Creativa</p></div></div>
     </div>
-
-    <!-- CAPÍTULO IV: RESULTADOS Y DISCUSIÓN -->
-    <section class="thesis-section" style="background: linear-gradient(to bottom, #42000e 0%, #1c0308 50%, #020205 100%); padding-top:120px; position:relative; z-index:175;">
-        <div class="thesis-container">
-            <span class="thesis-label" style="background: rgba(124,58,237,0.08); color:#b794f4; border-color: rgba(124,58,237,0.18);">Resultados</span>
-            <h2 class="thesis-title" style="background: linear-gradient(45deg,#ffffff,#7c3aed); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Análisis de Impacto en el Rendimiento Estudiantil</h2>
-
-            <div class="thesis-card border-t border-white/10">
-                <div class="flex justify-between items-start mb-6">
-                    <h3 class="text-xl font-bold text-white">Resumen de Hallazgos</h3>
-                </div>
-                <p class="text-gray-400 leading-relaxed">
-                    Los resultados muestran mejoras en la comprensión conceptual y en la resolución de problemas tras la integración de herramientas de IA en el aula. Se observó mayor motivación y participación activa en actividades guiadas por modelos adaptativos.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                <div class="thesis-card border-l border-cyan-500/20">
-                    <h3 class="text-lg font-bold text-white mb-3">Medidas Cuantitativas</h3>
-                    <p class="text-sm text-gray-400">Incremento promedio del rendimiento académico en pruebas estandarizadas: +12% (p < 0.05). Reducción de la tasa de abandono en actividades digitales.</p>
-                </div>
-                <div class="thesis-card border-l border-emerald-500/20">
-                    <h3 class="text-lg font-bold text-white mb-3">Observaciones Cualitativas</h3>
-                    <p class="text-sm text-gray-400">Estudiantes reportan mayor claridad en explicaciones personalizadas y docentes destacan ahorro de tiempo en tareas repetitivas.</p>
-                </div>
-            </div>
-
-            <div class="thesis-card mt-8">
-                <h3 class="text-lg font-bold text-white mb-3">Implicaciones</h3>
-                <p class="text-gray-400 leading-relaxed">
-                    Los hallazgos sugieren la necesidad de capacitación docente continua y protocolos éticos para el uso responsable de IA. Se recomienda ampliar el estudio a más cohortes para robustecer la evidencia.
-                </p>
-            </div>
-        </div>
-    </section>
-    <section></section>
-    <!-- TRANSICIÓN VISUAL AL CAPÍTULO V -->
-    <div class="chapter-transition" style="position:relative; height:90vh; display:flex; flex-direction:column; align-items:center; justify-content:center; background: linear-gradient(to bottom, #020205 0%, #302406 45%, #383a05 100%); overflow:hidden; z-index:190;">
-        <div class="data-stream" style="position:absolute; top:0; width:1px; height:100%; background: linear-gradient(to bottom, #06b6d4 0%, #34d399 100%); opacity:0.22;">
-            <div class="data-node" style="animation-delay: 0s; left: -4px;"></div>
-            <div class="data-node" style="animation-delay: 1.6s; left: -4px;"></div>
-            <div class="data-node" style="animation-delay: 3.2s; left: -4px;"></div>
-        </div>
-
-        <div id="cap5-glow" class="chapter-title-glow" style="font-size: clamp(4rem, 18vw, 12rem); font-weight:900; color: rgba(16,185,129,0.04); z-index:1; user-select:none;">CAP V</div>
-        <style>
-        @media (max-width: 640px) {
-            #cap5-glow {
-                font-size: clamp(5rem, 22vw, 14rem) !important;
-                color: rgba(16,185,129,0.12) !important;
-                text-shadow: 0 8px 28px rgba(16,185,129,0.10);
-                line-height: 0.85;
-                padding-top: 6px;
-            }
-        }
-        </style>
-
-        <div class="chapter-content-box" style="position:relative; z-index:10; text-align:center;">
-            <p class="sub-label" style="color:#34d399;">Síntesis</p>
-            <h2 class="main-chapter-head" style="color:white;">Conclusiones y Recomendaciones</h2>
-            <div class="scroll-hint-down" style="margin-top:60px; animation: bounce-scroll 2s infinite;">
-                <div class="scroll-pill" style="border-color: rgba(52,211,153,0.25);">
-                    <span style="display:block; width:4px; height:4px; background:#34d399; position:absolute; left:50%; margin-left:-2px; top:6px; border-radius:50%; animation: scroll-dot 1.5s infinite;"></span>
-                </div>
-                <p class="text-[9px] mt-4" style="color:#34d399; text-transform:uppercase; letter-spacing:0.6em; font-weight:700;">Continuar</p>
-            </div>
-        </div>
+    <div class="person-item" style="grid-column:span 2">
+      <img src="luis.jpeg" alt="Luis Noguera" loading="lazy"
+        onerror="this.src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=600&auto=format&fit=crop'">
+      <div class="person-info"><div class="info-content"><h3>Luis Noguera</h3><p>Noguera Films</p></div></div>
     </div>
+  </div>
+  <p style="margin-top:40px;font-size:9px;opacity:.2;letter-spacing:1.5em;text-transform:uppercase">Desciende hacia la tesis</p>
+</section>
 
-    <!-- CAPÍTULO V: CONCLUSIONES Y RECOMENDACIONES -->
-    <section class="thesis-section" style="background: linear-gradient(to bottom, #383a05 0%, #3b5a0f 50%, #000000 100%); padding-top:120px; position:relative; z-index:195;">
-        <div class="thesis-container">
-            <span class="thesis-label" style="background: rgba(16,185,129,0.08); color:#34d399; border-color: rgba(16,185,129,0.18);">Conclusiones</span>
-            <h2 class="thesis-title" style="background: linear-gradient(45deg,#ffffff,#22c55e); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Síntesis de Resultados y Recomendaciones</h2>
-
-            <div class="thesis-card border-t border-white/10">
-                <div class="flex justify-between items-start mb-6">
-                    <h3 class="text-xl font-bold text-white">Conclusiones Clave</h3>
-                </div>
-                <p class="text-gray-400 leading-relaxed">
-                    La integración de IA en el proceso educativo mostró efectos positivos en la comprensión, motivación y rendimiento. Sin embargo, su éxito depende de formación docente, infraestructura y lineamientos éticos claros.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                <div class="thesis-card border-l border-cyan-500/20">
-                    <h3 class="text-lg font-bold text-white mb-3">Recomendaciones Prácticas</h3>
-                    <ul class="text-sm text-gray-400 list-disc pl-5">
-                        <li>Capacitación continua para docentes en herramientas adaptativas.</li>
-                        <li>Desarrollo de planes piloto escalables dentro de la institución.</li>
-                    </ul>
-                </div>
-                <div class="thesis-card border-l border-emerald-500/20">
-                    <h3 class="text-lg font-bold text-white mb-3">Líneas Futuras</h3>
-                    <ul class="text-sm text-gray-400 list-disc pl-5">
-                        <li>Ampliar la muestra a más cohortes y centros educativos.</li>
-                        <li>Evaluar el impacto a largo plazo y aspectos éticos de la automatización.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="thesis-card mt-8">
-                <h3 class="text-lg font-bold text-white mb-3">Cierre</h3>
-                <p class="text-gray-400 leading-relaxed">
-                    Se concluye que la IA tiene potencial transformador en la educación cuando se implementa con evidencia, equidad y responsabilidad. Se recomienda institucionalizar buenas prácticas y políticas que garanticen beneficios sostenibles.
-                </p>
-            </div>
-        </div>
-    </section>
+<!-- ===== TOGGLE TESIS ===== -->
+<div class="switch-container" style="background:#020205;position:relative;z-index:140">
+  <span class="switch-label">Ocultar tesis</span>
+  <label class="ui-switch">
+    <input type="checkbox" id="toggle-thesis" onchange="toggleThesis()">
+    <span class="slider"></span>
+  </label>
+  <span class="switch-label on">Mostrar tesis</span>
 </div>
-    
-    
-    
-      
-    
-    
-    
 
+<!-- ===== WRAPPER TESIS ===== -->
+<div id="thesis-content-wrapper" style="display:none">
 
-    <div class="stars-bg"></div>
-
-    <!-- Ejemplo de transición previa en tu web -->
-    <div class="chapter-transition">
-        <div style="text-align: center; z-index: 10;">
-            <p style="letter-spacing: 1em; color: #10b981; text-transform: uppercase; font-size: 12px;">El Conocimiento</p>
-            <h1 style="font-size: 3rem; font-weight: 800; margin: 10px 0;">LA EVOLUCIÓN</h1>
-        </div>
+  <!-- Transición CAP I -->
+  <div class="chapter-transition" style="background:linear-gradient(to bottom,#064e3b 0%,#000 100%)">
+    <div class="data-stream" style="background:linear-gradient(to bottom,#10b981,#22d3ee)">
+      <div class="data-node"></div>
+      <div class="data-node"></div>
     </div>
+    <div class="chapter-title-glow" style="color:rgba(124,58,237,.05)">CAP I</div>
+    <div class="chapter-content-box">
+      <p class="sub-label">El problema</p>
+      <h2 class="main-chapter-head">Planteamiento</h2>
+      <div class="scroll-hint-down">
+        <div class="scroll-pill" style="border-color:rgba(34,211,238,.4)"></div>
+        <p style="font-size:9px;color:#22d3ee;margin-top:12px;text-transform:uppercase;letter-spacing:.6em;font-weight:700">Continuar</p>
+      </div>
+    </div>
+  </div>
 
-     <section class="node-section">
-        <div class="node-large-card">
-            <div class="reveal">
-                <span class="text-blue-500 font-mono text-sm tracking-widest mb-4 block">NODE.01 // ORIGEN</span>
-                <h2 class="text-4xl md:text-5xl font-bold mb-6">La Chispa del<br>Pensamiento Vivo.</h2>
-                <p class="text-lg text-gray-400 leading-relaxed mb-6">
-                    La inteligencia biológica es la base de todo progreso. Su motor principal es la <strong>plasticidad sináptica</strong>, permitiéndonos no solo procesar información, sino otorgarle un peso emocional y moral.
-                </p>
-                <p class="text-gray-500 mb-8">
-                    A diferencia de los modelos estáticos, el cerebro humano utiliza el <strong>razonamiento abductivo</strong> para generar soluciones creativas a partir de datos incompletos.
-                </p>
-                <div class="tech-specs">
-                    <div class="spec-item">
-                        <span class="spec-label">Arquitectura</span>
-                        <span class="spec-value">Carbono</span>
-                    </div>
-                    <div class="spec-item">
-                        <span class="spec-label">Ventaja</span>
-                        <span class="spec-value">Intuición</span>
-                    </div>
-                </div>
-            </div>
-            <div class="reveal flex justify-center order-last">
-                <div class="w-80 h-80 rounded-full bg-gradient-to-br from-gray-900 to-black border border-gray-800 flex items-center justify-center shadow-2xl relative">
-                    <div class="absolute inset-0 rounded-full border border-blue-500/20 animate-ping"></div>
-                    <span class="text-6xl text-white">🧠</span>
-                </div>
-            </div>
+  <!-- CAP I: Planteamiento -->
+  <section class="thesis-section" style="background:#050508">
+    <div class="thesis-container">
+      <span class="thesis-label">Investigación Académica</span>
+      <h2 class="thesis-title">El Uso de la Tecnología y las Inteligencias Artificiales para los Estudiantes de Tercer Año</h2>
+      <div class="thesis-card" style="border-top:1px solid rgba(255,255,255,.08)">
+        <h3>Introducción y Planteamiento</h3>
+        <p>La IA impulsa una transformación global liderada por potencias económicas. Su integración educativa trasciende la automatización, permitiendo una personalización profunda y optimización docente.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr;gap:16px">
+        <div class="thesis-card" style="border-left:3px solid rgba(16,185,129,.3)">
+          <h3>Objetivo General</h3>
+          <p style="font-size:.85rem">Determinar el uso de la IA en el proceso académico de los estudiantes de tercer año de la U.E. LITIN.</p>
         </div>
-        <div class="connection-line"></div>
-    </section>
-
-    <!-- NUEVA SECCIÓN: TAXONOMÍA DE LA IA EN EDUCACIÓN -->
-    <section class="node-section bg-[#050505] flex-col justify-start">
-        <div class="max-w-6xl w-full mx-auto">
-            <div class="reveal text-center mb-16">
-                <span class="text-blue-500 font-mono text-sm tracking-widest mb-4 block">IA CLASSIFICATION // CAPABILITIES</span>
-                <h2 class="text-4xl md:text-5xl font-bold mb-6">Especialización de la IA.</h2>
-                <p class="text-xl text-gray-400 max-w-3xl mx-auto">
-                    No toda la Inteligencia Artificial es igual. Cada variante aporta una capacidad única al ecosistema educativo, transformando el aula en un entorno dinámico.
-                </p>
-            </div>
-
-            <div class="ai-types-grid reveal">
-                <!-- TIPO 1: GENERATIVA -->
-                <div class="type-card">
-                    <div class="mb-6 text-blue-500 text-3xl">✨</div>
-                    <h3 class="text-xl font-bold mb-3">IA Generativa</h3>
-                    <p class="text-gray-500 text-sm mb-6">Capacidad de crear contenido original (texto, código, imágenes) a partir de instrucciones.</p>
-                    <div class="bg-blue-500/5 p-4 rounded-xl border border-blue-500/10">
-                        <span class="spec-label">Aporte Educativo</span>
-                        <p class="text-sm text-gray-300">Co-creación de materiales, resúmenes personalizados y generación de casos de estudio únicos para cada alumno.</p>
-                    </div>
-                </div>
-
-                <!-- TIPO 2: PREDICTIVA -->
-                <div class="type-card">
-                    <div class="mb-6 text-blue-500 text-3xl">📈</div>
-                    <h3 class="text-xl font-bold mb-3">IA Predictiva</h3>
-                    <p class="text-gray-500 text-sm mb-6">Análisis de patrones históricos para anticipar resultados o comportamientos futuros.</p>
-                    <div class="bg-blue-500/5 p-4 rounded-xl border border-blue-500/10">
-                        <span class="spec-label">Aporte Educativo</span>
-                        <p class="text-sm text-gray-300">Identificación temprana de riesgo de deserción y predicción de áreas donde el alumno necesitará refuerzo.</p>
-                    </div>
-                </div>
-
-                <!-- TIPO 3: CONVERSACIONAL -->
-                <div class="type-card">
-                    <div class="mb-6 text-blue-500 text-3xl">💬</div>
-                    <h3 class="text-xl font-bold mb-3">IA Conversacional</h3>
-                    <p class="text-gray-500 text-sm mb-6">Sistemas diseñados para el procesamiento del lenguaje natural en diálogos complejos.</p>
-                    <div class="bg-blue-500/5 p-4 rounded-xl border border-blue-500/10">
-                        <span class="spec-label">Aporte Educativo</span>
-                        <p class="text-sm text-gray-300">Tutores socráticos 24/7 que guían al estudiante mediante preguntas en lugar de dar respuestas directas.</p>
-                    </div>
-                </div>
-
-                <!-- TIPO 4: ADAPTATIVA -->
-                <div class="type-card">
-                    <div class="mb-6 text-blue-500 text-3xl">🧩</div>
-                    <h3 class="text-xl font-bold mb-3">IA Adaptativa</h3>
-                    <p class="text-gray-500 text-sm mb-6">Motores que modifican su estructura y contenido en tiempo real según la interacción.</p>
-                    <div class="bg-blue-500/5 p-4 rounded-xl border border-blue-500/10">
-                        <span class="spec-label">Aporte Educativo</span>
-                        <p class="text-sm text-gray-300">Personalización masiva del currículo: la dificultad y el formato cambian según el ritmo de cada estudiante.</p>
-                    </div>
-                </div>
-            </div>
+        <div class="thesis-card" style="border-left:3px solid rgba(16,185,129,.3)">
+          <h3>Justificación</h3>
+          <p style="font-size:.85rem">Modernización de métodos educativos mediante capacitación docente y personalización del aprendizaje.</p>
         </div>
-        <div class="connection-line"></div>
-    </section>
+      </div>
+    </div>
+  </section>
 
-    <!-- NODO 02: EXPANSIÓN SINTÉTICA -->
-    <section class="node-section">
-        <div class="node-large-card">
-            <div class="reveal flex justify-center">
-                <div class="relative">
-                    <div class="w-80 h-80 bg-blue-600 rounded-[3rem] opacity-10 absolute blur-3xl"></div>
-                    <div class="w-72 h-72 bg-[#1d1d1f] rounded-[2.5rem] border border-blue-500/30 flex items-center justify-center relative z-10 shadow-inner">
-                        <div class="text-blue-500 font-mono text-xl animate-pulse">011011001</div>
-                    </div>
-                </div>
-            </div>
-            <div class="reveal">
-                <span class="text-blue-500 font-mono text-sm tracking-widest mb-4 block">NODE.02 // EXPANSIÓN</span>
-                <h2 class="text-4xl md:text-5xl font-bold mb-6">Potencia de Cálculo<br>Inhumana.</h2>
-                <p class="text-lg text-gray-400 leading-relaxed mb-6">
-                    La IA actúa como una <strong>extensión cognitiva</strong>. Su arquitectura de silicio permite la detección de patrones sutiles en petabytes de información en milisegundos.
-                </p>
-                <div class="space-y-4">
-                    <div class="flex items-start gap-4">
-                        <div class="w-1 h-12 bg-blue-500 mt-1"></div>
-                        <div>
-                            <h4 class="font-bold">Procesamiento Masivo</h4>
-                            <p class="text-sm text-gray-500">Capacidad de análisis de Big Data inaccesible para la mente biológica.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-4">
-                        <div class="w-1 h-12 bg-blue-500 mt-1"></div>
-                        <div>
-                            <h4 class="font-bold">Inferencia Predictiva</h4>
-                            <p class="text-sm text-gray-500">Modelado de escenarios futuros basado en billones de variables históricas.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <!-- Transición CAP II -->
+  <div class="chapter-transition" style="background:linear-gradient(to bottom,#050508 0%,#061e27 100%)">
+    <div class="data-stream" style="background:linear-gradient(to bottom,#22d3ee,#06b6d4)">
+      <div class="data-node"></div>
+      <div class="data-node"></div>
+    </div>
+    <div class="chapter-title-glow" style="color:rgba(6,182,212,.05)">CAP II</div>
+    <div class="chapter-content-box">
+      <p class="sub-label">Evolución</p>
+      <h2 class="main-chapter-head">Marco Teórico</h2>
+      <div class="scroll-hint-down">
+        <div class="scroll-pill" style="border-color:rgba(34,211,238,.4)"></div>
+        <p style="font-size:9px;color:#22d3ee;margin-top:12px;text-transform:uppercase;letter-spacing:.6em;font-weight:700">Continuar</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAP II: Marco Teórico -->
+  <section class="chapter-two-start" style="background:#061e27;position:relative;z-index:155">
+    <div class="glow-effect"></div>
+    <div class="thesis-container">
+      <span class="thesis-label" style="color:#22d3ee;background:rgba(34,211,238,.08);border-color:rgba(34,211,238,.2)">Bases del Conocimiento</span>
+      <h2 class="thesis-title" style="background:linear-gradient(45deg,#fff,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Fundamentos Tecnológicos</h2>
+      <div class="thesis-card" style="border-left:4px solid #06b6d4">
+        <h3>Antecedentes de la Investigación</h3>
+        <p>El estudio de la Inteligencia Artificial no es un fenómeno aislado. Investigaciones previas sugieren que la implementación de algoritmos de aprendizaje profundo en entornos de secundaria mejora la retención de conceptos lógicos en un 40%.</p>
+        <div class="tag-group">
+          <span class="tag">Referencia Académica 2024</span>
+          <span class="tag" style="background:rgba(255,255,255,.04);color:#9ca3af;border-color:rgba(255,255,255,.1)">Estudio Piloto Latam</span>
         </div>
-        <div class="connection-line"></div>
-    </section>
-
-    <!-- NODO 03: FILTRO CRÍTICO Y ÉTICA -->
-    <section class="node-section bg-[#050505]">
-        <div class="node-large-card">
-            <div class="reveal">
-                <span class="text-blue-500 font-mono text-sm tracking-widest mb-4 block">NODE.03 // GOBERNANZA</span>
-                <h2 class="text-4xl md:text-5xl font-bold mb-6">El Filtro Ético.</h2>
-                <p class="text-lg text-gray-400 mb-8">
-                    La tecnología sin valores es ciega. La transición requiere una <strong>supervisión humana constante</strong> para evitar sesgos y asegurar la transparencia.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
-                        <h4 class="text-red-400 font-bold mb-2">Riesgos Algorítmicos</h4>
-                        <p class="text-sm text-gray-500">Sesgos de datos, falta de explicabilidad y pérdida de privacidad sistémica.</p>
-                    </div>
-                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
-                        <h4 class="text-green-400 font-bold mb-2">Meta Humana</h4>
-                        <p class="text-sm text-gray-500">Alinear la inteligencia sintética con la dignidad y el bienestar colectivo.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="reveal flex items-center justify-center">
-                <div class="p-8 border border-white/10 rounded-3xl bg-black shadow-2xl">
-                    <ul class="space-y-6">
-                        <li class="flex items-center gap-4">
-                            <span class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs">✓</span>
-                            <span class="text-gray-400">Gobernanza de Datos</span>
-                        </li>
-                        <li class="flex items-center gap-4">
-                            <span class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs">✓</span>
-                            <span class="text-gray-400">Auditoría de Sesgos</span>
-                        </li>
-                        <li class="flex items-center gap-4">
-                            <span class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs">✓</span>
-                            <span class="text-gray-400">Transparencia Operativa</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+      </div>
+      <div class="card-3-grid">
+        <div class="mini-card">
+          <div class="mini-card-num">01</div>
+          <h4>Bases Legales</h4>
+          <p>Marco regulatorio sobre el uso de tecnologías en instituciones venezolanas.</p>
         </div>
-        <div class="connection-line"></div>
-    </section>
-
-    <!-- NODO 04: EDUCACIÓN 4.0 -->
-    <section class="node-section bg-white text-black overflow-hidden">
-        <div class="node-large-card">
-            <div class="reveal flex justify-center order-last md:order-first">
-                <div class="w-96 h-64 bg-gray-100 rounded-3xl border border-gray-200 flex items-center justify-center text-6xl shadow-xl">
-                    🎓
-                </div>
-            </div>
-            <div class="reveal">
-                <span class="text-blue-600 font-mono text-sm tracking-widest mb-4 block">NODE.04 // FUTURO</span>
-                <h2 class="text-4xl md:text-5xl font-bold mb-6">Educación 4.0:<br>Simbiosis Total.</h2>
-                <p class="text-lg text-gray-600 mb-8 leading-relaxed">
-                    El aula evoluciona de un centro de transferencia a un <strong>hub de innovación asistida</strong>. La IA no dicta el conocimiento; personaliza el camino para que el humano lidere la creatividad.
-                </p>
-                <div class="space-y-6">
-                    <div class="p-5 border-l-4 border-blue-600 bg-gray-50">
-                        <h5 class="font-bold text-black">Aprendizaje Adaptativo</h5>
-                        <p class="text-sm text-gray-500">Sistemas que ajustan la dificultad y el método en tiempo real según la respuesta del estudiante.</p>
-                    </div>
-                    <div class="p-5 border-l-4 border-blue-600 bg-gray-50">
-                        <h5 class="font-bold text-black">Enfoque Socrático</h5>
-                        <p class="text-sm text-gray-500">La IA actúa como tutor persistente, fomentando el pensamiento crítico mediante el diálogo.</p>
-                    </div>
-                </div>
-            </div>
+        <div class="mini-card">
+          <div class="mini-card-num">02</div>
+          <h4>Definición de Términos</h4>
+          <p>Machine Learning, Redes Neuronales y Procesamiento de Lenguaje Natural.</p>
         </div>
-    </section>
+        <div class="mini-card">
+          <div class="mini-card-num">03</div>
+          <h4>Variables</h4>
+          <p>Análisis dependiente e independiente sobre el rendimiento estudiantil.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div id="game-container">
-    
+  <!-- Transición CAP III -->
+  <div class="chapter-transition" style="background:linear-gradient(to bottom,#061e27 0%,#0b2e3a 45%,#2b0456 100%)">
+    <div class="data-stream" style="background:linear-gradient(to bottom,#22d3ee,#b36bff)">
+      <div class="data-node" style="background:#b36bff;box-shadow:0 0 12px #b36bff"></div>
+      <div class="data-node" style="background:#b36bff;box-shadow:0 0 12px #b36bff"></div>
+    </div>
+    <div class="chapter-title-glow" style="color:rgba(124,58,237,.05)">CAP III</div>
+    <div class="chapter-content-box">
+      <p class="sub-label" style="color:#b36bff">Metodología</p>
+      <h2 class="main-chapter-head">Diseño Metodológico</h2>
+      <div class="scroll-hint-down">
+        <div class="scroll-pill" style="border-color:rgba(179,107,255,.3)"></div>
+        <p style="font-size:9px;color:#b36bff;margin-top:12px;text-transform:uppercase;letter-spacing:.6em;font-weight:700">Continuar</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAP III: Metodología -->
+  <section class="thesis-section" style="background:linear-gradient(to bottom,#2b0456,#0b2e3a 50%,#140110 100%)">
+    <div class="thesis-container">
+      <span class="thesis-label" style="color:#b36bff;background:rgba(179,107,255,.08);border-color:rgba(179,107,255,.2)">Metodología</span>
+      <h2 class="thesis-title" style="background:linear-gradient(45deg,#fff,#b36bff);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Diseño de la Investigación</h2>
+      <div class="thesis-card" style="border-top:1px solid rgba(255,255,255,.08)">
+        <h3>Enfoque Mixto</h3>
+        <p>La investigación combina métodos cuantitativos y cualitativos para una comprensión integral del impacto de la IA en el aprendizaje estudiantil.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr;gap:16px">
+        <div class="thesis-card" style="border-left:3px solid rgba(16,185,129,.3)">
+          <h3>Métodos Cuantitativos</h3>
+          <p style="font-size:.85rem">Se utilizarán encuestas y análisis estadísticos para medir el rendimiento académico de los estudiantes.</p>
+        </div>
+        <div class="thesis-card" style="border-left:3px solid rgba(16,185,129,.3)">
+          <h3>Métodos Cualitativos</h3>
+          <p style="font-size:.85rem">Entrevistas y grupos focales se llevarán a cabo para obtener perspectivas sobre la experiencia de aprendizaje.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transición CAP IV -->
+  <div class="chapter-transition" style="background:linear-gradient(to bottom,#17040c 0%,#3a0618 45%,#41010b 100%)">
+    <div class="data-stream" style="background:linear-gradient(to bottom,#06b6d4,#7c3aed)">
+      <div class="data-node" style="background:#7c3aed;box-shadow:0 0 12px #7c3aed"></div>
+      <div class="data-node" style="background:#7c3aed;animation-delay:1.6s"></div>
+    </div>
+    <div class="chapter-title-glow" style="color:rgba(124,58,237,.05)">CAP IV</div>
+    <div class="chapter-content-box">
+      <p class="sub-label" style="color:#7c3aed">Análisis</p>
+      <h2 class="main-chapter-head">Resultados y Discusión</h2>
+      <div class="scroll-hint-down">
+        <div class="scroll-pill" style="border-color:rgba(124,58,237,.3)"></div>
+        <p style="font-size:9px;color:#7c3aed;margin-top:12px;text-transform:uppercase;letter-spacing:.6em;font-weight:700">Continuar</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAP IV: Resultados -->
+  <section class="thesis-section" style="background:linear-gradient(to bottom,#42000e,#1c0308 50%,#020205 100%)">
+    <div class="thesis-container">
+      <span class="thesis-label" style="color:#b794f4;background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.18)">Resultados</span>
+      <h2 class="thesis-title" style="background:linear-gradient(45deg,#fff,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Análisis de Impacto en el Rendimiento Estudiantil</h2>
+      <div class="thesis-card" style="border-top:1px solid rgba(255,255,255,.08)">
+        <h3>Resumen de Hallazgos</h3>
+        <p>Los resultados muestran mejoras en la comprensión conceptual y en la resolución de problemas tras la integración de herramientas de IA en el aula. Se observó mayor motivación y participación activa en actividades guiadas por modelos adaptativos.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr;gap:16px">
+        <div class="thesis-card" style="border-left:3px solid rgba(6,182,212,.3)">
+          <h3>Medidas Cuantitativas</h3>
+          <p style="font-size:.85rem">Incremento promedio del rendimiento académico en pruebas estandarizadas: +12% (p &lt; 0.05). Reducción de la tasa de abandono en actividades digitales.</p>
+        </div>
+        <div class="thesis-card" style="border-left:3px solid rgba(16,185,129,.3)">
+          <h3>Observaciones Cualitativas</h3>
+          <p style="font-size:.85rem">Estudiantes reportan mayor claridad en explicaciones personalizadas y docentes destacan ahorro de tiempo en tareas repetitivas.</p>
+        </div>
+      </div>
+      <div class="thesis-card" style="margin-top:16px">
+        <h3>Implicaciones</h3>
+        <p>Los hallazgos sugieren la necesidad de capacitación docente continua y protocolos éticos para el uso responsable de IA. Se recomienda ampliar el estudio a más cohortes para robustecer la evidencia.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transición CAP V -->
+  <div class="chapter-transition" style="background:linear-gradient(to bottom,#020205 0%,#302406 45%,#383a05 100%)">
+    <div class="data-stream" style="background:linear-gradient(to bottom,#06b6d4,#34d399)">
+      <div class="data-node" style="background:#34d399;box-shadow:0 0 12px #34d399"></div>
+      <div class="data-node" style="background:#34d399;animation-delay:1.6s"></div>
+    </div>
+    <div class="chapter-title-glow" style="color:rgba(16,185,129,.05)">CAP V</div>
+    <div class="chapter-content-box">
+      <p class="sub-label" style="color:#34d399">Síntesis</p>
+      <h2 class="main-chapter-head">Conclusiones y Recomendaciones</h2>
+      <div class="scroll-hint-down">
+        <div class="scroll-pill" style="border-color:rgba(52,211,153,.3)"></div>
+        <p style="font-size:9px;color:#34d399;margin-top:12px;text-transform:uppercase;letter-spacing:.6em;font-weight:700">Continuar</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAP V: Conclusiones -->
+  <section class="thesis-section" style="background:linear-gradient(to bottom,#383a05,#3b5a0f 50%,#000 100%)">
+    <div class="thesis-container">
+      <span class="thesis-label" style="color:#34d399;background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.18)">Conclusiones</span>
+      <h2 class="thesis-title" style="background:linear-gradient(45deg,#fff,#22c55e);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Síntesis de Resultados y Recomendaciones</h2>
+      <div class="thesis-card" style="border-top:1px solid rgba(255,255,255,.08)">
+        <h3>Conclusiones Clave</h3>
+        <p>La integración de IA en el proceso educativo mostró efectos positivos en la comprensión, motivación y rendimiento. Sin embargo, su éxito depende de formación docente, infraestructura y lineamientos éticos claros.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr;gap:16px">
+        <div class="thesis-card" style="border-left:3px solid rgba(6,182,212,.3)">
+          <h3>Recomendaciones Prácticas</h3>
+          <ul style="font-size:.85rem;color:#9ca3af;padding-left:18px;line-height:1.9">
+            <li>Capacitación continua para docentes en herramientas adaptativas.</li>
+            <li>Desarrollo de planes piloto escalables dentro de la institución.</li>
+          </ul>
+        </div>
+        <div class="thesis-card" style="border-left:3px solid rgba(16,185,129,.3)">
+          <h3>Líneas Futuras</h3>
+          <ul style="font-size:.85rem;color:#9ca3af;padding-left:18px;line-height:1.9">
+            <li>Ampliar la muestra a más cohortes y centros educativos.</li>
+            <li>Evaluar el impacto a largo plazo y aspectos éticos de la automatización.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="thesis-card" style="margin-top:16px">
+        <h3>Cierre</h3>
+        <p>Se concluye que la IA tiene potencial transformador en la educación cuando se implementa con evidencia, equidad y responsabilidad. Se recomienda institucionalizar buenas prácticas y políticas que garanticen beneficios sostenibles.</p>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /thesis-content-wrapper -->
+
+<!-- ===== TRANSICIÓN EVOLUCIÓN ===== -->
+<div class="chapter-transition" style="background:linear-gradient(to bottom,#020205,#020205)">
+  <div style="text-align:center;z-index:10;padding:0 20px">
+    <p style="letter-spacing:.8em;color:#10b981;text-transform:uppercase;font-size:11px;margin-bottom:10px">El Conocimiento</p>
+    <h1 style="font-size:clamp(2rem,8vw,3rem);font-weight:800">La Evolución</h1>
+  </div>
+</div>
+
+<!-- ===== NODO 01: ORIGEN ===== -->
+<section class="node-section">
+  <div class="node-large-card">
+    <div class="reveal" style="width:100%;text-align:center">
+      <div class="deco-circle">
+        <div class="ping"></div>
+        <span class="emoji">🧠</span>
+      </div>
+    </div>
+    <div class="reveal">
+      <p class="font-mono-sm" style="color:#3b82f6;margin-bottom:16px">Node.01 // Origen</p>
+      <h2 style="font-size:clamp(1.8rem,5vw,3rem);font-weight:700;line-height:1.1;margin-bottom:20px">La Chispa del<br>Pensamiento Vivo.</h2>
+      <p class="text-sm-muted" style="margin-bottom:16px">La inteligencia biológica es la base de todo progreso. Su motor principal es la <strong style="color:#fff">plasticidad sináptica</strong>, permitiéndonos no solo procesar información, sino otorgarle un peso emocional y moral.</p>
+      <p class="text-sm-muted" style="margin-bottom:24px">A diferencia de los modelos estáticos, el cerebro humano utiliza el <strong style="color:#fff">razonamiento abductivo</strong> para generar soluciones creativas a partir de datos incompletos.</p>
+      <div class="tech-specs">
+        <div class="spec-item"><span class="spec-label">Arquitectura</span><span class="spec-value">Carbono</span></div>
+        <div class="spec-item"><span class="spec-label">Ventaja</span><span class="spec-value">Intuición</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="connection-line"></div>
+</section>
+
+<!-- ===== TAXONOMÍA IA ===== -->
+<section class="node-section" style="background:#050505;flex-direction:column;align-items:center;min-height:auto;padding:60px 16px">
+  <div style="max-width:1200px;width:100%;margin:0 auto">
+    <div class="reveal" style="text-align:center;margin-bottom:40px">
+      <p class="font-mono-sm" style="color:#3b82f6;margin-bottom:16px">IA Classification // Capabilities</p>
+      <h2 style="font-size:clamp(1.8rem,5vw,3rem);font-weight:700;margin-bottom:16px">Especialización de la IA.</h2>
+      <p style="font-size:1rem;color:#9ca3af;max-width:600px;margin:0 auto;line-height:1.7">No toda la Inteligencia Artificial es igual. Cada variante aporta una capacidad única al ecosistema educativo.</p>
+    </div>
+    <div class="ai-types-grid reveal">
+      <div class="type-card">
+        <div class="type-icon">✨</div>
+        <h3>IA Generativa</h3>
+        <p>Capacidad de crear contenido original (texto, código, imágenes) a partir de instrucciones.</p>
+        <div class="type-detail"><span class="spec-label">Aporte Educativo</span><p>Co-creación de materiales, resúmenes personalizados y generación de casos de estudio únicos para cada alumno.</p></div>
+      </div>
+      <div class="type-card">
+        <div class="type-icon">📈</div>
+        <h3>IA Predictiva</h3>
+        <p>Análisis de patrones históricos para anticipar resultados o comportamientos futuros.</p>
+        <div class="type-detail"><span class="spec-label">Aporte Educativo</span><p>Identificación temprana de riesgo de deserción y predicción de áreas donde el alumno necesitará refuerzo.</p></div>
+      </div>
+      <div class="type-card">
+        <div class="type-icon">💬</div>
+        <h3>IA Conversacional</h3>
+        <p>Sistemas diseñados para el procesamiento del lenguaje natural en diálogos complejos.</p>
+        <div class="type-detail"><span class="spec-label">Aporte Educativo</span><p>Tutores socráticos 24/7 que guían al estudiante mediante preguntas en lugar de dar respuestas directas.</p></div>
+      </div>
+      <div class="type-card">
+        <div class="type-icon">🧩</div>
+        <h3>IA Adaptativa</h3>
+        <p>Motores que modifican su estructura y contenido en tiempo real según la interacción.</p>
+        <div class="type-detail"><span class="spec-label">Aporte Educativo</span><p>Personalización masiva del currículo: la dificultad y el formato cambian según el ritmo de cada estudiante.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="connection-line" style="margin-top:60px"></div>
+</section>
+
+<!-- ===== NODO 02: EXPANSIÓN ===== -->
+<section class="node-section">
+  <div class="node-large-card">
+    <div class="reveal" style="width:100%;text-align:center">
+      <div class="deco-square" style="display:inline-flex;align-items:center;justify-content:center">
+        <div class="blur-bg"></div>
+        <div class="inner"><span>011011001</span></div>
+      </div>
+    </div>
+    <div class="reveal">
+      <p class="font-mono-sm" style="color:#3b82f6;margin-bottom:16px">Node.02 // Expansión</p>
+      <h2 style="font-size:clamp(1.8rem,5vw,3rem);font-weight:700;line-height:1.1;margin-bottom:20px">Potencia de Cálculo<br>Inhumana.</h2>
+      <p class="text-sm-muted" style="margin-bottom:24px">La IA actúa como una <strong style="color:#fff">extensión cognitiva</strong>. Su arquitectura de silicio permite la detección de patrones sutiles en petabytes de información en milisegundos.</p>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <div style="width:3px;height:48px;background:#3b82f6;border-radius:2px;flex-shrink:0;margin-top:2px"></div>
+          <div><h4 style="font-weight:700;font-size:.95rem;margin-bottom:4px">Procesamiento Masivo</h4><p style="font-size:.82rem;color:#6b7280">Capacidad de análisis de Big Data inaccesible para la mente biológica.</p></div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <div style="width:3px;height:48px;background:#3b82f6;border-radius:2px;flex-shrink:0;margin-top:2px"></div>
+          <div><h4 style="font-weight:700;font-size:.95rem;margin-bottom:4px">Inferencia Predictiva</h4><p style="font-size:.82rem;color:#6b7280">Modelado de escenarios futuros basado en billones de variables históricas.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="connection-line"></div>
+</section>
+
+<!-- ===== NODO 03: ÉTICA ===== -->
+<section class="node-section" style="background:#050505">
+  <div class="node-large-card">
+    <div class="reveal">
+      <p class="font-mono-sm" style="color:#3b82f6;margin-bottom:16px">Node.03 // Gobernanza</p>
+      <h2 style="font-size:clamp(1.8rem,5vw,3rem);font-weight:700;line-height:1.1;margin-bottom:20px">El Filtro Ético.</h2>
+      <p class="text-sm-muted" style="margin-bottom:24px">La tecnología sin valores es ciega. La transición requiere una <strong style="color:#fff">supervisión humana constante</strong> para evitar sesgos y asegurar la transparencia.</p>
+      <div class="risk-grid">
+        <div class="risk-card">
+          <h4 style="color:#f87171;font-weight:700;font-size:.9rem;margin-bottom:6px">Riesgos Algorítmicos</h4>
+          <p style="font-size:.82rem;color:#6b7280">Sesgos de datos, falta de explicabilidad y pérdida de privacidad sistémica.</p>
+        </div>
+        <div class="risk-card">
+          <h4 style="color:#4ade80;font-weight:700;font-size:.9rem;margin-bottom:6px">Meta Humana</h4>
+          <p style="font-size:.82rem;color:#6b7280">Alinear la inteligencia sintética con la dignidad y el bienestar colectivo.</p>
+        </div>
+      </div>
+    </div>
+    <div class="reveal" style="width:100%;text-align:center">
+      <div class="checks-box" style="max-width:300px;margin:0 auto">
+        <div class="check-row"><span class="check-icon">✓</span><span>Gobernanza de Datos</span></div>
+        <div class="check-row"><span class="check-icon">✓</span><span>Auditoría de Sesgos</span></div>
+        <div class="check-row"><span class="check-icon">✓</span><span>Transparencia Operativa</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="connection-line"></div>
+</section>
+
+<!-- ===== NODO 04: EDUCACIÓN 4.0 ===== -->
+<section class="node-section white-section" style="color:#000">
+  <div class="node-large-card">
+    <div class="reveal" style="width:100%;text-align:center">
+      <div style="width:100%;max-width:320px;height:180px;background:#f8fafc;border-radius:24px;border:1px solid #e5e7eb;display:flex;align-items:center;justify-content:center;font-size:52px;margin:0 auto">🎓</div>
+    </div>
+    <div class="reveal">
+      <p class="font-mono-sm" style="color:#2563eb;margin-bottom:16px">Node.04 // Futuro</p>
+      <h2 style="font-size:clamp(1.8rem,5vw,3rem);font-weight:700;line-height:1.1;margin-bottom:20px;color:#000">Educación 4.0:<br>Simbiosis Total.</h2>
+      <p style="font-size:.95rem;color:#6b7280;margin-bottom:24px;line-height:1.7">El aula evoluciona de un centro de transferencia a un <strong style="color:#000">hub de innovación asistida</strong>. La IA no dicta el conocimiento; personaliza el camino para que el humano lidere la creatividad.</p>
+      <div class="border-accent-left"><h5>Aprendizaje Adaptativo</h5><p>Sistemas que ajustan la dificultad y el método en tiempo real según la respuesta del estudiante.</p></div>
+      <div class="border-accent-left"><h5>Enfoque Socrático</h5><p>La IA actúa como tutor persistente, fomentando el pensamiento crítico mediante el diálogo.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NODO 05: JUEGO ===== -->
+<div style="background:#020205;padding:40px 16px;position:relative;z-index:200">
+  <div style="text-align:center;margin-bottom:24px">
+    <p class="font-mono-sm" style="color:#3b82f6;margin-bottom:10px">Node.05 // Simulador</p>
+    <h2 style="font-size:clamp(1.5rem,5vw,2.5rem);font-weight:700">Defensa Crítica de Datos</h2>
+    <p style="font-size:.85rem;color:#9ca3af;margin-top:8px">Identifica las afirmaciones falsas sobre IA. Toca las tarjetas rojas.</p>
+  </div>
+  <div id="game-container">
     <div id="start-screen" class="game-overlay">
-        <div class="text-center p-8">
-            <div class="text-6xl mb-6">🛡️</div>
-            <button class="game-btn-primary" onclick="Game.init()">Comenzar Defensa</button>
-            <p class="text-xs text-blue-400/60 mt-6 font-mono tracking-widest uppercase">
-                Node.05 // Sistema de Filtrado de Datos Listo
-            </p>
-        </div>
+      <div style="text-align:center;padding:20px">
+        <div style="font-size:48px;margin-bottom:20px">🛡️</div>
+        <h3 style="color:#60a5fa;font-family:monospace;font-size:1rem;margin-bottom:6px;text-transform:uppercase;letter-spacing:.1em">Node.05 // Sistema Listo</h3>
+        <p style="color:#475569;font-size:.8rem;font-family:monospace;margin-bottom:24px;max-width:300px">Identifica noticias falsas sobre IA antes de que crucen la pantalla</p>
+        <button class="game-btn-primary" onclick="Game.init()">Comenzar Defensa</button>
+      </div>
     </div>
-
-    <div id="game-screen" class="game-hidden h-full w-full relative">
-        <div id="game-ui" class="absolute top-0 left-0 w-full p-6 flex justify-between items-start pointer-events-none">
-            <div class="flex flex-col gap-3">
-                <div class="game-stat-pill pointer-events-auto">
-                    MÉRITO: <span id="score" class="text-blue-400">0</span>
-                </div>
-                <div id="combo-display" class="text-yellow-400 text-xs font-bold font-mono px-2">
-                    COMBO x1
-                </div>
-            </div>
-            
-            <div class="flex flex-col items-center pointer-events-auto">
-                <div class="w-32 h-2 bg-white/10 border border-blue-500/50 rounded-full overflow-hidden">
-                    <div id="energy-fill" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
-                </div>
-                <button id="btn-overclock" class="text-[9px] mt-2 text-blue-400 border border-blue-400/30 px-2 py-1 rounded hover:bg-blue-400/20 uppercase tracking-tighter" onclick="Game.activateOverclock()">
-                    Modo Concentración
-                </button>
-            </div>
-
-            <div class="game-stat-pill text-red-500 pointer-events-auto">
-                RIGOR: <span id="lives">3</span>
-            </div>
+    <div id="game-screen" class="game-hidden" style="height:100%;width:100%;position:relative">
+      <div id="game-ui" style="position:absolute;top:0;left:0;width:100%;padding:14px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;z-index:500">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="game-stat-pill" style="pointer-events:auto">MÉRITO: <span id="score" style="color:#60a5fa">0</span></div>
+          <div id="combo-display" style="color:#fbbf24;font-size:11px;font-weight:700;font-family:monospace;padding:0 4px">COMBO x1</div>
         </div>
-
-        <div id="conveyor-belt" class="w-full h-full relative"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;pointer-events:auto">
+          <div style="width:80px;height:6px;background:rgba(255,255,255,.1);border:1px solid rgba(59,130,246,.4);border-radius:4px;overflow:hidden">
+            <div id="energy-fill" style="height:100%;background:#3b82f6;transition:width .3s;width:0%"></div>
+          </div>
+          <button id="btn-overclock" onclick="Game.activateOverclock()" style="font-size:9px;color:#60a5fa;border:1px solid rgba(59,130,246,.3);padding:4px 8px;border-radius:4px;margin-top:6px;background:transparent;cursor:pointer;font-family:monospace;text-transform:uppercase;letter-spacing:.05em;pointer-events:auto">Concentración</button>
+        </div>
+        <div class="game-stat-pill" style="color:#f87171;pointer-events:auto">RIGOR: <span id="lives">3</span></div>
+      </div>
+      <div id="conveyor-belt" style="width:100%;height:100%;position:relative;overflow:hidden"></div>
     </div>
-
     <div id="end-screen" class="game-overlay game-hidden">
-        <div class="text-center p-8">
-            <h3 class="text-blue-400 font-mono mb-2 uppercase tracking-widest text-sm">Resultado Académico</h3>
-            <div id="final-score" class="text-7xl font-bold text-white mb-4">0</div>
-            <p id="performance" class="text-gray-500 text-xs mb-8 font-mono uppercase"></p>
-            <button class="game-btn-primary" onclick="Game.init()">Reiniciar Defensa</button>
-        </div>
+      <div style="text-align:center;padding:20px">
+        <h3 style="color:#60a5fa;font-family:monospace;text-transform:uppercase;letter-spacing:.1em;font-size:.9rem;margin-bottom:8px">Resultado Académico</h3>
+        <div id="final-score" style="font-size:clamp(3rem,10vw,5rem);font-weight:900;color:#fff;margin-bottom:8px">0</div>
+        <p id="performance" style="color:#475569;font-size:.75rem;font-family:monospace;text-transform:uppercase;margin-bottom:24px"></p>
+        <button class="game-btn-primary" onclick="Game.init()">Reiniciar Defensa</button>
+      </div>
     </div>
+  </div>
 </div>
-    
-    <script> 
-        const planet = document.getElementById('planet');
-        const title = document.getElementById('title');
-        const greeting = document.getElementById('greeting');
-        const line1 = document.getElementById('line1');
-        const line2 = document.getElementById('line2');
-        const nextPage = document.getElementById('next-page');
-        const finalPage = document.getElementById('final-page');
-        
-        let timer1Started = false;
-        let timer2Started = false;
 
-        window.addEventListener('scroll', () => {
-            const scrollY = window.scrollY;
-            const viewportH = window.innerHeight;
-            const planetPercent = Math.min(scrollY / (viewportH * 4), 1);
-            
-            planet.style.transform = `translateX(-50%) translateY(-${planetPercent * 160}%)`;
-            title.style.opacity = planetPercent > 0.2 ? Math.max(0, 1 - (planetPercent - 0.2) * 4) : 1;
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+  <p>© 2025 Squad CodeGenius · Investigación IA Educativa</p>
+</footer>
 
-            if (planetPercent > 0.85) {
-                if (!greeting.classList.contains('visible')) {
-                    greeting.classList.add('visible');
-                    if (!timer1Started) {
-                        timer1Started = true;
-                        setTimeout(() => {
-                            if (window.scrollY / (viewportH * 4) > 0.8) {
-                                line1.classList.add('active');
-                                setTimeout(() => {
-                                    if (window.scrollY / (viewportH * 4) > 0.8) {
-                                        nextPage.scrollIntoView({ behavior: 'smooth' });
-                                        triggerSecondTransition();
-                                    }
-                                }, 1500);
-                            }
-                        }, 2000);
-                    }
-                }
-            } else {
-                greeting.classList.remove('visible');
-                line1.classList.remove('active');
-                timer1Started = false;
-            }
-        });
+<script>
+/* ===== HERO SCROLL ===== */
+(function(){
+  const planet=document.getElementById('planet');
+  const title=document.getElementById('title');
+  const greeting=document.getElementById('greeting');
+  const line1=document.getElementById('line1');
+  const line2=document.getElementById('line2');
+  const nextPage=document.getElementById('next-page');
+  const finalPage=document.getElementById('final-page');
+  let t1=false,t2=false;
 
-        function triggerSecondTransition() {
-            if (!timer2Started) {
-                timer2Started = true;
-                setTimeout(() => {
-                    const rect = nextPage.getBoundingClientRect();
-                    if (Math.abs(rect.top) < 150) {
-                        line2.classList.add('active');
-                        setTimeout(() => {
-                            finalPage.scrollIntoView({ behavior: 'smooth' });
-                        }, 1500);
-                    } else {
-                        timer2Started = false;
-                    }
-                }, 2000);
-            }
-        }
-         
-    
-    function showContent(index, btn) {
-            const glider = document.getElementById('glider');
-            glider.style.transform = `translateX(${index * 100}%)`;
+  window.addEventListener('scroll',function(){
+    const sy=window.scrollY;
+    const vh=window.innerHeight;
+    const wh=document.querySelector('.scroll-wrapper').offsetHeight;
+    const pct=Math.min(sy/(wh-vh),1);
 
-            document.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    planet.style.transform='translateX(-50%) translateY(-'+(pct*160)+'%)';
+    title.style.opacity=pct>0.2?Math.max(0,1-(pct-0.2)*4):1;
 
-            document.querySelectorAll('.content-card').forEach((card, i) => {
-                if(i === index) {
-                    card.classList.add('active');
-                } else {
-                    card.classList.remove('active');
-                }
-            });
-        }  
+    if(pct>0.82){
+      if(!greeting.classList.contains('visible')) greeting.classList.add('visible');
+      if(!t1){
+        t1=true;
+        setTimeout(function(){
+          const cur=window.scrollY/(wh-vh);
+          if(cur>0.78){
+            line1.classList.add('active');
+            setTimeout(function(){
+              if(window.scrollY/(wh-vh)>0.78){
+                nextPage.scrollIntoView({behavior:'smooth'});
+                triggerSecond();
+              }
+            },1500);
+          }
+        },1800);
+      }
+    } else {
+      greeting.classList.remove('visible');
+      line1.classList.remove('active');
+      t1=false;
+    }
+  });
 
-            const NEWS_DB = [
-    // VERDADERAS (Hechos y Metodologías)
-    { text: "El Aprendizaje Adaptativo ajusta la dificultad según el progreso del alumno.", fake: false },
-    { text: "La IA puede detectar patrones de abandono escolar mediante el análisis de datos.", fake: false },
-    { text: "Los Tutores Inteligentes ofrecen feedback inmediato sin esperar al profesor.", fake: false },
-    { text: "El 'Prompt Engineering' es el arte de dar instrucciones precisas a una IA.", fake: false },
-    { text: "La IA generativa puede crear exámenes personalizados en cuestión de segundos.", fake: false },
-    { text: "Existen IAs que traducen clases en tiempo real para alumnos extranjeros.", fake: false },
-    { text: "La IA ayuda a los docentes a automatizar tareas administrativas tediosas.", fake: false },
-    { text: "Los modelos de lenguaje pueden simular charlas con personajes históricos.", fake: false },
-    { text: "El Learning Analytics ayuda a entender cómo aprenden mejor los estudiantes.", fake: false },
-    { text: "La IA permite crear materiales accesibles para alumnos con discapacidad.", fake: false },
-    { text: "La UNESCO recomienda el uso ético y supervisado de la IA en las aulas.", fake: false },
-    { text: "La IA puede convertir un texto largo en un mapa mental automáticamente.", fake: false },
+  function triggerSecond(){
+    if(!t2){
+      t2=true;
+      setTimeout(function(){
+        var r=nextPage.getBoundingClientRect();
+        if(Math.abs(r.top)<200){
+          line2.classList.add('active');
+          setTimeout(function(){finalPage.scrollIntoView({behavior:'smooth'});},1500);
+        } else {t2=false;}
+      },2000);
+    }
+  }
+})();
 
-    // FALSAS (Mitos y Errores)
-    { text: "La Inteligencia Artificial tiene sentimientos y empatía por los alumnos.", fake: true },
-    { text: "ChatGPT siempre entrega información 100% verídica y sin errores.", fake: true },
-    { text: "La IA reemplazará totalmente la labor del profesor en el futuro cercano.", fake: true },
-    { text: "Los detectores de plagio por IA son infalibles y nunca se equivocan.", fake: true },
-    { text: "La IA tiene conciencia propia y entiende el mundo como un humano.", fake: true },
-    { text: "Usar IA elimina por sí solo la brecha digital entre los estudiantes.", fake: true },
-    { text: "La IA puede leer la mente del alumno para saber si está distraído.", fake: true },
-    { text: "Los algoritmos de IA están libres de sesgos raciales o de género.", fake: true },
-    { text: "Una IA puede predecir con total exactitud el futuro laboral de un niño.", fake: true },
-    { text: "La IA aprende sin necesidad de datos generados por seres humanos.", fake: true },
-    { text: "Está prohibido por ley usar cualquier tipo de IA en las escuelas del mundo.", fake: true },
-    { text: "La IA puede sustituir la interacción social necesaria para el aprendizaje.", fake: true }
+/* ===== TOGGLE TESIS ===== */
+function toggleThesis(){
+  var cb=document.getElementById('toggle-thesis');
+  var content=document.getElementById('thesis-content-wrapper');
+  content.style.display=cb.checked?'block':'none';
+}
+
+/* ===== REVEAL ON SCROLL ===== */
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!els.length) return;
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting) e.target.classList.add('active');
+    });
+  },{threshold:0.12});
+  els.forEach(function(el){io.observe(el);});
+})();
+
+/* ===== GAME ===== */
+var NEWS_DB=[
+  {text:"El Aprendizaje Adaptativo ajusta la dificultad según el progreso del alumno.",fake:false},
+  {text:"La IA puede detectar patrones de abandono escolar mediante análisis de datos.",fake:false},
+  {text:"Los Tutores Inteligentes ofrecen feedback inmediato sin esperar al profesor.",fake:false},
+  {text:"El 'Prompt Engineering' es el arte de dar instrucciones precisas a una IA.",fake:false},
+  {text:"La IA generativa puede crear exámenes personalizados en cuestión de segundos.",fake:false},
+  {text:"Existen IAs que traducen clases en tiempo real para alumnos extranjeros.",fake:false},
+  {text:"La IA ayuda a los docentes a automatizar tareas administrativas tediosas.",fake:false},
+  {text:"Los modelos de lenguaje pueden simular charlas con personajes históricos.",fake:false},
+  {text:"El Learning Analytics ayuda a entender cómo aprenden mejor los estudiantes.",fake:false},
+  {text:"La IA puede crear materiales accesibles para alumnos con discapacidad.",fake:false},
+  {text:"La UNESCO recomienda el uso ético y supervisado de la IA en las aulas.",fake:false},
+  {text:"La IA puede convertir un texto largo en un mapa mental automáticamente.",fake:false},
+  {text:"La Inteligencia Artificial tiene sentimientos y empatía por los alumnos.",fake:true},
+  {text:"ChatGPT siempre entrega información 100% verídica y sin errores.",fake:true},
+  {text:"La IA reemplazará totalmente la labor del profesor en el futuro cercano.",fake:true},
+  {text:"Los detectores de plagio por IA son infalibles y nunca se equivocan.",fake:true},
+  {text:"La IA tiene conciencia propia y entiende el mundo como un humano.",fake:true},
+  {text:"Usar IA elimina por sí solo la brecha digital entre los estudiantes.",fake:true},
+  {text:"La IA puede leer la mente del alumno para saber si está distraído.",fake:true},
+  {text:"Los algoritmos de IA están libres de sesgos raciales o de género.",fake:true},
+  {text:"Una IA puede predecir con total exactitud el futuro laboral de un niño.",fake:true},
+  {text:"La IA aprende sin necesidad de datos generados por seres humanos.",fake:true},
+  {text:"Está prohibido por ley usar cualquier tipo de IA en las escuelas del mundo.",fake:true},
+  {text:"La IA puede sustituir la interacción social necesaria para el aprendizaje.",fake:true}
 ];
 
-       const Game = {
-    score: 0,
-    lives: 3,
-    energy: 0,
-    combo: 1,
-    isActive: false,
-    isSlowMo: false,
-    items: [],
-    usedIndices: new Set(),
-
-    // CANCIONES
-    introMusic: new Audio('music.mp4'), 
-    loopMusic: new Audio('segunda_cancion.mp3'), 
-
-    init() {
-        console.log("Reiniciando sistema...");
-
-        // 1. LIMPIEZA DE AUDIO (Corta lo que esté sonando y reinicia)
-        this.introMusic.pause();
-        this.loopMusic.pause();
-        this.introMusic.currentTime = 0;
-        this.loopMusic.currentTime = 0;
-
-        // 2. CONFIGURACIÓN DE PLAYLIST
-        this.introMusic.volume = 0.5;
-        this.loopMusic.volume = 0.5;
-        this.loopMusic.loop = true;
-        this.introMusic.onended = () => {
-            if (this.isActive) this.loopMusic.play();
-        };
-
-        // 3. RESET DE VARIABLES Y UI
-        this.isActive = true;
-        this.score = 0;
-        this.lives = 3;
-        this.energy = 0;
-        this.combo = 1;
-        this.isSlowMo = false;
-        this.items = [];
-        this.usedIndices.clear();
-
-        // 4. LIMPIEZA VISUAL DEL TABLERO
-        const belt = document.getElementById('conveyor-belt');
-        if(belt) belt.innerHTML = ''; // Borra todas las cartas de la partida anterior
-        
-        const container = document.getElementById('game-container');
-        if(container) container.classList.remove('slow-mo-active', 'shake-container');
-
-        // 5. CAMBIO DE PANTALLAS
-        document.getElementById('start-screen').classList.add('game-hidden');
-        document.getElementById('end-screen').classList.add('game-hidden'); // Oculta el Game Over
-        document.getElementById('game-screen').classList.remove('game-hidden');
-
-        // 6. ARRANQUE
-        this.updateUI();
-        this.introMusic.play().catch(e => console.log("Audio ready after click"));
-        
-        // Importante: Cancelamos cualquier spawn o loop previo si fuera necesario
-        // Pero al setear isActive = true y llamar a estos métodos, el flujo se refresca
-        this.spawnManager();
-        this.loop(); 
-    },
-
-    spawnManager() {
-        if(!this.isActive) return;
-        this.createCard();
-        // Dificultad progresiva basada en score
-        const nextSpawn = this.isSlowMo ? 3000 : Math.max(800, 2000 - (this.score / 50));
-        setTimeout(() => this.spawnManager(), nextSpawn);
-    },
-
-    createCard() {
-        const belt = document.getElementById('conveyor-belt');
-        if(!belt) return;
-
-        // Selección aleatoria sin repetir inmediatamente
-        let idx;
-        do {
-            idx = Math.floor(Math.random() * NEWS_DB.length);
-        } while (this.usedIndices.has(idx) && this.usedIndices.size < NEWS_DB.length);
-        
-        this.usedIndices.add(idx);
-        if(this.usedIndices.size >= NEWS_DB.length) this.usedIndices.clear();
-
-        const data = NEWS_DB[idx];
-        const card = document.createElement('div');
-        card.className = 'data-card';
-        card.innerHTML = `<div class="card-meta"><span>#VERIFICAR</span><span>IA_REF</span></div><p>${data.text}</p>`;
-        
-        const startY = 60 + Math.random() * (belt.offsetHeight - 150);
-        card.style.top = `${startY}px`;
-        card.style.left = "-250px";
-
-        const item = { 
-            el: card, 
-            data: data, 
-            x: -250, 
-            speed: 2 + Math.random() * 2,
-            hit: false 
-        };
-
-        // Eventos para Mouse y Touch
-        card.onmousedown = (e) => this.handleHit(item, e);
-        card.ontouchstart = (e) => { e.preventDefault(); this.handleHit(item, e.touches[0]); };
-
-        belt.appendChild(card);
-        this.items.push(item);
-    },
-
-    handleHit(item, e) {
-        if(!this.isActive || item.hit) return;
-        item.hit = true;
-
-        if(item.data.fake) {
-            this.score += 100 * this.combo;
-            this.energy = Math.min(100, this.energy + 15);
-            this.combo++;
-        } else {
-            this.lives--;
-            this.combo = 1;
-            this.shake();
-        }
-        
-        item.el.style.opacity = "0";
-        item.el.style.transform = "scale(0.5)";
-        setTimeout(() => item.el.remove(), 300);
-        
-        this.updateUI();
-        if(this.lives <= 0) this.gameOver();
-    },
-
-    shake() {
-        const container = document.getElementById('game-container');
-        if(container) {
-            container.classList.add('shake-container');
-            setTimeout(() => container.classList.remove('shake-container'), 300);
-        }
-    },
-
-    updateUI() {
-        const scoreEl = document.getElementById('score');
-        const livesEl = document.getElementById('lives');
-        const energyEl = document.getElementById('energy-fill');
-        const comboEl = document.getElementById('combo-display');
-
-        if(scoreEl) scoreEl.innerText = this.score;
-        if(livesEl) livesEl.innerText = this.lives;
-        if(energyEl) energyEl.style.width = `${this.energy}%`;
-        if(comboEl) comboEl.innerText = `COMBO x${this.combo}`;
-    },
-
-    loop() {
-        if(!this.isActive) return;
-        const belt = document.getElementById('conveyor-belt');
-        if(!belt) return;
-        const beltWidth = belt.offsetWidth;
-
-        this.items.forEach((item, idx) => {
-            if(!item.hit) {
-                // Si hay slowMo, la velocidad es 30%
-                item.x += this.isSlowMo ? item.speed * 0.3 : item.speed;
-                item.el.style.left = `${item.x}px`;
-
-                // Si se sale de la pantalla
-                if(item.x > beltWidth) {
-                    if(item.data.fake) { 
-                        this.lives--; 
-                        this.shake(); 
-                    }
-                    item.el.remove();
-                    this.items.splice(idx, 1);
-                    this.updateUI();
-                    if(this.lives <= 0) this.gameOver();
-                }
-            }
-        });
-        requestAnimationFrame(() => this.loop());
-    },
-
-    gameOver() {
-        this.isActive = false; // Esto detiene el loop y el spawnManager
-        
-        // Detener música
-        this.introMusic.pause();
-        this.loopMusic.pause();
-
-        // Mostrar pantalla final
-        document.getElementById('game-screen').classList.add('game-hidden');
-        const endScreen = document.getElementById('end-screen');
-        if(endScreen) {
-            endScreen.classList.remove('game-hidden');
-            document.getElementById('final-score').innerText = this.score;
-            
-            const perf = document.getElementById('performance');
-            if(perf) {
-                perf.innerText = this.score > 5000 ? "SISTEMA VALIDADO: EXPERTO" : "ERROR CRÍTICO: FUENTES NO FIABLES";
-            }
-        }
-    },
-
-    activateOverclock() {
-        if(this.energy >= 100 && !this.isSlowMo) {
-            this.energy = 0;
-            this.isSlowMo = true;
-            const container = document.getElementById('game-container');
-            container.classList.add('slow-mo-active');
-            
-            setTimeout(() => {
-                this.isSlowMo = false;
-                container.classList.remove('slow-mo-active');
-            }, 5000);
-            this.updateUI();
-        }
-    }
-};
-
-
-
-        function toggleInformation() {
-    const checkBox = document.getElementById("toggle-thesis");
-    const content = document.getElementById("thesis-content-wrapper");
-    
-    if (checkBox.checked == true) {
-        content.style.display = "block";
-        // Pequeño retraso para que la animación de opacidad funcione si la agregas
-        setTimeout(() => { content.style.opacity = "1"; }, 10);
+var Game={
+  score:0,lives:3,energy:0,combo:1,isActive:false,isSlowMo:false,items:[],usedIndices:new Set(),rafId:null,
+  init:function(){
+    this.isActive=false;
+    if(this.rafId){cancelAnimationFrame(this.rafId);this.rafId=null;}
+    this.score=0;this.lives=3;this.energy=0;this.combo=1;this.isSlowMo=false;
+    this.items=[];this.usedIndices.clear();
+    var belt=document.getElementById('conveyor-belt');
+    if(belt) belt.innerHTML='';
+    var container=document.getElementById('game-container');
+    if(container) container.classList.remove('slow-mo-active','shake-container');
+    document.getElementById('start-screen').classList.add('game-hidden');
+    document.getElementById('end-screen').classList.add('game-hidden');
+    document.getElementById('game-screen').classList.remove('game-hidden');
+    this.updateUI();
+    this.isActive=true;
+    this.spawnManager();
+    this.loop();
+  },
+  spawnManager:function(){
+    if(!this.isActive) return;
+    this.createCard();
+    var delay=this.isSlowMo?3000:Math.max(900,2200-(this.score/40));
+    var self=this;
+    setTimeout(function(){self.spawnManager();},delay);
+  },
+  createCard:function(){
+    var belt=document.getElementById('conveyor-belt');
+    if(!belt||!this.isActive) return;
+    var idx;
+    var tries=0;
+    do{idx=Math.floor(Math.random()*NEWS_DB.length);tries++;}
+    while(this.usedIndices.has(idx)&&this.usedIndices.size<NEWS_DB.length&&tries<50);
+    this.usedIndices.add(idx);
+    if(this.usedIndices.size>=NEWS_DB.length) this.usedIndices.clear();
+    var data=NEWS_DB[idx];
+    var card=document.createElement('div');
+    card.className='data-card';
+    var color=data.fake?'#ef4444':'#3b82f6';
+    card.style.borderLeftColor=color;
+    card.innerHTML='<div class="card-meta"><span>'+(data.fake?'⚠ VERIFICAR':'✓ DATO')+'</span><span>IA_REF</span></div><p>'+data.text+'</p>';
+    var bh=belt.offsetHeight||400;
+    var cardH=130;
+    var startY=Math.max(60,Math.min(bh-cardH-20,60+Math.random()*(bh-cardH-80)));
+    card.style.top=startY+'px';
+    card.style.left='-240px';
+    var item={el:card,data:data,x:-240,speed:1.5+Math.random()*2,hit:false};
+    var self=this;
+    card.addEventListener('click',function(){self.handleHit(item);});
+    card.addEventListener('touchstart',function(e){e.preventDefault();self.handleHit(item);},{passive:false});
+    belt.appendChild(card);
+    this.items.push(item);
+  },
+  handleHit:function(item){
+    if(!this.isActive||item.hit) return;
+    item.hit=true;
+    if(item.data.fake){
+      this.score+=100*this.combo;
+      this.energy=Math.min(100,this.energy+15);
+      this.combo++;
     } else {
-        content.style.opacity = "0";
-        content.style.display = "none";
+      this.lives--;this.combo=1;this.shake();
     }
-}
-    
-    </script>
+    item.el.style.opacity='0';
+    item.el.style.transform='scale(0.5)';
+    var el=item.el;
+    setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},250);
+    this.updateUI();
+    if(this.lives<=0) this.gameOver();
+  },
+  shake:function(){
+    var c=document.getElementById('game-container');
+    if(!c) return;
+    c.classList.add('shake-container');
+    setTimeout(function(){c.classList.remove('shake-container');},300);
+  },
+  updateUI:function(){
+    var sc=document.getElementById('score');
+    var li=document.getElementById('lives');
+    var en=document.getElementById('energy-fill');
+    var co=document.getElementById('combo-display');
+    if(sc) sc.textContent=this.score;
+    if(li) li.textContent=this.lives;
+    if(en) en.style.width=this.energy+'%';
+    if(co) co.textContent='COMBO x'+this.combo;
+  },
+  loop:function(){
+    if(!this.isActive) return;
+    var belt=document.getElementById('conveyor-belt');
+    if(!belt){this.rafId=requestAnimationFrame(this.loop.bind(this));return;}
+    var bw=belt.offsetWidth||360;
+    for(var i=this.items.length-1;i>=0;i--){
+      var item=this.items[i];
+      if(!item.hit){
+        item.x+=this.isSlowMo?item.speed*0.3:item.speed;
+        item.el.style.left=item.x+'px';
+        if(item.x>bw+20){
+          if(item.data.fake){this.lives--;this.shake();}
+          if(item.el.parentNode) item.el.parentNode.removeChild(item.el);
+          this.items.splice(i,1);
+          this.updateUI();
+          if(this.lives<=0){this.gameOver();return;}
+        }
+      }
+    }
+    this.rafId=requestAnimationFrame(this.loop.bind(this));
+  },
+  gameOver:function(){
+    this.isActive=false;
+    if(this.rafId){cancelAnimationFrame(this.rafId);this.rafId=null;}
+    document.getElementById('game-screen').classList.add('game-hidden');
+    var end=document.getElementById('end-screen');
+    if(end){
+      end.classList.remove('game-hidden');
+      document.getElementById('final-score').textContent=this.score;
+      var perf=document.getElementById('performance');
+      if(perf) perf.textContent=this.score>3000?'SISTEMA VALIDADO: EXPERTO':'ERROR CRÍTICO: FUENTES NO FIABLES';
+    }
+  },
+  activateOverclock:function(){
+    if(this.energy>=100&&!this.isSlowMo){
+      this.energy=0;this.isSlowMo=true;
+      var c=document.getElementById('game-container');
+      if(c) c.classList.add('slow-mo-active');
+      var self=this;
+      setTimeout(function(){
+        self.isSlowMo=false;
+        var cc=document.getElementById('game-container');
+        if(cc) cc.classList.remove('slow-mo-active');
+        self.updateUI();
+      },5000);
+      this.updateUI();
+    }
+  }
+};
+</script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
