@@ -208,17 +208,118 @@ input:checked+.slider:before{transform:translateX(24px)}
 <div class="stars-bg"></div>
 
 <!-- ===== HERO ===== -->
-<div class="scroll-wrapper">
+<div class="scroll-wrapper" style="height: 200vh; font-family: sans-serif;">
+  <style>
+    .scene-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: #050505;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .side-logo {
+      position: absolute;
+      top: 30px;
+      width: 80px; /* Puedes ajustar el ancho aquí */
+      height: auto;
+      z-index: 300;
+      transition: opacity 0.1s linear;
+    }
+    .side-logo img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+    .hero-title {
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      text-align: center;
+      text-transform: uppercase;
+      line-height: 1;
+      margin: 0;
+      z-index: 10;
+    }
+    .greeting-text {
+      margin-top: 15px;
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+      opacity: 0.7;
+      z-index: 10;
+    }
+    .planet {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle at 30% 30%, #00d4ff, #000);
+      border-radius: 50%;
+      opacity: 0.4;
+      z-index: 1;
+    }
+    .scroll-pill {
+      width: 18px;
+      height: 30px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 10px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .scroll-pill::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      width: 4px;
+      height: 6px;
+      background: white;
+      border-radius: 2px;
+      transform: translateX(-50%);
+      animation: wheel 2s infinite;
+    }
+    @keyframes wheel {
+      0% { opacity: 1; transform: translate(-50%, 0); }
+      100% { opacity: 0; transform: translate(-50%, 12px); }
+    }
+  </style>
+
   <div class="scene-container">
+    <div id="logo-left" class="side-logo" style="left: 5%;">
+      <img src="IMG_0685.png" alt="Logo Izquierda">
+    </div>
+
+    <div id="logo-right" class="side-logo" style="right: 5%;">
+      <img src="IMG_0686.png" alt="Logo Derecha">
+    </div>
+
     <h1 id="title" class="hero-title">Inteligencia<br>Artificial</h1>
     <div id="greeting" class="greeting-text">Una tecnología, infinitas posibilidades.</div>
-    <div id="line1" class="scroll-line"></div>
+    
     <div id="planet" class="planet"></div>
-    <div style="position:absolute;bottom:clamp(20px,5vh,40px);left:50%;transform:translateX(-50%);text-align:center;z-index:200">
+
+    <div id="scroller" style="position:absolute; bottom:30px; left:50%; transform:translateX(-50%); text-align:center; z-index:200">
       <div class="scroll-pill"></div>
-      <p style="font-size:8px;margin-top:10px;text-transform:uppercase;letter-spacing:.4em;font-weight:700;opacity:.4">Scroll</p>
+      <p style="font-size:8px; margin-top:10px; text-transform:uppercase; letter-spacing:.4em; font-weight:700; opacity:.4">Scroll</p>
     </div>
   </div>
+
+  <script>
+    (function() {
+      window.addEventListener('scroll', () => {
+        const sy = window.scrollY;
+        const op = Math.max(0, 1 - (sy / 350));
+        
+        document.getElementById('logo-left').style.opacity = op;
+        document.getElementById('logo-right').style.opacity = op;
+        document.getElementById('scroller').style.opacity = op;
+        
+        document.getElementById('planet').style.transform = `scale(${1 + sy * 0.0005})`;
+      });
+    })();
+  </script>
 </div>
 
 <!-- ===== BIENVENIDA ===== -->
