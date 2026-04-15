@@ -1922,62 +1922,34 @@ input:checked + .slider:before {
         }  
 
             const NEWS_DB = [
+    // VERDADERAS (Hechos y Metodologías)
+    { text: "El Aprendizaje Adaptativo ajusta la dificultad según el progreso del alumno.", fake: false },
+    { text: "La IA puede detectar patrones de abandono escolar mediante el análisis de datos.", fake: false },
+    { text: "Los Tutores Inteligentes ofrecen feedback inmediato sin esperar al profesor.", fake: false },
+    { text: "El 'Prompt Engineering' es el arte de dar instrucciones precisas a una IA.", fake: false },
+    { text: "La IA generativa puede crear exámenes personalizados en cuestión de segundos.", fake: false },
+    { text: "Existen IAs que traducen clases en tiempo real para alumnos extranjeros.", fake: false },
+    { text: "La IA ayuda a los docentes a automatizar tareas administrativas tediosas.", fake: false },
+    { text: "Los modelos de lenguaje pueden simular charlas con personajes históricos.", fake: false },
+    { text: "El Learning Analytics ayuda a entender cómo aprenden mejor los estudiantes.", fake: false },
+    { text: "La IA permite crear materiales accesibles para alumnos con discapacidad.", fake: false },
+    { text: "La UNESCO recomienda el uso ético y supervisado de la IA en las aulas.", fake: false },
+    { text: "La IA puede convertir un texto largo en un mapa mental automáticamente.", fake: false },
 
-            // REALES (Hechos verificables 2024-2025)
-
-            { text: "Donald Trump regresa a la Casa Blanca tras ganar las elecciones 2024.", fake: false },
-
-            { text: "España se corona campeona de la Eurocopa 2024 tras vencer a Inglaterra.", fake: false },
-
-            { text: "La misión Artemis II de la NASA se prepara para orbitar la Luna.", fake: false },
-
-            { text: "Apple lanza el Vision Pro, su primer visor de computación espacial.", fake: false },
-
-            { text: "El Real Madrid conquista su 15ª Champions League en Wembley.", fake: false },
-
-            { text: "Científicos detectan agua líquida bajo la superficie de Marte en nuevos datos.", fake: false },
-
-            { text: "Japón logra aterrizar con éxito su sonda SLIM en la Luna.", fake: false },
-
-            { text: "Los Juegos Olímpicos de París 2024 celebran su apertura en el río Sena.", fake: false },
-
-            { text: "Microsoft alcanza una valoración de 3 billones de dólares impulsada por la IA.", fake: false },
-
-            { text: "Aparece una nueva especie de dinosaurio con 'cuernos de pala' en EE.UU.", fake: false },
-
-            { text: "El telescopio James Webb descubre las galaxias más antiguas del universo.", fake: false },
-
-            { text: "Argentina gana la Copa América 2024 derrotando a Colombia.", fake: false },
-
-
-
-            // FALSAS (Alucinaciones de la Tesis)
-
-            { text: "La ONU prohíbe el uso de teléfonos inteligentes en escuelas de todo el mundo.", fake: true },
-
-            { text: "Científicos en Suiza logran teletransportar una partícula a 10 km de distancia.", fake: true },
-
-            { text: "Disney anuncia que cerrará todos sus parques físicos para mudarse al metaverso.", fake: true },
-
-            { text: "Un terremoto en el Pacífico crea una nueva isla del tamaño de Madrid.", fake: true },
-
-            { text: "Elon Musk compra la red social TikTok para fusionarla con X.", fake: true },
-
-            { text: "Descubren una ciudad egipcia intacta bajo el hielo de la Antártida.", fake: true },
-
-            { text: "La FIFA anuncia que el próximo Mundial se jugará cada 2 años.", fake: true },
-
-            { text: "Facebook implementará un cobro obligatorio de 5 dólares al mes a todos los usuarios.", fake: true },
-
-            { text: "Captan señales de radio inteligentes provenientes de la estrella Próxima Centauri.", fake: true },
-
-            { text: "Un hacker de 14 años logra desactivar el suministro eléctrico de toda Londres.", fake: true },
-
-            { text: "Google Maps añade función para ver el interior de cualquier casa en tiempo real.", fake: true },
-
-            { text: "Expertos confirman que la Luna se está alejando de la Tierra el doble de rápido.", fake: true }
-
-        ];
+    // FALSAS (Mitos y Errores)
+    { text: "La Inteligencia Artificial tiene sentimientos y empatía por los alumnos.", fake: true },
+    { text: "ChatGPT siempre entrega información 100% verídica y sin errores.", fake: true },
+    { text: "La IA reemplazará totalmente la labor del profesor en el futuro cercano.", fake: true },
+    { text: "Los detectores de plagio por IA son infalibles y nunca se equivocan.", fake: true },
+    { text: "La IA tiene conciencia propia y entiende el mundo como un humano.", fake: true },
+    { text: "Usar IA elimina por sí solo la brecha digital entre los estudiantes.", fake: true },
+    { text: "La IA puede leer la mente del alumno para saber si está distraído.", fake: true },
+    { text: "Los algoritmos de IA están libres de sesgos raciales o de género.", fake: true },
+    { text: "Una IA puede predecir con total exactitud el futuro laboral de un niño.", fake: true },
+    { text: "La IA aprende sin necesidad de datos generados por seres humanos.", fake: true },
+    { text: "Está prohibido por ley usar cualquier tipo de IA en las escuelas del mundo.", fake: true },
+    { text: "La IA puede sustituir la interacción social necesaria para el aprendizaje.", fake: true }
+];
 
        const Game = {
     score: 0,
